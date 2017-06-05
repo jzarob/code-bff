@@ -1,0 +1,14 @@
+---
+applications:
+- name: code-bff
+  memory: 2GB
+  host: code-bff
+  buildpack: https://github.com/8451/java-buildpack
+  disk_quota: 2048M
+  instances: 1
+  services:
+  optionalServices:
+  env:
+      JAVA_OPTS: ''
+      JBP_CONFIG_APP_DYNAMICS_AGENT: '{ default_application_name: "%space%-AGILE-FACTORY",  default_tier_name: "%space%_%org%_code-bff",  default_node_name: "%space%_%org%_code-bff:$CF_INSTANCE_INDEX" }'
+      CODE_SPACE: '%space%'
