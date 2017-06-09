@@ -1,5 +1,6 @@
 package com.e451.rest.gateways;
 
+import com.e451.rest.domains.question.Question;
 import com.e451.rest.domains.question.QuestionResponse;
 import org.springframework.http.ResponseEntity;
 
@@ -9,4 +10,8 @@ import org.springframework.http.ResponseEntity;
  */
 public interface QuestionServiceGateway {
     ResponseEntity<QuestionResponse> getQuestions();
+    ResponseEntity<QuestionResponse> getQuestion(String id);
+    ResponseEntity<QuestionResponse> createQuestion(Question question);
+    void updateQuestion(Question question);
+    void deleteQuestion(String id);
 }
