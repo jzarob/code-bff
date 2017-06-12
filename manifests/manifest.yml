@@ -6,7 +6,6 @@ applications:
   buildpack: https://github.com/8451/java-buildpack
   disk_quota: 2048M
   instances: 1
-  services:
   optionalServices:
   env:
       JAVA_OPTS: ''
