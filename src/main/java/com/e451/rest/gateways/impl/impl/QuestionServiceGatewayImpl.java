@@ -1,15 +1,16 @@
-package com.e451.rest.gateways.impl;
+package com.e451.rest.gateways.impl.impl;
 
 import com.e451.rest.domains.question.Question;
 import com.e451.rest.domains.question.QuestionResponse;
-import com.e451.rest.gateways.QuestionServiceGateway;
+import com.e451.rest.gateways.impl.QuestionServiceGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
@@ -56,20 +57,25 @@ public class QuestionServiceGatewayImpl implements QuestionServiceGateway {
     }
 
     @Override
-    public void updateQuestion(Question question) {
+    public ResponseEntity<QuestionResponse> updateQuestion(Question question) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(questionServiceUri);
 
         RestTemplate template = restTemplateBuilder.build();
 
-        template.put(builder.build().toUriString(), question);
+        HttpEntity<Question> requestEntity = new HttpEntity<>(question, null);
+
+
+        return template.exchange(builder.build().toUri(), HttpMethod.PUT, requestEntity, QuestionResponse.class);
     }
 
     @Override
-    public void deleteQuestion(String id) {
+    public ResponseEntity deleteQuestion(String id) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(questionServiceUri).pathSegment(id);
 
         RestTemplate template = restTemplateBuilder.build();
 
-        template.delete(builder.build().toUriString(), id);
+        HttpEntity requestEntity = new HttpEntity(null, null);
+
+        return template.exchange(builder.build().toUri(), HttpMethod.DELETE, requestEntity, Object.class);
     }
 }

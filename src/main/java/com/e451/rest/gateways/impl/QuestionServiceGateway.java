@@ -1,4 +1,4 @@
-package com.e451.rest.gateways;
+package com.e451.rest.gateways.impl;
 
 import com.e451.rest.domains.question.Question;
 import com.e451.rest.domains.question.QuestionResponse;
@@ -12,6 +12,6 @@ public interface QuestionServiceGateway {
     ResponseEntity<QuestionResponse> getQuestions();
     ResponseEntity<QuestionResponse> getQuestion(String id);
     ResponseEntity<QuestionResponse> createQuestion(Question question);
-    void updateQuestion(Question question);
-    void deleteQuestion(String id);
+    ResponseEntity<QuestionResponse> updateQuestion(Question question);
+    ResponseEntity deleteQuestion(String id);
 }

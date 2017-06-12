@@ -1,8 +1,11 @@
 package com.e451.rest.controllers;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.e451.rest.domains.question.Question;
+import com.e451.rest.domains.question.QuestionResponse;
+import com.e451.rest.services.impl.QuestionService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by e384873 on 6/9/2017.
@@ -11,4 +14,36 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 @RequestMapping("/questions")
 public class QuestionsController {
+
+    private QuestionService questionService;
+
+    @Autowired
+    public QuestionsController(QuestionService questionService) {
+        this.questionService = questionService;
+    }
+
+    @GetMapping
+    public ResponseEntity<QuestionResponse> getQuestions() {
+        return questionService.getQuestions();
+    }
+
+    @PutMapping
+    public ResponseEntity<QuestionResponse> updateQuestion(@RequestBody Question question) {
+        return questionService.updateQuestion(question);
+    }
+
+    @PostMapping
+    public ResponseEntity<QuestionResponse> createQuestion(@RequestBody Question question) {
+        return questionService.createQuestion(question);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<QuestionResponse> getQuestion(@PathVariable String id) {
+        return questionService.getQuestion(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteQuestion(@PathVariable String id) {
+        return questionService.deleteQuestion(id);
+    }
 }
