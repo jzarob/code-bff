@@ -6,16 +6,14 @@ import com.e451.rest.services.AssessmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by j747951 on 6/15/2017.
  */
 @Controller
 @RequestMapping("/assessments")
+@CrossOrigin
 public class AssessmentsController {
 
     private final AssessmentService assessmentService;
