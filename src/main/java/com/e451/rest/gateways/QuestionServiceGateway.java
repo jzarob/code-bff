@@ -1,4 +1,4 @@
-package com.e451.rest.gateways.impl;
+package com.e451.rest.gateways;
 
 import com.e451.rest.domains.question.Question;
 import com.e451.rest.domains.question.QuestionResponse;

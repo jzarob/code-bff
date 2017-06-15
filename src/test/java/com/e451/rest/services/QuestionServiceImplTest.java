@@ -1,9 +1,9 @@
-package com.e451.rest.services.impl;
+package com.e451.rest.services;
 
 import com.e451.rest.domains.question.Question;
 import com.e451.rest.domains.question.QuestionResponse;
-import com.e451.rest.gateways.impl.QuestionServiceGateway;
-import com.e451.rest.services.impl.impl.QuestionServiceImpl;
+import com.e451.rest.gateways.QuestionServiceGateway;
+import com.e451.rest.services.impl.QuestionServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
