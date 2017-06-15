@@ -25,11 +25,11 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     @Override
     public ResponseEntity<AssessmentResponse> getAssessments() {
-        return null;
+        return assessmentServiceGateway.getAssessments();
     }
 
     @Override
     public ResponseEntity<AssessmentResponse> createAssessment(Assessment assessment) {
-        return null;
+        return assessmentServiceGateway.createAssessment(assessment);
     }
 }

@@ -41,7 +41,7 @@ public class QuestionServiceImplTest {
     }
 
     @Test
-    public void whenGetQuestions_returnsListOfQuestions()   {
+    public void whenGetQuestions_returnsListOfQuestions() {
         QuestionResponse questionResponse = new QuestionResponse();
         questionResponse.setQuestions(this.questions);
 
@@ -55,7 +55,7 @@ public class QuestionServiceImplTest {
     }
 
     @Test
-    public void whenGetQuestion_returnListOfSizeOne()   {
+    public void whenGetQuestion_returnListOfSizeOne() {
         QuestionResponse questionResponse = new QuestionResponse();
         questionResponse.setQuestions(Arrays.asList(this.questions.get(0)));
 
@@ -69,7 +69,7 @@ public class QuestionServiceImplTest {
     }
 
     @Test
-    public void whenCreateQuestion_returnNewQuestion()  {
+    public void whenCreateQuestion_returnNewQuestion() {
         QuestionResponse questionResponse = new QuestionResponse();
         Question question = new Question("3", "q3", "a3", "t4", 3);
         questionResponse.setQuestions(Arrays.asList(question));
@@ -85,7 +85,7 @@ public class QuestionServiceImplTest {
     }
 
     @Test
-    public void whenUpdateQuestion_returnUpdatedQuestion()  {
+    public void whenUpdateQuestion_returnUpdatedQuestion() {
         QuestionResponse questionResponse = new QuestionResponse();
 
         Question question = new Question("2", "q3", "a3", "t3", 2);
