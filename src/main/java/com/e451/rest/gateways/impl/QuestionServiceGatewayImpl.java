@@ -1,8 +1,8 @@
-package com.e451.rest.gateways.impl.impl;
+package com.e451.rest.gateways.impl;
 
 import com.e451.rest.domains.question.Question;
 import com.e451.rest.domains.question.QuestionResponse;
-import com.e451.rest.gateways.impl.QuestionServiceGateway;
+import com.e451.rest.gateways.QuestionServiceGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
