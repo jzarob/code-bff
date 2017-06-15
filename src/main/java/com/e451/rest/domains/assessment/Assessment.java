@@ -1,5 +1,7 @@
 package com.e451.rest.domains.assessment;
 
+import java.util.Date;
+
 /**
  * Created by j747951 on 6/15/2017.
  */
@@ -8,6 +10,10 @@ public class Assessment {
     private String firstName;
     private String lastName;
     private String email;
+    private String modifiedBy;
+    private String createdBy;
+    private Date createdDate;
+    private Date modifiedDate;
 
     public String getId() {
         return id;
@@ -39,6 +45,38 @@ public class Assessment {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Date getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
     }
 
     public Assessment(String id, String firstName, String lastName, String email) {
