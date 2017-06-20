@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.UUID;
+
 /**
  * Created by l659598 on 6/20/2017.
  */
@@ -34,6 +36,16 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
         RestTemplate template = restTemplateBuilder.build();
 
         return template.postForEntity(builder.build().toUriString(), user, UserResponse.class);
+    }
+
+    @Override
+    public ResponseEntity activate(UUID uuid) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri)
+                .pathSegment("activate", uuid.toString());
+
+        RestTemplate template = restTemplateBuilder.build();
+
+        return template.getForEntity(builder.build().toUriString(), ResponseEntity.class);
     }
 
 }

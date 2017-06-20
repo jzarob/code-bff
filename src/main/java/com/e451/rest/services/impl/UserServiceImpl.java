@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 /**
  * Created by l659598 on 6/20/2017.
  */
@@ -24,6 +26,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<UserResponse> createUser(User user) {
         return userServiceGateway.createUser(user);
+    }
+
+    @Override
+    public ResponseEntity activate(UUID guid) {
+        return userServiceGateway.activate(guid);
     }
 
 }

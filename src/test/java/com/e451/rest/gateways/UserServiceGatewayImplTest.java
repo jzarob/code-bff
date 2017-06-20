@@ -11,8 +11,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
@@ -52,6 +54,21 @@ public class UserServiceGatewayImplTest {
         userServiceGateway.createUser(user);
 
         verify(restTemplate).postForEntity(BASE_URI, user, UserResponse.class);
+    }
+
+    @Test
+    public void whenActivateCalled_thenRestTemplateIsCalled() throws Exception {
+        UUID uuid = UUID.randomUUID();
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(BASE_URI)
+                .pathSegment("activate", uuid.toString());
+
+        when(restTemplate.getForEntity(builder.build().toUriString(), ResponseEntity.class))
+                .thenReturn(ResponseEntity.ok().build());
+
+        userServiceGateway.activate(uuid);
+
+        verify(restTemplate).getForEntity(builder.build().toUriString(), ResponseEntity.class);
     }
 
 }

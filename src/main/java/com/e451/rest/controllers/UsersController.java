@@ -6,10 +6,9 @@ import com.e451.rest.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 /**
  * Created by l659598 on 6/20/2017.
@@ -29,6 +28,11 @@ public class UsersController {
     @PostMapping
     public ResponseEntity<UserResponse> createUser(@RequestBody User user) {
         return userService.createUser(user);
+    }
+
+    @GetMapping("/activate/{guid}")
+    public ResponseEntity activateUser(@PathVariable("guid") String guid) {
+        return userService.activate(UUID.fromString(guid));
     }
 
 }

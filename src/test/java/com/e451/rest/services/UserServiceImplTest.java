@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.Mockito.when;
 
@@ -56,5 +57,16 @@ public class UserServiceImplTest {
         ResponseEntity<UserResponse> response = userService.createUser(user);
 
         Assert.assertEquals(1, response.getBody().getUsers().size());
+    }
+
+    @Test
+    public void whenActivateUser_returnOK() {
+        UUID guid = UUID.randomUUID();
+
+        when(userServiceGateway.activate(guid)).thenReturn(ResponseEntity.ok().build());
+
+        ResponseEntity response = userService.activate(guid);
+
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 }
