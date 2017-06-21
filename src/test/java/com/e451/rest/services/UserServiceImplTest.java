@@ -61,7 +61,7 @@ public class UserServiceImplTest {
 
     @Test
     public void whenActivateUser_returnOK() {
-        UUID guid = UUID.randomUUID();
+        String guid = UUID.randomUUID().toString();
 
         when(userServiceGateway.activate(guid)).thenReturn(ResponseEntity.ok().build());
 

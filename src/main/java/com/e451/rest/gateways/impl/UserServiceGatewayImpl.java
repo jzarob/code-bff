@@ -39,9 +39,9 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
     }
 
     @Override
-    public ResponseEntity activate(UUID uuid) {
+    public ResponseEntity activate(String uuid) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri)
-                .pathSegment("activate", uuid.toString());
+                .pathSegment("activate", uuid);
 
         RestTemplate template = restTemplateBuilder.build();
 

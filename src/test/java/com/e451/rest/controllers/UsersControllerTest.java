@@ -60,7 +60,7 @@ public class UsersControllerTest {
 
     @Test
     public void whenActivate_returnResponseOK() {
-        UUID uuid = UUID.randomUUID();
+        String uuid = UUID.randomUUID().toString();
         ResponseEntity responseEntity = ResponseEntity.ok().build();
 
         when(userService.activate(uuid)).thenReturn(responseEntity);

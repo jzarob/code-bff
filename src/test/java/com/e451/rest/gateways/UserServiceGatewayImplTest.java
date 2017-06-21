@@ -58,7 +58,7 @@ public class UserServiceGatewayImplTest {
 
     @Test
     public void whenActivateCalled_thenRestTemplateIsCalled() throws Exception {
-        UUID uuid = UUID.randomUUID();
+        String uuid = UUID.randomUUID().toString();
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(BASE_URI)
                 .pathSegment("activate", uuid.toString());

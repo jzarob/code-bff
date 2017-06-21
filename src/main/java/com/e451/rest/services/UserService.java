@@ -11,5 +11,5 @@ import java.util.UUID;
  */
 public interface UserService {
     ResponseEntity<UserResponse> createUser(User user);
-    ResponseEntity activate(UUID uuid);
+    ResponseEntity activate(String uuid);
 }

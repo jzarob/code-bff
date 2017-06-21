@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity activate(UUID guid) {
+    public ResponseEntity activate(String guid) {
         return userServiceGateway.activate(guid);
     }
 
