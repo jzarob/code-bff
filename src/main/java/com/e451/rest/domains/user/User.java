@@ -8,14 +8,12 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.UUID;
-
 /**
  * Created by l659598 on 6/19/2017.
  */
 @Document
 @Component
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class User {
 
     @Id
@@ -25,14 +23,15 @@ public class User {
 
     @Indexed(unique = true)
     private String username;
+    @JsonProperty(access = JsonProperty.Access.READ_WRITE)
     private String password;
     private boolean enabled;
 
     @Indexed
+    @JsonIgnore
     private String activationGuid;
 
     public User() {
-        this.activationGuid = UUID.randomUUID().toString();
     }
 
     public User(String id, String firstName, String lastName, String email, String password) {
@@ -42,7 +41,6 @@ public class User {
         this.username = email;
         this.password = password;
         this.enabled = false;
-        this.activationGuid = UUID.randomUUID().toString();
     }
 
     public String getId() {
