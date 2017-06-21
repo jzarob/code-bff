@@ -1,10 +1,11 @@
 package com.e451.rest.domains.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-//import org.springframework.security.core.GrantedAuthority;
-//import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -19,29 +20,29 @@ public class User {
 
     @Id
     private String id;
-
     private String firstName;
-
     private String lastName;
 
     @Indexed(unique = true)
-    private String email;
-
+    private String username;
     private String password;
-
     private boolean enabled;
 
-    private UUID activationGuid;
+    @Indexed
+    private String activationGuid;
 
-    public User() { }
+    public User() {
+        this.activationGuid = UUID.randomUUID().toString();
+    }
 
     public User(String id, String firstName, String lastName, String email, String password) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
+        this.username = email;
         this.password = password;
         this.enabled = false;
+        this.activationGuid = UUID.randomUUID().toString();
     }
 
     public String getId() {
@@ -53,11 +54,11 @@ public class User {
     }
 
     public String getUsername() {
-        return email;
+        return username;
     }
 
     public void setUsername(String username) {
-        this.email = username;
+        this.username = username;
     }
 
     public String getFirstName() {
@@ -77,11 +78,11 @@ public class User {
     }
 
     public String getEmail() {
-        return email;
+        return username;
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.username = email;
     }
 
     public String getPassword() {
@@ -92,11 +93,11 @@ public class User {
         this.password = password;
     }
 
-    public UUID getActivationGuid() {
+    public String getActivationGuid() {
         return activationGuid;
     }
 
-    public void setActivationGuid(UUID activationGuid) {
+    public void setActivationGuid(String activationGuid) {
         this.activationGuid = activationGuid;
     }
 
@@ -108,23 +109,27 @@ public class User {
         this.enabled = enabled;
     }
 
-//    @Override
+    //@Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return true;
     }
 
-//    @Override
+    //@Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return true;
     }
 
-//    @Override
+   // @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
 
 //    @Override
+//    @JsonIgnore
 //    public Collection<? extends GrantedAuthority> getAuthorities() {
 //        return null;
 //    }
