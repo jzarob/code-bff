@@ -75,14 +75,6 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getEmail() {
-        return username;
-    }
-
-    public void setEmail(String email) {
-        this.username = email;
-    }
-
     public String getPassword() {
         return password;
     }
