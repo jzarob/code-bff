@@ -28,8 +28,8 @@ public class AssessmentsController {
         return assessmentService.getAssessments();
     }
 
-    @GetMapping
-    public ResponseEntity<AssessmentResponse> getAssessmentByGuid(@PathVariable  String guid) {
+    @GetMapping("/{guid}")
+    public ResponseEntity<AssessmentResponse> getAssessmentByGuid(@PathVariable String guid) {
         return assessmentService.getAssessmentByGuid(guid);
     }
 
