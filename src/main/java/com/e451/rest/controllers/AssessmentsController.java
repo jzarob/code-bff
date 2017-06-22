@@ -28,8 +28,18 @@ public class AssessmentsController {
         return assessmentService.getAssessments();
     }
 
+    @GetMapping
+    public ResponseEntity<AssessmentResponse> getAssessmentByGuid(@PathVariable  String guid) {
+        return assessmentService.getAssessmentByGuid(guid);
+    }
+
     @PostMapping
     public ResponseEntity<AssessmentResponse> createAssessment(@RequestBody Assessment assessment) {
         return assessmentService.createAssessment(assessment);
+    }
+
+    @PutMapping
+    public ResponseEntity<AssessmentResponse> updateAssessment(@RequestBody Assessment assessment) {
+        return assessmentService.updateAssessment(assessment);
     }
 }

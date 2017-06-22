@@ -2,7 +2,6 @@ package com.e451.rest.services;
 
 import com.e451.rest.domains.assessment.Assessment;
 import com.e451.rest.domains.assessment.AssessmentResponse;
-import com.e451.rest.domains.question.QuestionResponse;
 import com.e451.rest.gateways.AssessmentServiceGateway;
 import com.e451.rest.services.impl.AssessmentServiceImpl;
 import org.junit.Assert;
@@ -57,9 +56,23 @@ public class AssessmentServiceImplTest {
 
         Assert.assertEquals(3, response.getBody().getAssessments().size());
     }
+    
+    @Test
+    public void whenGetAssessmentByGuid_returnsListOfSingleAssessment() {
+        AssessmentResponse assessmentResponse = new AssessmentResponse();
+        assessmentResponse.setAssessments(Arrays.asList(this.assessments.get(0)));
+
+        ResponseEntity<AssessmentResponse> gatewayResponse = new ResponseEntity<>(assessmentResponse, HttpStatus.OK);
+
+        when(assessmentServiceGateway.getAssessmentByGuid("1")).thenReturn(gatewayResponse);
+
+        ResponseEntity<AssessmentResponse> response = assessmentService.getAssessmentByGuid("1");
+
+        Assert.assertTrue(response.getBody().getAssessments().size() == 1);
+    }
 
     @Test
-    public void whenCreateAssessment_returnNewQuestion() {
+    public void whenCreateAssessment_returnNewAssessment() {
         AssessmentResponse assessmentResponse = new AssessmentResponse();
         Assessment assessment = new Assessment("4", "fn4", "ln4", "test4@test.com");
         assessmentResponse.setAssessments(Arrays.asList(assessment));
@@ -72,5 +85,22 @@ public class AssessmentServiceImplTest {
         ResponseEntity<AssessmentResponse> response = assessmentService.createAssessment(assessment);
 
         Assert.assertEquals(1, response.getBody().getAssessments().size());
+    }
+
+    @Test
+    public void whenUpdateAssessment_returnUpdatedAssessment() {
+        AssessmentResponse assessmentResponse = new AssessmentResponse();
+
+        Assessment assessment = new Assessment("4", "fn4", "ln4", "test4@test.com");
+        assessmentResponse.setAssessments(Arrays.asList(assessment));
+
+        ResponseEntity<AssessmentResponse> gatewayResponse = new ResponseEntity<AssessmentResponse>(assessmentResponse, HttpStatus.ACCEPTED);
+
+        when(assessmentServiceGateway.updateAssessment(assessment)).thenReturn(gatewayResponse);
+
+        ResponseEntity<AssessmentResponse> response = assessmentService.updateAssessment(assessment);
+
+        Assert.assertEquals(1, response.getBody().getAssessments().size());
+        Assert.assertEquals(assessment, response.getBody().getAssessments().get(0));
     }
 }

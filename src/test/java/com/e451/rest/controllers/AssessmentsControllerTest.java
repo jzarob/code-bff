@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class AssessmentsControllerTest {
 
-    private AssessmentsController controller;
+    private AssessmentsController assessmentsController;
 
     @Mock
     private AssessmentService assessmentService;
@@ -32,7 +32,7 @@ public class AssessmentsControllerTest {
 
     @Before
     public void setup() {
-        controller = new AssessmentsController(assessmentService);
+        assessmentsController = new AssessmentsController(assessmentService);
         assessments = Arrays.asList(
                 new Assessment("1", "fn1", "ln1", "test1@test.com"),
                 new Assessment("2", "fn2", "ln2", "test2@test.com"),
@@ -49,12 +49,27 @@ public class AssessmentsControllerTest {
 
         when(assessmentService.getAssessments()).thenReturn(responseEntity);
 
-        ResponseEntity<AssessmentResponse> response = controller.getAssessments();
+        ResponseEntity<AssessmentResponse> response = assessmentsController.getAssessments();
 
         Assert.assertEquals(3, response.getBody().getAssessments().size());
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
+    @Test
+    public void whenGetAssessmentByGuid_returnListOfSingleAssessment() {
+        AssessmentResponse assessmentResponse = new AssessmentResponse();
+        assessmentResponse.setAssessments(Arrays.asList(assessments.get(0)));
+
+        ResponseEntity<AssessmentResponse> responseEntity = ResponseEntity.ok(assessmentResponse);
+
+        when(assessmentService.getAssessmentByGuid("1")).thenReturn(responseEntity);
+
+        ResponseEntity<AssessmentResponse> response = assessmentsController.getAssessmentByGuid("1");
+
+        Assert.assertEquals(1, response.getBody().getAssessments().size());
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+    
     @Test
     public void whenCreateAssessment_returnNewAssessment() {
         AssessmentResponse assessmentResponse = new AssessmentResponse();
@@ -65,9 +80,24 @@ public class AssessmentsControllerTest {
 
         when(assessmentService.createAssessment(assessments.get(0))).thenReturn(responseEntity);
 
-        ResponseEntity<AssessmentResponse> response = controller.createAssessment(assessments.get(0));
+        ResponseEntity<AssessmentResponse> response = assessmentsController.createAssessment(assessments.get(0));
 
         Assert.assertEquals(assessments.get(0), response.getBody().getAssessments().get(0));
         Assert.assertEquals(HttpStatus.CREATED, response.getStatusCode());
+    }
+
+    @Test
+    public void whenUpdateAssessment_returnUpdatedAssessment() {
+        AssessmentResponse assessmentResponse = new AssessmentResponse();
+        assessmentResponse.setAssessments(Arrays.asList(assessments.get(0)));
+
+        ResponseEntity<AssessmentResponse> responseEntity = ResponseEntity.status(HttpStatus.ACCEPTED).body(assessmentResponse);
+
+        when(assessmentService.updateAssessment(assessments.get(0))).thenReturn(responseEntity);
+
+        ResponseEntity<AssessmentResponse> response = assessmentsController.updateAssessment(assessments.get(0));
+
+        Assert.assertEquals(response.getBody().getAssessments().get(0), assessments.get(0));
+        Assert.assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
     }
 }

@@ -29,7 +29,15 @@ public class AssessmentServiceImpl implements AssessmentService {
     }
 
     @Override
+    public ResponseEntity<AssessmentResponse> getAssessmentByGuid(String guid) { return assessmentServiceGateway.getAssessmentByGuid(guid); }
+
+    @Override
     public ResponseEntity<AssessmentResponse> createAssessment(Assessment assessment) {
         return assessmentServiceGateway.createAssessment(assessment);
+    }
+
+    @Override
+    public ResponseEntity<AssessmentResponse> updateAssessment(Assessment assessment) {
+        return assessmentServiceGateway.updateAssessment(assessment);
     }
 }
