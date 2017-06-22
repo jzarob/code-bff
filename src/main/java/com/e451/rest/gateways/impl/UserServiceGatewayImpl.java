@@ -6,6 +6,7 @@ import com.e451.rest.gateways.UserServiceGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -31,11 +32,17 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
 
     @Override
     public ResponseEntity<UserResponse> createUser(User user) {
+
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri);
-
         RestTemplate template = restTemplateBuilder.build();
+        ResponseEntity response;
 
-        return template.postForEntity(builder.build().toUriString(), user, UserResponse.class);
+        try {
+            response = template.postForEntity(builder.build().toUriString(), user, UserResponse.class);
+            return ResponseEntity.status(HttpStatus.CREATED).body((UserResponse)response.getBody());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @Override
