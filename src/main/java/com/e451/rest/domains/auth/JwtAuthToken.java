@@ -1,4 +1,4 @@
-package com.e451.rest.security;
+package com.e451.rest.domains.auth;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;

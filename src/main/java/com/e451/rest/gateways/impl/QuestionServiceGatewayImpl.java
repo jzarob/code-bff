@@ -21,15 +21,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class QuestionServiceGatewayImpl implements QuestionServiceGateway {
 
     private final String questionServiceUri;
-    private final RestTemplateBuilder restTemplateBuilder;
     private final RestTemplate restTemplate;
 
     @Autowired
     public QuestionServiceGatewayImpl(@Value("${service-uri}") String questionServiceUri,
-                                      RestTemplateBuilder restTemplateBuilder,
                                       RestTemplate restTemplate) {
         this.questionServiceUri = questionServiceUri + "/questions";
-        this.restTemplateBuilder = restTemplateBuilder;
         this.restTemplate = restTemplate;
     }
 
@@ -42,41 +39,29 @@ public class QuestionServiceGatewayImpl implements QuestionServiceGateway {
     @Override
     public ResponseEntity<QuestionResponse> getQuestion(String id) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(questionServiceUri).pathSegment(id);
-
-        RestTemplate template = restTemplateBuilder.build();
-
-        return template.getForEntity(builder.build().toUriString(), QuestionResponse.class);
+        return restTemplate.getForEntity(builder.build().toUriString(), QuestionResponse.class);
     }
 
     @Override
     public ResponseEntity<QuestionResponse> createQuestion(Question question) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(questionServiceUri);
-
-        RestTemplate template = restTemplateBuilder.build();
-
-        return template.postForEntity(builder.build().toUriString(), question, QuestionResponse.class);
+        return restTemplate.postForEntity(builder.build().toUriString(), question, QuestionResponse.class);
     }
 
     @Override
     public ResponseEntity<QuestionResponse> updateQuestion(Question question) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(questionServiceUri);
-
-        RestTemplate template = restTemplateBuilder.build();
-
         HttpEntity<Question> requestEntity = new HttpEntity<>(question, null);
 
-
-        return template.exchange(builder.build().toUri(), HttpMethod.PUT, requestEntity, QuestionResponse.class);
+        return restTemplate.exchange(builder.build().toUri(), HttpMethod.PUT, requestEntity, QuestionResponse.class);
     }
 
     @Override
     public ResponseEntity deleteQuestion(String id) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(questionServiceUri).pathSegment(id);
 
-        RestTemplate template = restTemplateBuilder.build();
-
         HttpEntity requestEntity = new HttpEntity(null, null);
 
-        return template.exchange(builder.build().toUri(), HttpMethod.DELETE, requestEntity, Object.class);
+        return restTemplate.exchange(builder.build().toUri(), HttpMethod.DELETE, requestEntity, Object.class);
     }
 }

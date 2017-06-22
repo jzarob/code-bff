@@ -27,18 +27,13 @@ public class UserServiceGatewayImplTest {
 
     @Mock
     private RestTemplate restTemplate;
-
-    @Mock
-    private RestTemplateBuilder restTemplateBuilder;
-
     private UserServiceGateway userServiceGateway;
 
     private static final String BASE_URI = "fakeUri/users";
 
     @Before
     public void setup() {
-        when(restTemplateBuilder.build()).thenReturn(restTemplate);
-        userServiceGateway = new UserServiceGatewayImpl("fakeUri", restTemplateBuilder);
+        userServiceGateway = new UserServiceGatewayImpl("fakeUri", restTemplate);
     }
 
     @Test

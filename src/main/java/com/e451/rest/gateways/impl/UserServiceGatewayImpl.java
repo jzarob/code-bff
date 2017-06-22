@@ -20,32 +20,26 @@ import java.util.UUID;
 public class UserServiceGatewayImpl implements UserServiceGateway {
 
     private final String userServiceUri;
-    private final RestTemplateBuilder restTemplateBuilder;
+    private final RestTemplate restTemplate;
 
     @Autowired
     public UserServiceGatewayImpl(@Value("${service-uri}") String userServiceUri,
-                                      RestTemplateBuilder restTemplateBuilder) {
+                                      RestTemplate restTemplate) {
         this.userServiceUri = userServiceUri + "/users";
-        this.restTemplateBuilder = restTemplateBuilder;
+        this.restTemplate = restTemplate;
     }
 
     @Override
     public ResponseEntity<UserResponse> createUser(User user) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri);
-
-        RestTemplate template = restTemplateBuilder.build();
-
-        return template.postForEntity(builder.build().toUriString(), user, UserResponse.class);
+        return restTemplate.postForEntity(builder.build().toUriString(), user, UserResponse.class);
     }
 
     @Override
     public ResponseEntity activate(String uuid) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri)
                 .pathSegment("activate", uuid);
-
-        RestTemplate template = restTemplateBuilder.build();
-
-        return template.getForEntity(builder.build().toUriString(), ResponseEntity.class);
+        return restTemplate.getForEntity(builder.build().toUriString(), ResponseEntity.class);
     }
 
 }

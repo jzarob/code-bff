@@ -33,20 +33,15 @@ public class QuestionServiceGatewayImplTest {
     @Mock
     private RestTemplate restTemplate;
 
-    @Mock
-    private RestTemplateBuilder restTemplateBuilder;
-
     private QuestionServiceGateway questionServiceGateway;
 
 
     @Before
     public void setup() {
-        when(restTemplateBuilder.build()).thenReturn(restTemplate);
-        questionServiceGateway = new QuestionServiceGatewayImpl("fakeUri", restTemplateBuilder, restTemplate);
+        questionServiceGateway = new QuestionServiceGatewayImpl("fakeUri", restTemplate);
     }
 
     @Test
-    @Ignore
     public void whenGetQuestionsCalled_thenRestTemplateIsCalled() throws Exception {
         QuestionResponse questionResponse = new QuestionResponse();
         ResponseEntity<QuestionResponse> response = ResponseEntity.ok(questionResponse);

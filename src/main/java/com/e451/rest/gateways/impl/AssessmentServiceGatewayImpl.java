@@ -18,30 +18,24 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class AssessmentServiceGatewayImpl implements AssessmentServiceGateway {
 
     private final String assessmentServiceUri;
-    private final RestTemplateBuilder restTemplateBuilder;
+    private final RestTemplate restTemplate;
 
     @Autowired
     public AssessmentServiceGatewayImpl(@Value("${service-uri}") String assessmentServiceUri,
-                                        RestTemplateBuilder restTemplateBuilder) {
+                                        RestTemplate restTemplate) {
         this.assessmentServiceUri = assessmentServiceUri + "/assessments";
-        this.restTemplateBuilder = restTemplateBuilder;
+        this.restTemplate = restTemplate;
     }
 
     @Override
     public ResponseEntity<AssessmentResponse> getAssessments() {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(assessmentServiceUri);
-
-        RestTemplate template = restTemplateBuilder.build();
-
-        return template.getForEntity(builder.build().toUriString(), AssessmentResponse.class);
+        return restTemplate.getForEntity(builder.build().toUriString(), AssessmentResponse.class);
     }
 
     @Override
     public ResponseEntity<AssessmentResponse> createAssessment(Assessment assessment) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(assessmentServiceUri);
-
-        RestTemplate template = restTemplateBuilder.build();
-
-        return template.postForEntity(builder.build().toUriString(), assessment, AssessmentResponse.class);
+        return restTemplate.postForEntity(builder.build().toUriString(), assessment, AssessmentResponse.class);
     }
 }

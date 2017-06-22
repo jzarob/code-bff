@@ -26,17 +26,13 @@ public class AssessmentServiceGatewayImplTest {
     @Mock
     private RestTemplate restTemplate;
 
-    @Mock
-    private RestTemplateBuilder restTemplateBuilder;
-
     private AssessmentServiceGateway assessmentServiceGateway;
 
     private static final String BASE_URI = "fakeUri/assessments";
 
     @Before
     public void setup() {
-        when(restTemplateBuilder.build()).thenReturn(restTemplate);
-        assessmentServiceGateway = new AssessmentServiceGatewayImpl("fakeUri", restTemplateBuilder);
+        assessmentServiceGateway = new AssessmentServiceGatewayImpl("fakeUri", restTemplate);
     }
 
     @Test
