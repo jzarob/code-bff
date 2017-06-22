@@ -59,17 +59,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new JwtAuthFilter(userDetailsService, jwtTokenUtil, header);
     }
 
-    @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
-        RestTemplate restTemplate = builder.build();
-
-        restTemplate.setInterceptors(
-                Arrays.asList(
-                        new JwtHeaderInterceptor(header)));
-        return restTemplate;
-    }
-
-
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
