@@ -6,6 +6,7 @@ import com.e451.rest.gateways.QuestionServiceGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -21,21 +22,21 @@ public class QuestionServiceGatewayImpl implements QuestionServiceGateway {
 
     private final String questionServiceUri;
     private final RestTemplateBuilder restTemplateBuilder;
+    private final RestTemplate restTemplate;
 
     @Autowired
     public QuestionServiceGatewayImpl(@Value("${service-uri}") String questionServiceUri,
-                                      RestTemplateBuilder restTemplateBuilder) {
+                                      RestTemplateBuilder restTemplateBuilder,
+                                      RestTemplate restTemplate) {
         this.questionServiceUri = questionServiceUri + "/questions";
         this.restTemplateBuilder = restTemplateBuilder;
+        this.restTemplate = restTemplate;
     }
 
     @Override
     public ResponseEntity<QuestionResponse> getQuestions() {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(questionServiceUri);
-
-        RestTemplate template = restTemplateBuilder.build();
-
-        return template.getForEntity(builder.build().toUriString(), QuestionResponse.class);
+        return restTemplate.getForEntity(builder.build().toUriString(), QuestionResponse.class);
     }
 
     @Override

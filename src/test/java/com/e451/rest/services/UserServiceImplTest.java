@@ -4,6 +4,7 @@ import com.e451.rest.domains.assessment.AssessmentResponse;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
 import com.e451.rest.gateways.UserServiceGateway;
+import com.e451.rest.repository.UserRepository;
 import com.e451.rest.services.impl.UserServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;
@@ -30,11 +31,14 @@ public class UserServiceImplTest {
     @Mock
     private UserServiceGateway userServiceGateway;
 
+    @Mock
+    private UserRepository userRepository;
+
     private List<User> users;
 
     @Before
     public void setup() {
-        this.userService = new UserServiceImpl(userServiceGateway);
+        this.userService = new UserServiceImpl(userServiceGateway, userRepository);
 
         users = Arrays.asList(
                 new User("id1", "liz1", "conrad1", "email1", "password1"),
