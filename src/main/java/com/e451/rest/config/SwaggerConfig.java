@@ -40,7 +40,6 @@ public class SwaggerConfig {
             .genericModelSubstitutes(ResponseEntity.class)
             .useDefaultResponseMessages(false)
             .securitySchemes(Arrays.asList(apiKey()))
-            //.securityContexts(Arrays.asList(securityContext()))
             .enableUrlTemplating(true)
             .apiInfo(metadata())
             .tags(new Tag("CoDE BFF", "All apis relating to CoDE BFF"));
@@ -49,21 +48,6 @@ public class SwaggerConfig {
     private ApiKey apiKey() {
         return new ApiKey("token", "Authorization", "header");
     }
-
-//    private SecurityContext securityContext() {
-//        return SecurityContext.builder()
-//                .securityReferences(defaultAuth())
-//                .forPaths(not(PathSelectors.regex("/auth.*")))
-//                .build();
-//    }
-//
-//    private List<SecurityReference> defaultAuth() {
-//        AuthorizationScope authorizationScope =
-//                new AuthorizationScope("global", "accessEverything");
-//        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-//        authorizationScopes[0] = authorizationScope
-//        return Arrays.asList(new SecurityReference("global", authorizationScopes));
-//    }
 
     private ApiInfo metadata() {
         return new ApiInfoBuilder()
