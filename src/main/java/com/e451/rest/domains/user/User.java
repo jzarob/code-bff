@@ -6,7 +6,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+
+import java.util.Collection;
 
 /**
  * Created by l659598 on 6/19/2017.
@@ -14,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Document
 @Component
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class User {
+public class User implements UserDetails {
 
     @Id
     private String id;
@@ -118,11 +122,11 @@ public class User {
     }
 
 
-//    @Override
-//    @JsonIgnore
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return null;
-//    }
+    @Override
+    @JsonIgnore
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
 
 
 }

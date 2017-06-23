@@ -4,6 +4,7 @@ import com.e451.rest.domains.assessment.AssessmentResponse;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
 import com.e451.rest.gateways.UserServiceGateway;
+import com.e451.rest.repository.UserRepository;
 import com.e451.rest.services.impl.UserServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;
@@ -11,13 +12,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.dao.RecoverableDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -30,11 +35,14 @@ public class UserServiceImplTest {
     @Mock
     private UserServiceGateway userServiceGateway;
 
+    @Mock
+    private UserRepository userRepository;
+
     private List<User> users;
 
     @Before
     public void setup() {
-        this.userService = new UserServiceImpl(userServiceGateway);
+        this.userService = new UserServiceImpl(userServiceGateway, userRepository);
 
         users = Arrays.asList(
                 new User("id1", "liz1", "conrad1", "email1", "password1"),
@@ -68,5 +76,23 @@ public class UserServiceImplTest {
         ResponseEntity response = userService.activate(guid);
 
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void whenloadUserByUserName_returnTheUserIfExists() {
+        User user = users.get(0);
+        when(userRepository.findByUsername(user.getUsername())).thenReturn(user);
+
+        User returnedUser = (User)userService.loadUserByUsername(user.getUsername());
+
+        Assert.assertNotNull(returnedUser);
+        Assert.assertEquals(user, returnedUser);
+    }
+
+    @Test(expected = RecoverableDataAccessException.class)
+    public void whenLoadUserByUserName_throwIfUserDoesNotExisit() {
+        when(userRepository.findByUsername(any(String.class))).thenThrow(new RecoverableDataAccessException(("error")));
+
+        userService.loadUserByUsername("test");
     }
 }

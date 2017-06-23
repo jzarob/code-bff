@@ -21,24 +21,23 @@ import java.util.UUID;
 public class UserServiceGatewayImpl implements UserServiceGateway {
 
     private final String userServiceUri;
-    private final RestTemplateBuilder restTemplateBuilder;
+    private final RestTemplate restTemplate;
 
     @Autowired
     public UserServiceGatewayImpl(@Value("${service-uri}") String userServiceUri,
-                                      RestTemplateBuilder restTemplateBuilder) {
+                                      RestTemplate restTemplate) {
         this.userServiceUri = userServiceUri + "/users";
-        this.restTemplateBuilder = restTemplateBuilder;
+        this.restTemplate = restTemplate;
     }
 
     @Override
     public ResponseEntity<UserResponse> createUser(User user) {
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri);
-        RestTemplate template = restTemplateBuilder.build();
         ResponseEntity response;
 
         try {
-            response = template.postForEntity(builder.build().toUriString(), user, UserResponse.class);
+            response = restTemplate.postForEntity(builder.build().toUriString(), user, UserResponse.class);
             return ResponseEntity.status(HttpStatus.CREATED).body((UserResponse)response.getBody());
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -49,10 +48,7 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
     public ResponseEntity activate(String uuid) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri)
                 .pathSegment("activate", uuid);
-
-        RestTemplate template = restTemplateBuilder.build();
-
-        return template.getForEntity(builder.build().toUriString(), ResponseEntity.class);
+        return restTemplate.getForEntity(builder.build().toUriString(), ResponseEntity.class);
     }
 
 }

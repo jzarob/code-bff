@@ -4,6 +4,7 @@ import com.e451.rest.domains.question.Question;
 import com.e451.rest.domains.question.QuestionResponse;
 import com.e451.rest.gateways.impl.QuestionServiceGatewayImpl;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -32,15 +33,12 @@ public class QuestionServiceGatewayImplTest {
     @Mock
     private RestTemplate restTemplate;
 
-    @Mock
-    private RestTemplateBuilder restTemplateBuilder;
-
     private QuestionServiceGateway questionServiceGateway;
+
 
     @Before
     public void setup() {
-        when(restTemplateBuilder.build()).thenReturn(restTemplate);
-        questionServiceGateway = new QuestionServiceGatewayImpl("fakeUri", restTemplateBuilder);
+        questionServiceGateway = new QuestionServiceGatewayImpl("fakeUri", restTemplate);
     }
 
     @Test
