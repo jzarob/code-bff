@@ -9,9 +9,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
 import java.util.Arrays;
 
 import static org.mockito.Mockito.verify;
@@ -52,6 +55,18 @@ public class AssessmentServiceGatewayImplTest {
     }
 
     @Test
+    public void whenGetAssessmentByGuidCalled_thenRestTemplateIsCalled() throws Exception   {
+        AssessmentResponse assessmentResponse = new AssessmentResponse();
+        ResponseEntity<AssessmentResponse> response = ResponseEntity.ok(assessmentResponse);
+
+        when(restTemplate.getForEntity("fakeUri/assessments/1", AssessmentResponse.class)).thenReturn(response);
+
+        assessmentServiceGateway.getAssessmentByGuid("1");
+
+        verify(restTemplate).getForEntity("fakeUri/assessments/1", AssessmentResponse.class);
+    }
+
+    @Test
     public void whenCreateAssessmentCalled_thenRestTemplateIsCalled() throws Exception {
         AssessmentResponse assessmentResponse = new AssessmentResponse();
         final Assessment assessment =
@@ -65,5 +80,26 @@ public class AssessmentServiceGatewayImplTest {
 
         verify(restTemplate).postForEntity(BASE_URI, assessment, AssessmentResponse.class);
     }
+    
+    @Test
+    public void whenUpdateAssessmentCalled_thenRestTemplateIsCalled() throws Exception {
+        AssessmentResponse assessmentResponse = new AssessmentResponse();
+
+        Assessment assessment = new Assessment("1", "firstName2", "lastName2", "test@test.com");
+
+        assessmentResponse.setAssessments(Arrays.asList(assessment));
+
+        HttpEntity<Assessment> assessmentHttpEntity = new HttpEntity<>(assessment, null);
+        ResponseEntity<AssessmentResponse> responseEntity = ResponseEntity.ok(assessmentResponse);
+
+
+        when(restTemplate.exchange(new URI("fakeUri/assessments"), HttpMethod.PUT, assessmentHttpEntity, AssessmentResponse.class)).thenReturn(responseEntity);
+
+        assessmentServiceGateway.updateAssessment(assessment);
+
+        verify(restTemplate).exchange(new URI("fakeUri/assessments"), HttpMethod.PUT, assessmentHttpEntity, AssessmentResponse.class);
+    }
+    
+    
 
 }
