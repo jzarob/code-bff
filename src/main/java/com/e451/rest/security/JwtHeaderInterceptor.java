@@ -24,8 +24,8 @@ public class JwtHeaderInterceptor implements ClientHttpRequestInterceptor {
     @Override
     public ClientHttpResponse intercept(HttpRequest httpRequest, byte[] bytes, ClientHttpRequestExecution clientHttpRequestExecution) throws IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            JwtAuthToken jwtAuth = (JwtAuthToken ) authentication;
+        if (authentication != null && authentication.isAuthenticated() && authentication instanceof JwtAuthToken) {
+            JwtAuthToken jwtAuth = (JwtAuthToken) authentication;
             httpRequest.getHeaders().set(headerName, jwtAuth.getToken());
         }
         return clientHttpRequestExecution.execute(httpRequest, bytes);
