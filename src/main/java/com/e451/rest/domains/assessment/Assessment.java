@@ -17,6 +17,7 @@ public class Assessment {
     private String createdBy;
     private Date createdDate;
     private Date modifiedDate;
+    private Boolean active;
 
     @Indexed
     private String interviewGuid;
@@ -92,6 +93,14 @@ public class Assessment {
 
     public void setInterviewGuid(String interviewGuid) {
         this.interviewGuid = interviewGuid;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
     public Assessment(String id, String firstName, String lastName, String email) {
