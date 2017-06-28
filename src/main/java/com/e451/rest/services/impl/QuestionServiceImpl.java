@@ -1,9 +1,9 @@
-package com.e451.rest.services.impl.impl;
+package com.e451.rest.services.impl;
 
 import com.e451.rest.domains.question.Question;
 import com.e451.rest.domains.question.QuestionResponse;
-import com.e451.rest.gateways.impl.QuestionServiceGateway;
-import com.e451.rest.services.impl.QuestionService;
+import com.e451.rest.gateways.QuestionServiceGateway;
+import com.e451.rest.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

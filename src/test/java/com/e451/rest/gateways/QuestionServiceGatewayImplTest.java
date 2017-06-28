@@ -1,13 +1,13 @@
-package com.e451.rest.gateways.impl;
+package com.e451.rest.gateways;
 
 import com.e451.rest.domains.question.Question;
 import com.e451.rest.domains.question.QuestionResponse;
-import com.e451.rest.gateways.impl.impl.QuestionServiceGatewayImpl;
+import com.e451.rest.gateways.impl.QuestionServiceGatewayImpl;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
@@ -33,15 +33,12 @@ public class QuestionServiceGatewayImplTest {
     @Mock
     private RestTemplate restTemplate;
 
-    @Mock
-    private RestTemplateBuilder restTemplateBuilder;
-
     private QuestionServiceGateway questionServiceGateway;
+
 
     @Before
     public void setup() {
-        when(restTemplateBuilder.build()).thenReturn(restTemplate);
-        questionServiceGateway = new QuestionServiceGatewayImpl("fakeUri", restTemplateBuilder);
+        questionServiceGateway = new QuestionServiceGatewayImpl("fakeUri", restTemplate);
     }
 
     @Test

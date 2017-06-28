@@ -2,7 +2,7 @@ package com.e451.rest.controllers;
 
 import com.e451.rest.domains.question.Question;
 import com.e451.rest.domains.question.QuestionResponse;
-import com.e451.rest.services.impl.QuestionService;
+import com.e451.rest.services.QuestionService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
