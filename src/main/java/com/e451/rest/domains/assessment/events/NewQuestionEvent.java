@@ -3,15 +3,17 @@ package com.e451.rest.domains.assessment.events;
 /**
  * Created by j747951 on 6/29/2017.
  */
-public class NewQuestionEvent {
+public class NewQuestionEvent extends WebSocketEvent {
     private String title;
     private String body;
     private String questionResponseId;
 
     public NewQuestionEvent() {
+        super();
     }
 
     public NewQuestionEvent(String title, String body, String questionResponseId) {
+        super();
         this.title = title;
         this.body = body;
         this.questionResponseId = questionResponseId;
