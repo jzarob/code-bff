@@ -6,12 +6,14 @@ import com.e451.rest.gateways.QuestionAnswerServiceGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * Created by j747951 on 6/29/2017.
  */
+@Service
 public class QuestionAnswerServiceServiceGatewayImpl implements QuestionAnswerServiceGateway {
 
     private final String assessmentsUri;
