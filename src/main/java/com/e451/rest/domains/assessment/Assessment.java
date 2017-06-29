@@ -19,6 +19,7 @@ public class Assessment {
     private String createdBy;
     private Date createdDate;
     private Date modifiedDate;
+    private Boolean active;
     private String interviewGuid;
     private List<QuestionAnswer> questionAnswers;
 
@@ -101,6 +102,14 @@ public class Assessment {
 
     public void setQuestionAnswers(List<QuestionAnswer> questionAnswers) {
         this.questionAnswers = questionAnswers;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
     public Assessment(String id, String firstName, String lastName, String email) {
