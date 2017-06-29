@@ -40,4 +40,5 @@ public class AssessmentServiceImpl implements AssessmentService {
     public ResponseEntity<AssessmentResponse> updateAssessment(Assessment assessment) {
         return assessmentServiceGateway.updateAssessment(assessment);
     }
+
 }
