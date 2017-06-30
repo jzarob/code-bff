@@ -2,7 +2,9 @@ package com.e451.rest.domains.assessment;
 
 import org.springframework.data.mongodb.core.index.Indexed;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -18,10 +20,8 @@ public class Assessment {
     private Date createdDate;
     private Date modifiedDate;
     private Boolean active;
-
-    @Indexed
     private String interviewGuid;
-
+    private List<QuestionAnswer> questionAnswers;
 
     public String getId() {
         return id;
@@ -93,6 +93,15 @@ public class Assessment {
 
     public void setInterviewGuid(String interviewGuid) {
         this.interviewGuid = interviewGuid;
+    }
+
+    public List<QuestionAnswer> getQuestionAnswers() {
+        if(questionAnswers == null) questionAnswers = new ArrayList<>();
+        return questionAnswers;
+    }
+
+    public void setQuestionAnswers(List<QuestionAnswer> questionAnswers) {
+        this.questionAnswers = questionAnswers;
     }
 
     public Boolean getActive() {
