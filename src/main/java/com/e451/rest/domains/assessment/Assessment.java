@@ -1,7 +1,6 @@
 package com.e451.rest.domains.assessment;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import org.springframework.data.mongodb.core.index.Indexed;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,7 +22,7 @@ public class Assessment {
     private Date createdDate;
     private Date modifiedDate;
     private String interviewGuid;
-    private AssessmentState assessmentState;
+    private AssessmentState state;
     private List<QuestionAnswer> questionAnswers;
 
     public String getId() {
@@ -107,12 +106,12 @@ public class Assessment {
         this.questionAnswers = questionAnswers;
     }
 
-    public AssessmentState getAssessmentState() {
-        return assessmentState;
+    public AssessmentState getState() {
+        return state;
     }
 
-    public void setAssessmentState(AssessmentState assessmentState) {
-        this.assessmentState = assessmentState;
+    public void setState(AssessmentState state) {
+        this.state = state;
     }
 
     public String getNotes() {
