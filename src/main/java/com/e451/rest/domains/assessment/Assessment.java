@@ -1,5 +1,6 @@
 package com.e451.rest.domains.assessment;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.data.mongodb.core.index.Indexed;
 
 import java.util.ArrayList;
@@ -10,17 +11,19 @@ import java.util.UUID;
 /**
  * Created by j747951 on 6/15/2017.
  */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class Assessment {
     private String id;
     private String firstName;
     private String lastName;
     private String email;
+    private String notes;
     private String modifiedBy;
     private String createdBy;
     private Date createdDate;
     private Date modifiedDate;
-    private Boolean active;
     private String interviewGuid;
+    private AssessmentState assessmentState;
     private List<QuestionAnswer> questionAnswers;
 
     public String getId() {
@@ -104,12 +107,20 @@ public class Assessment {
         this.questionAnswers = questionAnswers;
     }
 
-    public Boolean getActive() {
-        return active;
+    public AssessmentState getAssessmentState() {
+        return assessmentState;
     }
 
-    public void setActive(Boolean active) {
-        this.active = active;
+    public void setAssessmentState(AssessmentState assessmentState) {
+        this.assessmentState = assessmentState;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     public Assessment(String id, String firstName, String lastName, String email) {

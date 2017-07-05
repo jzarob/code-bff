@@ -1,8 +1,11 @@
 package com.e451.rest.domains.assessment;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
  * Created by j747951 on 6/29/2017.
  */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class QuestionAnswer {
     private String title;
     private String body;

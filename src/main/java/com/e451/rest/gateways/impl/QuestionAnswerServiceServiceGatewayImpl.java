@@ -20,7 +20,7 @@ public class QuestionAnswerServiceServiceGatewayImpl implements QuestionAnswerSe
     private final RestTemplate restTemplate;
 
     @Autowired
-    public QuestionAnswerServiceServiceGatewayImpl(@Value("{service-uri") String serviceUri, RestTemplate restTemplate) {
+    public QuestionAnswerServiceServiceGatewayImpl(@Value("${service-uri}") String serviceUri, RestTemplate restTemplate) {
         this.assessmentsUri = serviceUri + "/assessments";
         this.restTemplate = restTemplate;
     }
