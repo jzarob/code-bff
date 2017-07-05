@@ -4,6 +4,7 @@ import com.e451.rest.domains.assessment.QuestionAnswer;
 import com.e451.rest.domains.assessment.QuestionAnswerResponse;
 import com.e451.rest.domains.assessment.events.AnswerQuestionEvent;
 import com.e451.rest.domains.assessment.events.NewQuestionEvent;
+import com.e451.rest.services.AssessmentService;
 import com.e451.rest.services.QuestionAnswerService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -31,11 +32,14 @@ public class AssessmentsSocketControllerTest {
     @Mock
     private QuestionAnswerService questionAnswerService;
 
+    @Mock
+    private AssessmentService assessmentService;
+
     private List<QuestionAnswer> questionAnswerList;
 
     @Before
     public void setup() {
-        assessmentsSocketController = new AssessmentsSocketController(questionAnswerService);
+        assessmentsSocketController = new AssessmentsSocketController(questionAnswerService, assessmentService);
         questionAnswerList = Arrays.asList(
                 new QuestionAnswer("Q1", "body1", "answer1", "1"),
                 new QuestionAnswer("Q2", "body2", "answer2", "2"),
