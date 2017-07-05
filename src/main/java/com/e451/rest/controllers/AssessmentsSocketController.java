@@ -1,8 +1,11 @@
 package com.e451.rest.controllers;
 
+import com.e451.rest.domains.assessment.Assessment;
+import com.e451.rest.domains.assessment.AssessmentState;
 import com.e451.rest.domains.assessment.QuestionAnswer;
 import com.e451.rest.domains.assessment.QuestionAnswerResponse;
 import com.e451.rest.domains.assessment.events.*;
+import com.e451.rest.services.AssessmentService;
 import com.e451.rest.services.QuestionAnswerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,12 +24,15 @@ import org.springframework.stereotype.Controller;
 public class AssessmentsSocketController {
 
     private QuestionAnswerService questionAnswerService;
+    private AssessmentService assessmentService;
 
     private static final Logger LOG = LoggerFactory.getLogger(AssessmentsSocketController.class);
 
     @Autowired
-    public AssessmentsSocketController(QuestionAnswerService questionAnswerService) {
+    public AssessmentsSocketController(QuestionAnswerService questionAnswerService,
+                                       AssessmentService assessmentService) {
         this.questionAnswerService = questionAnswerService;
+        this.assessmentService = assessmentService;
     }
 
 
@@ -74,7 +80,10 @@ public class AssessmentsSocketController {
 
         LOG.info("received end-assessment event for assessment " + assessmentGuid);
 
-        // Close the assessment
+        Assessment current = assessmentService.getAssessmentByGuid(assessmentGuid).getBody().getAssessments().get(0);
+        current.setAssessmentState(AssessmentState.NOTES);
+        assessmentService.updateAssessment(current);
+
         return event;
     }
 
