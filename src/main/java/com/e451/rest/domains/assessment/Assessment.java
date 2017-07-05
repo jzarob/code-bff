@@ -22,6 +22,7 @@ public class Assessment {
     private Date createdDate;
     private Date modifiedDate;
     private String interviewGuid;
+    @JsonInclude(value=JsonInclude.Include.ALWAYS)
     private AssessmentState state;
     private List<QuestionAnswer> questionAnswers;
 
