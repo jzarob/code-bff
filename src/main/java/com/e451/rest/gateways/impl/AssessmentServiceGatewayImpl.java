@@ -6,7 +6,6 @@ import com.e451.rest.domains.assessment.AssessmentStateResponse;
 import com.e451.rest.gateways.AssessmentServiceGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.xml.ws.Response;
 
 /**
  * Created by j747951 on 6/15/2017.
