@@ -2,6 +2,7 @@ package com.e451.rest.services;
 
 import com.e451.rest.domains.assessment.Assessment;
 import com.e451.rest.domains.assessment.AssessmentResponse;
+import com.e451.rest.domains.assessment.AssessmentStateResponse;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
 public interface AssessmentService {
     ResponseEntity<AssessmentResponse> getAssessments();
     ResponseEntity<AssessmentResponse> getAssessmentByGuid(String guid);
+    ResponseEntity<AssessmentStateResponse> getAssessmentStateByGuid(String guid);
     ResponseEntity<AssessmentResponse> createAssessment(Assessment assessment);
     ResponseEntity<AssessmentResponse> updateAssessment(Assessment assessment);
 }
