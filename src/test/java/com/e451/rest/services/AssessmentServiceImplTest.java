@@ -15,7 +15,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
@@ -77,7 +76,7 @@ public class AssessmentServiceImplTest {
     @Test
     public void whenGetAssessmentStateByGuid_returnAssessmentStateResponse() {
         AssessmentStateResponse assessmentStateResponse = new AssessmentStateResponse();
-        assessmentStateResponse.setAssessmentState(AssessmentState.NOTES);
+        assessmentStateResponse.setState(AssessmentState.NOTES);
         ResponseEntity<AssessmentStateResponse> gatewayResponse =
                 new ResponseEntity<AssessmentStateResponse>(assessmentStateResponse, HttpStatus.OK);
 
@@ -85,7 +84,7 @@ public class AssessmentServiceImplTest {
 
         ResponseEntity<AssessmentStateResponse> response = assessmentService.getAssessmentStateByGuid("1");
 
-        Assert.assertEquals(AssessmentState.NOTES, response.getBody().getAssessmentState());
+        Assert.assertEquals(AssessmentState.NOTES, response.getBody().getState());
     }
 
     @Test

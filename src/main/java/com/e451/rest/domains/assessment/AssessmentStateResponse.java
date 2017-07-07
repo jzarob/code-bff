@@ -4,13 +4,13 @@ package com.e451.rest.domains.assessment;
  * Created by e384873 on 7/7/2017.
  */
 public class AssessmentStateResponse {
-    private AssessmentState assessmentState;
+    private AssessmentState state;
 
-    public AssessmentState getAssessmentState() {
-        return assessmentState;
+    public AssessmentState getState() {
+        return state;
     }
 
-    public void setAssessmentState(AssessmentState assessmentState) {
-        this.assessmentState = assessmentState;
+    public void setState(AssessmentState state) {
+        this.state = state;
     }
 }

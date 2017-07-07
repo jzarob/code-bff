@@ -75,7 +75,7 @@ public class AssessmentsControllerTest {
     @Test
     public void whenGetAssessmentStateByGuid_returnAssessmentState() {
         AssessmentStateResponse assessmentStateResponse = new AssessmentStateResponse();
-        assessmentStateResponse.setAssessmentState(AssessmentState.NOTES);
+        assessmentStateResponse.setState(AssessmentState.NOTES);
 
         ResponseEntity<AssessmentStateResponse> responseEntity = ResponseEntity.ok(assessmentStateResponse);
 
@@ -83,7 +83,7 @@ public class AssessmentsControllerTest {
 
         ResponseEntity<AssessmentStateResponse> response = assessmentsController.getAssessmentStateByGuid("1");
 
-        Assert.assertEquals(AssessmentState.NOTES, response.getBody().getAssessmentState());
+        Assert.assertEquals(AssessmentState.NOTES, response.getBody().getState());
     }
     
     @Test
