@@ -2,6 +2,8 @@ package com.e451.rest.services;
 
 import com.e451.rest.domains.assessment.Assessment;
 import com.e451.rest.domains.assessment.AssessmentResponse;
+import com.e451.rest.domains.assessment.AssessmentState;
+import com.e451.rest.domains.assessment.AssessmentStateResponse;
 import com.e451.rest.gateways.AssessmentServiceGateway;
 import com.e451.rest.services.impl.AssessmentServiceImpl;
 import org.junit.Assert;
@@ -17,6 +19,7 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 /**
@@ -69,6 +72,20 @@ public class AssessmentServiceImplTest {
         ResponseEntity<AssessmentResponse> response = assessmentService.getAssessmentByGuid("1");
 
         Assert.assertTrue(response.getBody().getAssessments().size() == 1);
+    }
+
+    @Test
+    public void whenGetAssessmentStateByGuid_returnAssessmentStateResponse() {
+        AssessmentStateResponse assessmentStateResponse = new AssessmentStateResponse();
+        assessmentStateResponse.setAssessmentState(AssessmentState.NOTES);
+        ResponseEntity<AssessmentStateResponse> gatewayResponse =
+                new ResponseEntity<AssessmentStateResponse>(assessmentStateResponse, HttpStatus.OK);
+
+        when(assessmentServiceGateway.getAssessmentStateByGuid("1")).thenReturn(gatewayResponse);
+
+        ResponseEntity<AssessmentStateResponse> response = assessmentService.getAssessmentStateByGuid("1");
+
+        Assert.assertEquals(AssessmentState.NOTES, response.getBody().getAssessmentState());
     }
 
     @Test
