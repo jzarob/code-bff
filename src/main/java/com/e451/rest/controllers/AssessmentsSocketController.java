@@ -80,10 +80,6 @@ public class AssessmentsSocketController {
 
         LOG.info("received end-assessment event for assessment " + assessmentGuid);
 
-        Assessment current = assessmentService.getAssessmentByGuid(assessmentGuid).getBody().getAssessments().get(0);
-        current.setState(AssessmentState.NOTES);
-        assessmentService.updateAssessment(current);
-
         return event;
     }
 
