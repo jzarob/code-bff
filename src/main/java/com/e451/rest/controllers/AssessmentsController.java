@@ -2,6 +2,7 @@ package com.e451.rest.controllers;
 
 import com.e451.rest.domains.assessment.Assessment;
 import com.e451.rest.domains.assessment.AssessmentResponse;
+import com.e451.rest.domains.assessment.AssessmentStateResponse;
 import com.e451.rest.services.AssessmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,11 @@ public class AssessmentsController {
     @GetMapping("/{guid}")
     public ResponseEntity<AssessmentResponse> getAssessmentByGuid(@PathVariable String guid) {
         return assessmentService.getAssessmentByGuid(guid);
+    }
+
+    @GetMapping("/{guid}/status")
+    public ResponseEntity<AssessmentStateResponse> getAssessmentStateByGuid(@PathVariable("guid") String guid) {
+        return assessmentService.getAssessmentStateByGuid(guid);
     }
 
     @PostMapping

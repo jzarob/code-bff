@@ -2,6 +2,8 @@ package com.e451.rest.controllers;
 
 import com.e451.rest.domains.assessment.Assessment;
 import com.e451.rest.domains.assessment.AssessmentResponse;
+import com.e451.rest.domains.assessment.AssessmentState;
+import com.e451.rest.domains.assessment.AssessmentStateResponse;
 import com.e451.rest.services.AssessmentService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -68,6 +70,20 @@ public class AssessmentsControllerTest {
 
         Assert.assertEquals(1, response.getBody().getAssessments().size());
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void whenGetAssessmentStateByGuid_returnAssessmentState() {
+        AssessmentStateResponse assessmentStateResponse = new AssessmentStateResponse();
+        assessmentStateResponse.setState(AssessmentState.NOTES);
+
+        ResponseEntity<AssessmentStateResponse> responseEntity = ResponseEntity.ok(assessmentStateResponse);
+
+        when(assessmentService.getAssessmentStateByGuid("1")).thenReturn(responseEntity);
+
+        ResponseEntity<AssessmentStateResponse> response = assessmentsController.getAssessmentStateByGuid("1");
+
+        Assert.assertEquals(AssessmentState.NOTES, response.getBody().getState());
     }
     
     @Test
