@@ -55,6 +55,18 @@ public class QuestionServiceGatewayImplTest {
     }
 
     @Test
+    public void whenGetQuestionsPageableCalled_thenRestTemplateIsCalled() throws Exception {
+        QuestionResponse questionResponse = new QuestionResponse();
+        ResponseEntity<QuestionResponse> response = ResponseEntity.ok(questionResponse);
+
+        when(restTemplate.getForEntity("fakeUri/questions?page=0&size=20&property=title", QuestionResponse.class)).thenReturn(response);
+
+        questionServiceGateway.getQuestions(0,20,"title");
+
+        verify(restTemplate).getForEntity("fakeUri/questions?page=0&size=20&property=title", QuestionResponse.class);
+    }
+
+    @Test
     public void whenGetQuestionCalled_thenRestTemplateIsCalled() throws Exception {
         QuestionResponse questionResponse = new QuestionResponse();
         ResponseEntity<QuestionResponse> response = ResponseEntity.ok(questionResponse);

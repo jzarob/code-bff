@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.awt.print.Pageable;
+
 /**
  * Created by e384873 on 6/9/2017.
  */
@@ -34,6 +36,15 @@ public class QuestionServiceGatewayImpl implements QuestionServiceGateway {
     @Override
     public ResponseEntity<QuestionResponse> getQuestions() {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(questionServiceUri);
+        return restTemplate.getForEntity(builder.build().toUriString(), QuestionResponse.class);
+    }
+
+    @Override
+    public ResponseEntity<QuestionResponse> getQuestions(int page, int size, String property) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(questionServiceUri)
+                .queryParam("page", page)
+                .queryParam("size", size)
+                .queryParam("property", property);
         return restTemplate.getForEntity(builder.build().toUriString(), QuestionResponse.class);
     }
 

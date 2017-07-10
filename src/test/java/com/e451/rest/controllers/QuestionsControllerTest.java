@@ -61,6 +61,23 @@ public class QuestionsControllerTest {
     }
 
     @Test
+    public void whenGetQuestionsPageable_returnListOfQuestions() {
+        QuestionResponse questionResponse = new QuestionResponse();
+        questionResponse.setQuestions(questions);
+        questionResponse.setPaginationTotalElements((long) questions.size());
+
+        ResponseEntity<QuestionResponse> responseEntity = ResponseEntity.ok(questionResponse);
+
+        when(questionService.getQuestions(0, 20, "title")).thenReturn(responseEntity);
+
+        ResponseEntity<QuestionResponse> response = questionsController.getQuestions(0, 20, "title");
+
+        Assert.assertEquals(this.questions.size(), response.getBody().getQuestions().size());
+        Assert.assertEquals(this.questions.size(), (long) response.getBody().getPaginationTotalElements());
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
     public void whenGetLanguages_returnListOfLanguages() {
         LanguageResponse languageResponse = new LanguageResponse();
         languageResponse.setLanguages(languages);

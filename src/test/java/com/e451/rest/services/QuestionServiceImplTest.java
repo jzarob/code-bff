@@ -59,6 +59,23 @@ public class QuestionServiceImplTest {
     }
 
     @Test
+    public void whenGetQuestionsPageable_returnlistOfQuestions() {
+        QuestionResponse questionResponse = new QuestionResponse();
+        questionResponse.setQuestions(this.questions);
+        questionResponse.setPaginationTotalElements((long) this.questions.size());
+
+        ResponseEntity<QuestionResponse> gatewayResponse =
+                new ResponseEntity<QuestionResponse>(questionResponse, HttpStatus.OK);
+
+        when(questionServiceGateway.getQuestions(0, 20, "title")).thenReturn(gatewayResponse);
+
+        ResponseEntity<QuestionResponse> response = questionService.getQuestions(0, 20, "title");
+
+        Assert.assertEquals(this.questions.size(), response.getBody().getQuestions().size());
+        Assert.assertEquals(this.questions.size(), (long) response.getBody().getPaginationTotalElements());
+    }
+
+    @Test
     public void whenGetQuestion_returnListOfSizeOne() {
         QuestionResponse questionResponse = new QuestionResponse();
         questionResponse.setQuestions(Arrays.asList(this.questions.get(0)));
