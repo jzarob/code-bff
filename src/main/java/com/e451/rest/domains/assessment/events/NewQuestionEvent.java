@@ -7,6 +7,7 @@ public class NewQuestionEvent extends WebSocketEvent {
     private String title;
     private String body;
     private String questionResponseId;
+    private String language;
 
     public NewQuestionEvent() {
         super();
@@ -41,5 +42,13 @@ public class NewQuestionEvent extends WebSocketEvent {
 
     public void setQuestionResponseId(String questionResponseId) {
         this.questionResponseId = questionResponseId;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 }

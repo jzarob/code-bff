@@ -1,5 +1,6 @@
 package com.e451.rest.controllers;
 
+import com.e451.rest.domains.language.LanguageResponse;
 import com.e451.rest.domains.question.Question;
 import com.e451.rest.domains.question.QuestionResponse;
 import com.e451.rest.services.QuestionService;
@@ -40,6 +41,11 @@ public class QuestionsController {
     @GetMapping("/{id}")
     public ResponseEntity<QuestionResponse> getQuestion(@PathVariable String id) {
         return questionService.getQuestion(id);
+    }
+
+    @GetMapping("/languages")
+    public ResponseEntity<LanguageResponse> getLanguages() {
+        return questionService.getLanguages();
     }
 
     @DeleteMapping("/{id}")

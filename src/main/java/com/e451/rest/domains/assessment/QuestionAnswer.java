@@ -11,6 +11,7 @@ public class QuestionAnswer {
     private String body;
     private String answer;
     private String questionResponseId;
+    private String language;
 
     public QuestionAnswer() {
     }
@@ -20,6 +21,11 @@ public class QuestionAnswer {
         this.body = body;
         this.answer = answer;
         this.questionResponseId = questionResponseId;
+    }
+
+    public QuestionAnswer(String title, String body, String answer, String questionResponseId, String language) {
+        this(title, body, answer, questionResponseId);
+        this.language = language;
     }
 
     public String getTitle() {
@@ -52,5 +58,13 @@ public class QuestionAnswer {
 
     public void setQuestionResponseId(String questionResponseId) {
         this.questionResponseId = questionResponseId;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 }
