@@ -1,5 +1,6 @@
 package com.e451.rest.gateways.impl;
 
+import com.e451.rest.domains.language.LanguageResponse;
 import com.e451.rest.domains.question.Question;
 import com.e451.rest.domains.question.QuestionResponse;
 import com.e451.rest.gateways.QuestionServiceGateway;
@@ -40,6 +41,12 @@ public class QuestionServiceGatewayImpl implements QuestionServiceGateway {
     public ResponseEntity<QuestionResponse> getQuestion(String id) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(questionServiceUri).pathSegment(id);
         return restTemplate.getForEntity(builder.build().toUriString(), QuestionResponse.class);
+    }
+
+    @Override
+    public ResponseEntity<LanguageResponse> getLanguages() {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(questionServiceUri).pathSegment("languages");
+        return restTemplate.getForEntity(builder.build().toUriString(), LanguageResponse.class);
     }
 
     @Override

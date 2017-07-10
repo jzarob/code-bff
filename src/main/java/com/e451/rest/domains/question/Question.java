@@ -8,22 +8,15 @@ import java.util.Date;
 public class Question {
 
     private String id;
-
     private String body;
-
     private String suggestedAnswer;
-
     private String title;
-
     private String createdBy;
-
     private Date createdDate;
-
     private String modifiedBy;
-
     private Date modifiedDate;
-
     private Integer difficulty;
+    private String language;
 
     public Question() {
 
@@ -109,6 +102,13 @@ public class Question {
         this.difficulty = difficulty;
     }
 
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -127,6 +127,8 @@ public class Question {
         if (modifiedBy != null ? !modifiedBy.equals(question1.modifiedBy) : question1.modifiedBy != null) return false;
         if (modifiedDate != null ? !modifiedDate.equals(question1.modifiedDate) : question1.modifiedDate != null)
             return false;
-        return difficulty.equals(question1.difficulty);
+        if (!difficulty.equals(question1.difficulty)) return false;
+        return language.equals(question1.language);
     }
+
 }

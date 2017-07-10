@@ -67,7 +67,7 @@ public class AssessmentsSocketController {
         LOG.info("received answer-question event for assessment " + assessmentGuid);
 
         QuestionAnswer questionAnswer = new QuestionAnswer(event.getTitle(), event.getBody(), event.getAnswer(),
-                event.getQuestionResponseId());
+                event.getQuestionResponseId(), event.getLanguage());
         questionAnswerService.updateQuestionAnswer(questionAnswer, assessmentGuid);
         // Populate additional fields on the question response
         return event;

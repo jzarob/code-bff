@@ -1,5 +1,6 @@
 package com.e451.rest.gateways;
 
+import com.e451.rest.domains.language.LanguageResponse;
 import com.e451.rest.domains.question.Question;
 import com.e451.rest.domains.question.QuestionResponse;
 import com.e451.rest.gateways.impl.QuestionServiceGatewayImpl;
@@ -63,6 +64,18 @@ public class QuestionServiceGatewayImplTest {
         questionServiceGateway.getQuestion("1");
 
         verify(restTemplate).getForEntity("fakeUri/questions/1", QuestionResponse.class);
+    }
+
+    @Test
+    public void whenGetLanguagesCalled_thenRestTemplateIsCalled() throws Exception {
+        LanguageResponse languageResponse = new LanguageResponse();
+        ResponseEntity<LanguageResponse> response = ResponseEntity.ok(languageResponse);
+
+        when(restTemplate.getForEntity("fakeUri/questions/languages", LanguageResponse.class)).thenReturn(response);
+
+        questionServiceGateway.getLanguages();
+
+        verify(restTemplate).getForEntity("fakeUri/questions/languages", LanguageResponse.class);
     }
 
     @Test
