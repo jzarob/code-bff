@@ -58,6 +58,24 @@ public class AssessmentServiceImplTest {
 
         Assert.assertEquals(3, response.getBody().getAssessments().size());
     }
+
+    @Test
+    public void whenGetAssessmentsPageable_returnListOfAssessments() {
+
+        AssessmentResponse assessmentResponse = new AssessmentResponse();
+        assessmentResponse.setAssessments(this.assessments);
+        assessmentResponse.setPaginationTotalElements((long) this.assessments.size());
+
+        ResponseEntity<AssessmentResponse> gatewayResponse =
+                new ResponseEntity<>(assessmentResponse, HttpStatus.OK);
+
+        when(assessmentServiceGateway.getAssessments(0, 20, "lastName")).thenReturn(gatewayResponse);
+
+        ResponseEntity<AssessmentResponse> response = assessmentService.getAssessments(0, 20, "lastName");
+
+        Assert.assertEquals(this.assessments.size(), response.getBody().getAssessments().size());
+        Assert.assertEquals(this.assessments.size(), (long) response.getBody().getPaginationTotalElements());
+    }
     
     @Test
     public void whenGetAssessmentByGuid_returnsListOfSingleAssessment() {

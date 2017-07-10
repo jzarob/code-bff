@@ -58,6 +58,25 @@ public class AssessmentsControllerTest {
     }
 
     @Test
+    public void whenGetAssessmentsPageable_returnListOfAssessments() {
+
+         AssessmentResponse assessmentResponse = new AssessmentResponse();
+         assessmentResponse.setAssessments(assessments);
+         assessmentResponse.setPaginationTotalElements((long) assessments.size());
+
+         ResponseEntity<AssessmentResponse> responseEntity = ResponseEntity.ok(assessmentResponse);
+
+         when(assessmentService.getAssessments(0, 20, "title")).thenReturn(responseEntity);
+
+         ResponseEntity<AssessmentResponse> response = assessmentsController.getAssessments(0, 20, "title");
+
+         Assert.assertEquals(this.assessments.size(), response.getBody().getAssessments().size());
+         Assert.assertEquals(this.assessments.size(), (long) response.getBody().getPaginationTotalElements());
+         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+
+    }
+
+    @Test
     public void whenGetAssessmentByGuid_returnListOfSingleAssessment() {
         AssessmentResponse assessmentResponse = new AssessmentResponse();
         assessmentResponse.setAssessments(Arrays.asList(assessments.get(0)));

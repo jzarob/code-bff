@@ -59,7 +59,7 @@ public class QuestionServiceImplTest {
     }
 
     @Test
-    public void whenGetQuestionsPageable_returnlistOfQuestions() {
+    public void whenGetQuestionsPageable_returnListOfQuestions() {
         QuestionResponse questionResponse = new QuestionResponse();
         questionResponse.setQuestions(this.questions);
         questionResponse.setPaginationTotalElements((long) this.questions.size());

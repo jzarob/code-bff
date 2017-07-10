@@ -29,6 +29,13 @@ public class AssessmentsController {
         return assessmentService.getAssessments();
     }
 
+    @GetMapping(params = {"page", "size", "property"})
+    public ResponseEntity<AssessmentResponse> getAssessments(@RequestParam("page") int page,
+                                                             @RequestParam("size") int size,
+                                                             @RequestParam("property") String property) {
+        return assessmentService.getAssessments(page, size, property);
+    }
+
     @GetMapping("/{guid}")
     public ResponseEntity<AssessmentResponse> getAssessmentByGuid(@PathVariable String guid) {
         return assessmentService.getAssessmentByGuid(guid);
