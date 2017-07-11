@@ -73,7 +73,6 @@ public class AssessmentsControllerTest {
          Assert.assertEquals(this.assessments.size(), response.getBody().getAssessments().size());
          Assert.assertEquals(this.assessments.size(), (long) response.getBody().getPaginationTotalElements());
          Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-
     }
 
     @Test
