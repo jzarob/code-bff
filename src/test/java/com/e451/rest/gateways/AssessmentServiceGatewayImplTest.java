@@ -52,6 +52,18 @@ public class AssessmentServiceGatewayImplTest {
     }
 
     @Test
+    public void whenGetAssessmentsPageableCalled_thenRestTemplateIsCalled() throws Exception {
+        AssessmentResponse assessmentResponse = new AssessmentResponse();
+        ResponseEntity<AssessmentResponse> response = ResponseEntity.ok(assessmentResponse);
+
+        when(restTemplate.getForEntity("fakeUri/assessments?page=0&size=20&property=lastName", AssessmentResponse.class)).thenReturn(response);
+
+        assessmentServiceGateway.getAssessments(0, 20, "lastName");
+
+        verify(restTemplate).getForEntity("fakeUri/assessments?page=0&size=20&property=lastName", AssessmentResponse.class);
+    }
+
+    @Test
     public void whenGetAssessmentByGuidCalled_thenRestTemplateIsCalled() throws Exception {
         AssessmentResponse assessmentResponse = new AssessmentResponse();
         ResponseEntity<AssessmentResponse> response = ResponseEntity.ok(assessmentResponse);

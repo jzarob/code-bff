@@ -6,8 +6,6 @@ import com.e451.rest.domains.question.QuestionResponse;
 import com.e451.rest.gateways.QuestionServiceGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +32,15 @@ public class QuestionServiceGatewayImpl implements QuestionServiceGateway {
     @Override
     public ResponseEntity<QuestionResponse> getQuestions() {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(questionServiceUri);
+        return restTemplate.getForEntity(builder.build().toUriString(), QuestionResponse.class);
+    }
+
+    @Override
+    public ResponseEntity<QuestionResponse> getQuestions(int page, int size, String property) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(questionServiceUri)
+                .queryParam("page", page)
+                .queryParam("size", size)
+                .queryParam("property", property);
         return restTemplate.getForEntity(builder.build().toUriString(), QuestionResponse.class);
     }
 

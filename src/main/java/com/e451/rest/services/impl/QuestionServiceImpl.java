@@ -28,6 +28,11 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    public ResponseEntity<QuestionResponse> getQuestions(int page, int size, String property) {
+        return questionServiceGateway.getQuestions(page, size, property);
+    }
+
+    @Override
     public ResponseEntity<LanguageResponse> getLanguages() { return questionServiceGateway.getLanguages(); }
 
     @Override

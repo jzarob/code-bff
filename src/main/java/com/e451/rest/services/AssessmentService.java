@@ -12,6 +12,7 @@ import java.util.List;
  */
 public interface AssessmentService {
     ResponseEntity<AssessmentResponse> getAssessments();
+    ResponseEntity<AssessmentResponse> getAssessments(int page, int size, String property);
     ResponseEntity<AssessmentResponse> getAssessmentByGuid(String guid);
     ResponseEntity<AssessmentStateResponse> getAssessmentStateByGuid(String guid);
     ResponseEntity<AssessmentResponse> createAssessment(Assessment assessment);

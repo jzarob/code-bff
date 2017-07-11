@@ -28,6 +28,13 @@ public class QuestionsController {
         return questionService.getQuestions();
     }
 
+    @GetMapping(params = {"page", "size", "property"})
+    public ResponseEntity<QuestionResponse> getQuestions(@RequestParam("page") int page,
+                                                         @RequestParam("size") int size,
+                                                         @RequestParam("property") String property) {
+        return questionService.getQuestions(page, size, property);
+    }
+
     @PutMapping
     public ResponseEntity<QuestionResponse> updateQuestion(@RequestBody Question question) {
         return questionService.updateQuestion(question);

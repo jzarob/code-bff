@@ -30,6 +30,11 @@ public class AssessmentServiceImpl implements AssessmentService {
     }
 
     @Override
+    public ResponseEntity<AssessmentResponse> getAssessments(int page, int size, String property) {
+        return assessmentServiceGateway.getAssessments(page, size, property);
+    }
+
+    @Override
     public ResponseEntity<AssessmentResponse> getAssessmentByGuid(String guid) { return assessmentServiceGateway.getAssessmentByGuid(guid); }
 
     @Override
