@@ -2,6 +2,8 @@ package com.e451.rest.services;
 
 import com.e451.rest.domains.assessment.Assessment;
 import com.e451.rest.domains.assessment.AssessmentResponse;
+import com.e451.rest.domains.assessment.AssessmentState;
+import com.e451.rest.domains.assessment.AssessmentStateResponse;
 import com.e451.rest.gateways.AssessmentServiceGateway;
 import com.e451.rest.services.impl.AssessmentServiceImpl;
 import org.junit.Assert;
@@ -13,10 +15,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 /**
@@ -56,6 +58,24 @@ public class AssessmentServiceImplTest {
 
         Assert.assertEquals(3, response.getBody().getAssessments().size());
     }
+
+    @Test
+    public void whenGetAssessmentsPageable_returnListOfAssessments() {
+
+        AssessmentResponse assessmentResponse = new AssessmentResponse();
+        assessmentResponse.setAssessments(this.assessments);
+        assessmentResponse.setPaginationTotalElements((long) this.assessments.size());
+
+        ResponseEntity<AssessmentResponse> gatewayResponse =
+                new ResponseEntity<>(assessmentResponse, HttpStatus.OK);
+
+        when(assessmentServiceGateway.getAssessments(0, 20, "lastName")).thenReturn(gatewayResponse);
+
+        ResponseEntity<AssessmentResponse> response = assessmentService.getAssessments(0, 20, "lastName");
+
+        Assert.assertEquals(this.assessments.size(), response.getBody().getAssessments().size());
+        Assert.assertEquals(this.assessments.size(), (long) response.getBody().getPaginationTotalElements());
+    }
     
     @Test
     public void whenGetAssessmentByGuid_returnsListOfSingleAssessment() {
@@ -69,6 +89,20 @@ public class AssessmentServiceImplTest {
         ResponseEntity<AssessmentResponse> response = assessmentService.getAssessmentByGuid("1");
 
         Assert.assertTrue(response.getBody().getAssessments().size() == 1);
+    }
+
+    @Test
+    public void whenGetAssessmentStateByGuid_returnAssessmentStateResponse() {
+        AssessmentStateResponse assessmentStateResponse = new AssessmentStateResponse();
+        assessmentStateResponse.setState(AssessmentState.NOTES);
+        ResponseEntity<AssessmentStateResponse> gatewayResponse =
+                new ResponseEntity<AssessmentStateResponse>(assessmentStateResponse, HttpStatus.OK);
+
+        when(assessmentServiceGateway.getAssessmentStateByGuid("1")).thenReturn(gatewayResponse);
+
+        ResponseEntity<AssessmentStateResponse> response = assessmentService.getAssessmentStateByGuid("1");
+
+        Assert.assertEquals(AssessmentState.NOTES, response.getBody().getState());
     }
 
     @Test

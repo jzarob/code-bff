@@ -2,6 +2,7 @@ package com.e451.rest.services.impl;
 
 import com.e451.rest.domains.assessment.Assessment;
 import com.e451.rest.domains.assessment.AssessmentResponse;
+import com.e451.rest.domains.assessment.AssessmentStateResponse;
 import com.e451.rest.gateways.AssessmentServiceGateway;
 import com.e451.rest.services.AssessmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,17 @@ public class AssessmentServiceImpl implements AssessmentService {
     }
 
     @Override
+    public ResponseEntity<AssessmentResponse> getAssessments(int page, int size, String property) {
+        return assessmentServiceGateway.getAssessments(page, size, property);
+    }
+
+    @Override
     public ResponseEntity<AssessmentResponse> getAssessmentByGuid(String guid) { return assessmentServiceGateway.getAssessmentByGuid(guid); }
+
+    @Override
+    public ResponseEntity<AssessmentStateResponse> getAssessmentStateByGuid(String guid) {
+        return assessmentServiceGateway.getAssessmentStateByGuid(guid);
+    }
 
     @Override
     public ResponseEntity<AssessmentResponse> createAssessment(Assessment assessment) {
@@ -40,4 +51,5 @@ public class AssessmentServiceImpl implements AssessmentService {
     public ResponseEntity<AssessmentResponse> updateAssessment(Assessment assessment) {
         return assessmentServiceGateway.updateAssessment(assessment);
     }
+
 }

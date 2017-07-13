@@ -1,5 +1,6 @@
 package com.e451.rest.gateways;
 
+import com.e451.rest.domains.language.LanguageResponse;
 import com.e451.rest.domains.question.Question;
 import com.e451.rest.domains.question.QuestionResponse;
 import com.e451.rest.gateways.impl.QuestionServiceGatewayImpl;
@@ -54,6 +55,18 @@ public class QuestionServiceGatewayImplTest {
     }
 
     @Test
+    public void whenGetQuestionsPageableCalled_thenRestTemplateIsCalled() throws Exception {
+        QuestionResponse questionResponse = new QuestionResponse();
+        ResponseEntity<QuestionResponse> response = ResponseEntity.ok(questionResponse);
+
+        when(restTemplate.getForEntity("fakeUri/questions?page=0&size=20&property=title", QuestionResponse.class)).thenReturn(response);
+
+        questionServiceGateway.getQuestions(0,20,"title");
+
+        verify(restTemplate).getForEntity("fakeUri/questions?page=0&size=20&property=title", QuestionResponse.class);
+    }
+
+    @Test
     public void whenGetQuestionCalled_thenRestTemplateIsCalled() throws Exception {
         QuestionResponse questionResponse = new QuestionResponse();
         ResponseEntity<QuestionResponse> response = ResponseEntity.ok(questionResponse);
@@ -63,6 +76,18 @@ public class QuestionServiceGatewayImplTest {
         questionServiceGateway.getQuestion("1");
 
         verify(restTemplate).getForEntity("fakeUri/questions/1", QuestionResponse.class);
+    }
+
+    @Test
+    public void whenGetLanguagesCalled_thenRestTemplateIsCalled() throws Exception {
+        LanguageResponse languageResponse = new LanguageResponse();
+        ResponseEntity<LanguageResponse> response = ResponseEntity.ok(languageResponse);
+
+        when(restTemplate.getForEntity("fakeUri/questions/languages", LanguageResponse.class)).thenReturn(response);
+
+        questionServiceGateway.getLanguages();
+
+        verify(restTemplate).getForEntity("fakeUri/questions/languages", LanguageResponse.class);
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.e451.rest.services;
 
+import com.e451.rest.domains.language.LanguageResponse;
 import com.e451.rest.domains.question.Question;
 import com.e451.rest.domains.question.QuestionResponse;
 import com.e451.rest.gateways.QuestionServiceGateway;
@@ -30,6 +31,7 @@ public class QuestionServiceImplTest {
     private QuestionServiceGateway questionServiceGateway;
 
     private List<Question> questions;
+    private List<String> languages;
 
     @Before
     public void setup() {
@@ -38,6 +40,8 @@ public class QuestionServiceImplTest {
                 new Question("1", "q1", "a1", "t1", 5),
                 new Question("2", "q2", "a2", "t1", 4)
                 );
+
+        languages = Arrays.asList("Java", "Python", "SQL");
     }
 
     @Test
@@ -55,6 +59,23 @@ public class QuestionServiceImplTest {
     }
 
     @Test
+    public void whenGetQuestionsPageable_returnListOfQuestions() {
+        QuestionResponse questionResponse = new QuestionResponse();
+        questionResponse.setQuestions(this.questions);
+        questionResponse.setPaginationTotalElements((long) this.questions.size());
+
+        ResponseEntity<QuestionResponse> gatewayResponse =
+                new ResponseEntity<QuestionResponse>(questionResponse, HttpStatus.OK);
+
+        when(questionServiceGateway.getQuestions(0, 20, "title")).thenReturn(gatewayResponse);
+
+        ResponseEntity<QuestionResponse> response = questionService.getQuestions(0, 20, "title");
+
+        Assert.assertEquals(this.questions.size(), response.getBody().getQuestions().size());
+        Assert.assertEquals(this.questions.size(), (long) response.getBody().getPaginationTotalElements());
+    }
+
+    @Test
     public void whenGetQuestion_returnListOfSizeOne() {
         QuestionResponse questionResponse = new QuestionResponse();
         questionResponse.setQuestions(Arrays.asList(this.questions.get(0)));
@@ -66,6 +87,20 @@ public class QuestionServiceImplTest {
         ResponseEntity<QuestionResponse> response = questionService.getQuestion("1");
 
         Assert.assertTrue(response.getBody().getQuestions().size() == 1);
+    }
+
+    @Test
+    public void whenGetLanguages_returnsListOfLanguages() {
+        LanguageResponse languageResponse = new LanguageResponse();
+        languageResponse.setLanguages(this.languages);
+
+        ResponseEntity<LanguageResponse> gatewayResponse = new ResponseEntity<LanguageResponse>(languageResponse, HttpStatus.OK);
+
+        when(questionServiceGateway.getLanguages()).thenReturn(gatewayResponse);
+
+        ResponseEntity<LanguageResponse> response = questionService.getLanguages();
+
+        Assert.assertTrue(response.getBody().getLanguages().size() == 3);
     }
 
     @Test

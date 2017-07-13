@@ -1,12 +1,11 @@
 package com.e451.rest.gateways.impl;
 
+import com.e451.rest.domains.language.LanguageResponse;
 import com.e451.rest.domains.question.Question;
 import com.e451.rest.domains.question.QuestionResponse;
 import com.e451.rest.gateways.QuestionServiceGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -37,9 +36,24 @@ public class QuestionServiceGatewayImpl implements QuestionServiceGateway {
     }
 
     @Override
+    public ResponseEntity<QuestionResponse> getQuestions(int page, int size, String property) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(questionServiceUri)
+                .queryParam("page", page)
+                .queryParam("size", size)
+                .queryParam("property", property);
+        return restTemplate.getForEntity(builder.build().toUriString(), QuestionResponse.class);
+    }
+
+    @Override
     public ResponseEntity<QuestionResponse> getQuestion(String id) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(questionServiceUri).pathSegment(id);
         return restTemplate.getForEntity(builder.build().toUriString(), QuestionResponse.class);
+    }
+
+    @Override
+    public ResponseEntity<LanguageResponse> getLanguages() {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(questionServiceUri).pathSegment("languages");
+        return restTemplate.getForEntity(builder.build().toUriString(), LanguageResponse.class);
     }
 
     @Override

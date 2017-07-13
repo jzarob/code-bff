@@ -2,6 +2,8 @@ package com.e451.rest.controllers;
 
 import com.e451.rest.domains.assessment.Assessment;
 import com.e451.rest.domains.assessment.AssessmentResponse;
+import com.e451.rest.domains.assessment.AssessmentState;
+import com.e451.rest.domains.assessment.AssessmentStateResponse;
 import com.e451.rest.services.AssessmentService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -56,6 +58,24 @@ public class AssessmentsControllerTest {
     }
 
     @Test
+    public void whenGetAssessmentsPageable_returnListOfAssessments() {
+
+         AssessmentResponse assessmentResponse = new AssessmentResponse();
+         assessmentResponse.setAssessments(assessments);
+         assessmentResponse.setPaginationTotalElements((long) assessments.size());
+
+         ResponseEntity<AssessmentResponse> responseEntity = ResponseEntity.ok(assessmentResponse);
+
+         when(assessmentService.getAssessments(0, 20, "title")).thenReturn(responseEntity);
+
+         ResponseEntity<AssessmentResponse> response = assessmentsController.getAssessments(0, 20, "title");
+
+         Assert.assertEquals(this.assessments.size(), response.getBody().getAssessments().size());
+         Assert.assertEquals(this.assessments.size(), (long) response.getBody().getPaginationTotalElements());
+         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
     public void whenGetAssessmentByGuid_returnListOfSingleAssessment() {
         AssessmentResponse assessmentResponse = new AssessmentResponse();
         assessmentResponse.setAssessments(Arrays.asList(assessments.get(0)));
@@ -68,6 +88,20 @@ public class AssessmentsControllerTest {
 
         Assert.assertEquals(1, response.getBody().getAssessments().size());
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void whenGetAssessmentStateByGuid_returnAssessmentState() {
+        AssessmentStateResponse assessmentStateResponse = new AssessmentStateResponse();
+        assessmentStateResponse.setState(AssessmentState.NOTES);
+
+        ResponseEntity<AssessmentStateResponse> responseEntity = ResponseEntity.ok(assessmentStateResponse);
+
+        when(assessmentService.getAssessmentStateByGuid("1")).thenReturn(responseEntity);
+
+        ResponseEntity<AssessmentStateResponse> response = assessmentsController.getAssessmentStateByGuid("1");
+
+        Assert.assertEquals(AssessmentState.NOTES, response.getBody().getState());
     }
     
     @Test

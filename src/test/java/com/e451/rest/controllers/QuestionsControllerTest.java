@@ -1,5 +1,6 @@
 package com.e451.rest.controllers;
 
+import com.e451.rest.domains.language.LanguageResponse;
 import com.e451.rest.domains.question.Question;
 import com.e451.rest.domains.question.QuestionResponse;
 import com.e451.rest.services.QuestionService;
@@ -30,6 +31,7 @@ public class QuestionsControllerTest {
     private QuestionService questionService;
 
     private List<Question> questions;
+    private List<String> languages;
 
     @Before
     public void setup() {
@@ -39,6 +41,8 @@ public class QuestionsControllerTest {
           new Question("2", "q2", "a2", "t2", 3),
           new Question("3", "q3", "a3", "t3", 3)
         );
+
+        languages = Arrays.asList("Java", "Python", "SQL");
     }
 
     @Test
@@ -53,6 +57,38 @@ public class QuestionsControllerTest {
         ResponseEntity<QuestionResponse> response = questionsController.getQuestions();
 
         Assert.assertEquals(3, response.getBody().getQuestions().size());
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void whenGetQuestionsPageable_returnListOfQuestions() {
+        QuestionResponse questionResponse = new QuestionResponse();
+        questionResponse.setQuestions(questions);
+        questionResponse.setPaginationTotalElements((long) questions.size());
+
+        ResponseEntity<QuestionResponse> responseEntity = ResponseEntity.ok(questionResponse);
+
+        when(questionService.getQuestions(0, 20, "title")).thenReturn(responseEntity);
+
+        ResponseEntity<QuestionResponse> response = questionsController.getQuestions(0, 20, "title");
+
+        Assert.assertEquals(this.questions.size(), response.getBody().getQuestions().size());
+        Assert.assertEquals(this.questions.size(), (long) response.getBody().getPaginationTotalElements());
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void whenGetLanguages_returnListOfLanguages() {
+        LanguageResponse languageResponse = new LanguageResponse();
+        languageResponse.setLanguages(languages);
+
+        ResponseEntity<LanguageResponse> responseEntity = ResponseEntity.ok(languageResponse);
+
+        when(questionService.getLanguages()).thenReturn(responseEntity);
+
+        ResponseEntity<LanguageResponse> response = questionsController.getLanguages();
+
+        Assert.assertEquals(3, response.getBody().getLanguages().size());
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 

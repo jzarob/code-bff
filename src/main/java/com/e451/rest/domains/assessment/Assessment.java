@@ -1,27 +1,30 @@
 package com.e451.rest.domains.assessment;
 
-import org.springframework.data.mongodb.core.index.Indexed;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by j747951 on 6/15/2017.
  */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class Assessment {
     private String id;
     private String firstName;
     private String lastName;
     private String email;
+    private String notes;
     private String modifiedBy;
     private String createdBy;
     private Date createdDate;
     private Date modifiedDate;
-    private Boolean active;
-
-    @Indexed
     private String interviewGuid;
-
+    @JsonInclude(value=JsonInclude.Include.ALWAYS)
+    private AssessmentState state;
+    private List<QuestionAnswer> questionAnswers;
 
     public String getId() {
         return id;
@@ -95,12 +98,29 @@ public class Assessment {
         this.interviewGuid = interviewGuid;
     }
 
-    public Boolean getActive() {
-        return active;
+    public List<QuestionAnswer> getQuestionAnswers() {
+        if(questionAnswers == null) questionAnswers = new ArrayList<>();
+        return questionAnswers;
     }
 
-    public void setActive(Boolean active) {
-        this.active = active;
+    public void setQuestionAnswers(List<QuestionAnswer> questionAnswers) {
+        this.questionAnswers = questionAnswers;
+    }
+
+    public AssessmentState getState() {
+        return state;
+    }
+
+    public void setState(AssessmentState state) {
+        this.state = state;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     public Assessment(String id, String firstName, String lastName, String email) {

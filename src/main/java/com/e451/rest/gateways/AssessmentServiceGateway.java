@@ -2,6 +2,7 @@ package com.e451.rest.gateways;
 
 import com.e451.rest.domains.assessment.Assessment;
 import com.e451.rest.domains.assessment.AssessmentResponse;
+import com.e451.rest.domains.assessment.AssessmentStateResponse;
 import org.springframework.http.ResponseEntity;
 
 /**
@@ -9,7 +10,9 @@ import org.springframework.http.ResponseEntity;
  */
 public interface AssessmentServiceGateway {
     ResponseEntity<AssessmentResponse> getAssessments();
+    ResponseEntity<AssessmentResponse> getAssessments(int page, int size, String property);
     ResponseEntity<AssessmentResponse> getAssessmentByGuid(String guid);
+    ResponseEntity<AssessmentStateResponse> getAssessmentStateByGuid(String guid);
     ResponseEntity<AssessmentResponse> createAssessment(Assessment assessment);
     ResponseEntity<AssessmentResponse> updateAssessment(Assessment assessment);
 }

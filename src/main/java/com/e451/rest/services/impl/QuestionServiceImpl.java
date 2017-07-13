@@ -1,5 +1,6 @@
 package com.e451.rest.services.impl;
 
+import com.e451.rest.domains.language.LanguageResponse;
 import com.e451.rest.domains.question.Question;
 import com.e451.rest.domains.question.QuestionResponse;
 import com.e451.rest.gateways.QuestionServiceGateway;
@@ -25,6 +26,14 @@ public class QuestionServiceImpl implements QuestionService {
     public ResponseEntity<QuestionResponse> getQuestions() {
         return questionServiceGateway.getQuestions();
     }
+
+    @Override
+    public ResponseEntity<QuestionResponse> getQuestions(int page, int size, String property) {
+        return questionServiceGateway.getQuestions(page, size, property);
+    }
+
+    @Override
+    public ResponseEntity<LanguageResponse> getLanguages() { return questionServiceGateway.getLanguages(); }
 
     @Override
     public ResponseEntity<QuestionResponse> getQuestion(String id) {

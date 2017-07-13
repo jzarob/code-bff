@@ -2,6 +2,7 @@ package com.e451.rest.gateways;
 
 import com.e451.rest.domains.assessment.Assessment;
 import com.e451.rest.domains.assessment.AssessmentResponse;
+import com.e451.rest.domains.assessment.AssessmentStateResponse;
 import com.e451.rest.gateways.impl.AssessmentServiceGatewayImpl;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,7 +52,19 @@ public class AssessmentServiceGatewayImplTest {
     }
 
     @Test
-    public void whenGetAssessmentByGuidCalled_thenRestTemplateIsCalled() throws Exception   {
+    public void whenGetAssessmentsPageableCalled_thenRestTemplateIsCalled() throws Exception {
+        AssessmentResponse assessmentResponse = new AssessmentResponse();
+        ResponseEntity<AssessmentResponse> response = ResponseEntity.ok(assessmentResponse);
+
+        when(restTemplate.getForEntity("fakeUri/assessments?page=0&size=20&property=lastName", AssessmentResponse.class)).thenReturn(response);
+
+        assessmentServiceGateway.getAssessments(0, 20, "lastName");
+
+        verify(restTemplate).getForEntity("fakeUri/assessments?page=0&size=20&property=lastName", AssessmentResponse.class);
+    }
+
+    @Test
+    public void whenGetAssessmentByGuidCalled_thenRestTemplateIsCalled() throws Exception {
         AssessmentResponse assessmentResponse = new AssessmentResponse();
         ResponseEntity<AssessmentResponse> response = ResponseEntity.ok(assessmentResponse);
 
@@ -60,6 +73,19 @@ public class AssessmentServiceGatewayImplTest {
         assessmentServiceGateway.getAssessmentByGuid("1");
 
         verify(restTemplate).getForEntity("fakeUri/assessments/1", AssessmentResponse.class);
+    }
+
+    @Test
+    public void whenGetAssessmentStateByGuidCalled_thenRestTemplateIsCalled() throws Exception {
+        AssessmentStateResponse assessmentStateResponse = new AssessmentStateResponse();
+        ResponseEntity<AssessmentStateResponse> response = ResponseEntity.ok(assessmentStateResponse);
+
+        when(restTemplate.getForEntity("fakeUri/assessments/1/status", AssessmentStateResponse.class))
+                .thenReturn(response);
+
+        assessmentServiceGateway.getAssessmentStateByGuid("1");
+
+        verify(restTemplate).getForEntity("fakeUri/assessments/1/status", AssessmentStateResponse.class);
     }
 
     @Test
