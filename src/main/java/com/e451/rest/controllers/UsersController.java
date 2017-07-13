@@ -25,6 +25,11 @@ public class UsersController {
         this.userService = userService;
     }
 
+    @GetMapping
+    public ResponseEntity<UserResponse> getUsers() {
+        return userService.getUsers();
+    }
+
     @PostMapping
     public ResponseEntity<UserResponse> createUser(@RequestBody User user) {
         return userService.createUser(user);

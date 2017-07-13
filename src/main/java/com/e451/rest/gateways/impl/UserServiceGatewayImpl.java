@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.xml.ws.Response;
 import java.util.UUID;
 
 /**
@@ -28,6 +29,19 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
                                       RestTemplate restTemplate) {
         this.userServiceUri = userServiceUri + "/users";
         this.restTemplate = restTemplate;
+    }
+
+    @Override
+    public ResponseEntity<UserResponse> getUsers() {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri);
+        ResponseEntity response;
+
+        try {
+            response = restTemplate.getForEntity(builder.build().toUriString(), UserResponse.class);
+            return ResponseEntity.ok((UserResponse) response.getBody());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @Override

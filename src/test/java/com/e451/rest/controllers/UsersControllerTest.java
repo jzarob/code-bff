@@ -13,6 +13,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import javax.xml.ws.Response;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -40,6 +41,22 @@ public class UsersControllerTest {
                 new User("id2", "liz2", "conrad2", "email2", "password2"),
                 new User("id3", "liz3", "conrad3", "email3", "password3")
         );
+    }
+
+    @Test
+    public void whenGetUses_returnListOfUsers() {
+        UserResponse userResponse = new UserResponse();
+        userResponse.setUsers(this.users);
+
+        ResponseEntity<UserResponse> responseEntity =
+                ResponseEntity.ok().body(userResponse);
+
+        when(userService.getUsers()).thenReturn(responseEntity);
+
+        ResponseEntity<UserResponse> response = controller.getUsers();
+
+        Assert.assertEquals(users.size(), response.getBody().getUsers().size());
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
