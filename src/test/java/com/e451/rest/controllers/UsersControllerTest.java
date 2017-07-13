@@ -70,4 +70,29 @@ public class UsersControllerTest {
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
+    @Test
+    public void whenUpdateUser_returnsUpdatedUser() {
+        UserResponse userResponse = new UserResponse();
+        User user = users.get(0);
+        String originalFirstName = user.getFirstName();
+        user.setFirstName("firstName");
+        userResponse.setUsers(Arrays.asList(user));
+        when(userService.updateUser(user)).thenReturn(ResponseEntity.status(HttpStatus.OK).body(userResponse));
+        ResponseEntity<UserResponse> response = controller.updateUser(user);
+
+        Assert.assertEquals(user, response.getBody().getUsers().get(0));
+        Assert.assertNotEquals(originalFirstName, response.getBody().getUsers().get(0).getFirstName());
+    }
+
+    @Test
+    public void whenGetActiveUser_returnsActiveUser() {
+        UserResponse userResponse = new UserResponse();
+        User user = users.get(0);
+        userResponse.setUsers(Arrays.asList(user));
+        when(userService.getActiveUser()).thenReturn(ResponseEntity.status(HttpStatus.OK).body(userResponse));
+        ResponseEntity<UserResponse> response = controller.getActiveUer();
+
+        Assert.assertEquals(user, response.getBody().getUsers().get(0));
+    }
+
 }

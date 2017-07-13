@@ -30,10 +30,16 @@ public class UsersController {
         return userService.createUser(user);
     }
 
+    @PutMapping
+    public ResponseEntity<UserResponse> updateUser(@RequestBody User user) { return userService.updateUser(user); }
+
     @GetMapping("/activate/{guid}")
     public ResponseEntity activateUser(@PathVariable("guid") String guid) {
         return userService.activate(guid);
     }
+
+    @GetMapping("/activeUser")
+    public ResponseEntity<UserResponse> getActiveUer() { return userService.getActiveUser(); }
 
 }
 

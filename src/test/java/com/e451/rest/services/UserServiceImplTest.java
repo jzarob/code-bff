@@ -39,6 +39,8 @@ public class UserServiceImplTest {
     private UserRepository userRepository;
 
     private List<User> users;
+    private UserResponse userResponse;
+    private User user;
 
     @Before
     public void setup() {
@@ -49,13 +51,13 @@ public class UserServiceImplTest {
                 new User("id2", "liz2", "conrad2", "email2", "password2"),
                 new User("id3", "liz3", "conrad3", "email3", "password3")
         );
+        userResponse = new UserResponse();
+        user = users.get(0);
+        userResponse.setUsers(Arrays.asList(user));
     }
 
     @Test
     public void whenCreateUser_returnNewUser() {
-        UserResponse userResponse = new UserResponse();
-        User user = users.get(0);
-        userResponse.setUsers(Arrays.asList(user));
 
         ResponseEntity<UserResponse> gatewayRespone =
                 ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
@@ -94,5 +96,23 @@ public class UserServiceImplTest {
         when(userRepository.findByUsername(any(String.class))).thenThrow(new RecoverableDataAccessException(("error")));
 
         userService.loadUserByUsername("test");
+    }
+
+    @Test
+    public void whenUpdateUser_returnsUpdatedUsser() {
+        when(userServiceGateway.updateUser(user)).thenReturn(ResponseEntity.status(HttpStatus.OK).body(userResponse));
+
+        ResponseEntity<UserResponse> response = userService.updateUser(user);
+
+        Assert.assertEquals(user, response.getBody().getUsers().get(0));
+    }
+
+    @Test
+    public void whenGetActiveUser_returnsActiveUser () {
+        when(userServiceGateway.getActiveUser()).thenReturn(ResponseEntity.status(HttpStatus.OK).body(userResponse));
+
+        ResponseEntity<UserResponse> response = userService.getActiveUser();
+
+        Assert.assertEquals(user, response.getBody().getUsers().get(0));
     }
 }

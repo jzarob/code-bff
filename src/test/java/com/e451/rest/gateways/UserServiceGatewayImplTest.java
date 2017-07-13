@@ -3,19 +3,20 @@ package com.e451.rest.gateways;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
 import com.e451.rest.gateways.impl.UserServiceGatewayImpl;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import java.util.Arrays;
 import java.util.UUID;
-
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
@@ -30,10 +31,12 @@ public class UserServiceGatewayImplTest {
     private UserServiceGateway userServiceGateway;
 
     private static final String BASE_URI = "fakeUri/users";
+    private User user;
 
     @Before
     public void setup() {
         userServiceGateway = new UserServiceGatewayImpl("fakeUri", restTemplate);
+        user = new User("id", "fname", "lname", "e@mail.com", "Password7");
     }
 
     @Test
@@ -64,6 +67,36 @@ public class UserServiceGatewayImplTest {
         userServiceGateway.activate(uuid);
 
         verify(restTemplate).getForEntity(builder.build().toUriString(), ResponseEntity.class);
+    }
+
+    @Test
+    public void whenUpdateUser_thenReturnUpdatedUser() {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(BASE_URI);
+        HttpEntity<User> requestEntity = new HttpEntity<>(user, null);
+        UserResponse userResponse = new UserResponse();
+        userResponse.setUsers(Arrays.asList(user));
+
+        when(restTemplate.exchange(builder.build().toUriString(), HttpMethod.PUT, requestEntity, UserResponse.class))
+                .thenReturn(ResponseEntity.status(HttpStatus.OK).body(userResponse));
+        ResponseEntity<UserResponse> response = userServiceGateway.updateUser(user);
+
+        Assert.assertEquals(user, response.getBody().getUsers().get(0));
+        verify(restTemplate).exchange(builder.build().toUriString(), HttpMethod.PUT, requestEntity, UserResponse.class);
+    }
+
+    @Test
+    public void whenGetActiveUser_thenReturnActiveUser() {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(BASE_URI)
+                .pathSegment("activeUser");
+        UserResponse userResponse = new UserResponse();
+        userResponse.setUsers(Arrays.asList(user));
+
+        when(restTemplate.getForEntity(builder.build().toUriString(), UserResponse.class))
+                .thenReturn(ResponseEntity.status(HttpStatus.OK).body(userResponse));
+
+        userServiceGateway.getActiveUser();
+
+        verify(restTemplate).getForEntity(builder.build().toUriString(), UserResponse.class);
     }
 
 }

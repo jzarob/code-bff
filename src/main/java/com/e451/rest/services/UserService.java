@@ -12,6 +12,8 @@ import java.util.UUID;
  */
 public interface UserService {
     ResponseEntity<UserResponse> createUser(User user);
+    ResponseEntity<UserResponse> updateUser(User user);
     ResponseEntity activate(String uuid);
     UserDetails loadUserByUsername(String username);
+    ResponseEntity<UserResponse> getActiveUser();
 }

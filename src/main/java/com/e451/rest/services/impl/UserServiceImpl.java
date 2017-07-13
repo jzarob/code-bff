@@ -38,6 +38,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public ResponseEntity<UserResponse> updateUser(User user) { return userServiceGateway.updateUser(user); }
+
+    @Override
     public ResponseEntity activate(String guid) {
         return userServiceGateway.activate(guid);
     }
@@ -51,6 +54,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         return user;
     }
+
+    @Override
+    public ResponseEntity<UserResponse> getActiveUser() { return userServiceGateway.getActiveUser(); }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
