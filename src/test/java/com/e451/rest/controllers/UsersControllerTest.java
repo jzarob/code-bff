@@ -87,4 +87,15 @@ public class UsersControllerTest {
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
+    @Test
+    public void whenDeleteUser_returnNoContent() {
+        ResponseEntity responseEntity = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
+        when(userService.deleteUser("1")).thenReturn(responseEntity);
+
+        ResponseEntity response = controller.deleteUser("1");
+
+        Assert.assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+    }
+
 }

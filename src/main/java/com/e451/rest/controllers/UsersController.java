@@ -30,6 +30,11 @@ public class UsersController {
         return userService.getUsers();
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteUser(@PathVariable("id") String id) {
+        return userService.deleteUser(id);
+    }
+
     @PostMapping
     public ResponseEntity<UserResponse> createUser(@RequestBody User user) {
         return userService.createUser(user);

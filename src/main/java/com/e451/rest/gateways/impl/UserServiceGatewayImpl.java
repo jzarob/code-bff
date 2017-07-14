@@ -6,6 +6,8 @@ import com.e451.rest.gateways.UserServiceGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -42,6 +44,15 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @Override
+    public ResponseEntity deleteUser(String id) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri).pathSegment(id);
+
+        HttpEntity requestEntity = new HttpEntity(null, null);
+
+        return restTemplate.exchange(builder.build().toUri(), HttpMethod.DELETE, requestEntity, Object.class);
     }
 
     @Override

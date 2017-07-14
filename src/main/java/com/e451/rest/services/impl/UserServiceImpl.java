@@ -43,6 +43,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public ResponseEntity deleteUser(String id) { return userServiceGateway.deleteUser(id); }
+
+    @Override
     public ResponseEntity activate(String guid) {
         return userServiceGateway.activate(guid);
     }

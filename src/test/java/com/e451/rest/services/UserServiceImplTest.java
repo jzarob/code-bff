@@ -111,4 +111,15 @@ public class UserServiceImplTest {
 
         userService.loadUserByUsername("test");
     }
+
+    @Test
+    public void whenDeleteUser_returnResponseEntity() {
+        ResponseEntity gatewayResponse = new ResponseEntity(null, HttpStatus.NO_CONTENT);
+
+        when(userServiceGateway.deleteUser("1")).thenReturn(gatewayResponse);
+
+        ResponseEntity response = userService.deleteUser("1");
+
+        Assert.assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+    }
 }

@@ -12,5 +12,6 @@ import java.util.UUID;
 public interface UserServiceGateway {
     ResponseEntity<UserResponse> getUsers();
     ResponseEntity<UserResponse> createUser(User user);
+    ResponseEntity deleteUser(String id);
     ResponseEntity activate(String uuid);
 }

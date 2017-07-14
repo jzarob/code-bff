@@ -9,10 +9,14 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -84,6 +88,19 @@ public class UserServiceGatewayImplTest {
         userServiceGateway.activate(uuid);
 
         verify(restTemplate).getForEntity(builder.build().toUriString(), ResponseEntity.class);
+    }
+
+    @Test
+    public void whenDeleteUserCalled_thenRestTempalteIsCalled() throws Exception {
+        URI uri = new URI("fakeUri/users/1");
+
+        HttpEntity request = new HttpEntity(null, null);
+
+        when(restTemplate.exchange(uri, HttpMethod.DELETE, request, Object.class)).thenReturn(ResponseEntity.status(HttpStatus.NO_CONTENT).build());
+
+        userServiceGateway.deleteUser("1");
+
+        verify(restTemplate).exchange(uri, HttpMethod.DELETE, request, Object.class);
     }
 
 }
