@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.xml.ws.Response;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -65,6 +66,21 @@ public class UserServiceImplTest {
         ResponseEntity<UserResponse> response = userService.createUser(user);
 
         Assert.assertEquals(1, response.getBody().getUsers().size());
+    }
+
+    @Test
+    public void whenGetUsers_returnListOfUsers() {
+        UserResponse userResponse =  new UserResponse();
+        userResponse.setUsers(users);
+
+        ResponseEntity<UserResponse> gatewayResponse =
+                ResponseEntity.status(HttpStatus.OK).body(userResponse);
+
+        when(userServiceGateway.getUsers()).thenReturn(gatewayResponse);
+
+        ResponseEntity<UserResponse> response = userService.getUsers();
+
+        Assert.assertEquals(users.size(), response.getBody().getUsers().size());
     }
 
     @Test

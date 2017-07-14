@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public ResponseEntity<UserResponse> getUsers() {
-        return null;
+        return userServiceGateway.getUsers();
     }
 
     @Override

@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.Mockito.when;
@@ -30,6 +31,12 @@ public class UserServiceGatewayImplTest {
     private UserServiceGateway userServiceGateway;
 
     private static final String BASE_URI = "fakeUri/users";
+
+    private static final List<User> users = Arrays.asList(
+            new User("id1", "liz", "conrad", "zil@darnoc.com", "passw0rd"),
+            new User("id2", "liz", "conrad", "zil@darnoc.com", "passw0rd"),
+            new User("id3", "liz", "conrad", "zil@darnoc.com", "passw0rd")
+    );
 
     @Before
     public void setup() {
@@ -49,6 +56,19 @@ public class UserServiceGatewayImplTest {
         userServiceGateway.createUser(user);
 
         verify(restTemplate).postForEntity(BASE_URI, user, UserResponse.class);
+    }
+
+    @Test
+    public  void whenGetUsersCalled_thenRestTemplateIsCalled() throws Exception {
+        UserResponse userResponse = new UserResponse();
+        userResponse.setUsers(users);
+        ResponseEntity<UserResponse> response = ResponseEntity.ok(userResponse);
+
+        when(restTemplate.getForEntity(BASE_URI, UserResponse.class)).thenReturn(response);
+
+        userServiceGateway.getUsers();
+
+        verify(restTemplate).getForEntity(BASE_URI, UserResponse.class);
     }
 
     @Test
