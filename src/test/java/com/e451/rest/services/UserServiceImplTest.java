@@ -1,6 +1,5 @@
 package com.e451.rest.services;
 
-import com.e451.rest.domains.assessment.AssessmentResponse;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
 import com.e451.rest.gateways.UserServiceGateway;
@@ -17,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.xml.ws.Response;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
