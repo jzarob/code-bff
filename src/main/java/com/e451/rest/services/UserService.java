@@ -12,6 +12,7 @@ import java.util.UUID;
  */
 public interface UserService {
     ResponseEntity<UserResponse> getUsers();
+    ResponseEntity<UserResponse> getUsers(int page, int size, String property);
     ResponseEntity<UserResponse> createUser(User user);
     ResponseEntity deleteUser(String id);
     ResponseEntity activate(String uuid);

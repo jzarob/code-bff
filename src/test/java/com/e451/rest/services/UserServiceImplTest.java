@@ -82,6 +82,23 @@ public class UserServiceImplTest {
     }
 
     @Test
+    public void whenGetUsersPageable_returnListOfUsers() {
+        UserResponse questionResponse = new UserResponse();
+        questionResponse.setUsers(this.users);
+        questionResponse.setPaginationTotalElements((long) this.users.size());
+
+        ResponseEntity<UserResponse> gatewayResponse =
+                new ResponseEntity<UserResponse>(questionResponse, HttpStatus.OK);
+
+        when(userServiceGateway.getUsers(0, 20, "title")).thenReturn(gatewayResponse);
+
+        ResponseEntity<UserResponse> response = userService.getUsers(0, 20, "title");
+
+        Assert.assertEquals(this.users.size(), response.getBody().getUsers().size());
+        Assert.assertEquals(this.users.size(), (long) response.getBody().getPaginationTotalElements());
+    }
+
+    @Test
     public void whenActivateUser_returnOK() {
         String guid = UUID.randomUUID().toString();
 

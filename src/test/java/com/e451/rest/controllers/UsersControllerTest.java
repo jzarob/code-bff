@@ -42,7 +42,7 @@ public class UsersControllerTest {
     }
 
     @Test
-    public void whenGetUses_returnListOfUsers() {
+    public void whenGetUsers_returnListOfUsers() {
         UserResponse userResponse = new UserResponse();
         userResponse.setUsers(this.users);
 
@@ -54,6 +54,23 @@ public class UsersControllerTest {
         ResponseEntity<UserResponse> response = controller.getUsers();
 
         Assert.assertEquals(users.size(), response.getBody().getUsers().size());
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void whenGetUsersPageable_returnListOfUsers() {
+        UserResponse userResponse = new UserResponse();
+        userResponse.setUsers(users);
+        userResponse.setPaginationTotalElements((long) users.size());
+
+        ResponseEntity<UserResponse> responseEntity = ResponseEntity.ok(userResponse);
+
+        when(userService.getUsers(0, 20, "lastName")).thenReturn(responseEntity);
+
+        ResponseEntity<UserResponse> response = controller.getUsers(0, 20, "lastName");
+
+        Assert.assertEquals(this.users.size(), response.getBody().getUsers().size());
+        Assert.assertEquals(this.users.size(), (long) response.getBody().getPaginationTotalElements());
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 

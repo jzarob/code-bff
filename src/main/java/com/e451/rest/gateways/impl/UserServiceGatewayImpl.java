@@ -45,6 +45,15 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
     }
 
     @Override
+    public ResponseEntity<UserResponse> getUsers(int page, int size, String property) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri)
+                .queryParam("page", page)
+                .queryParam("size", size)
+                .queryParam("property", property);
+        return restTemplate.getForEntity(builder.build().toUriString(), UserResponse.class);
+    }
+
+    @Override
     public ResponseEntity deleteUser(String id) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri).pathSegment(id);
 

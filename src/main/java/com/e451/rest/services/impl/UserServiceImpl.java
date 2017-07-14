@@ -38,6 +38,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public ResponseEntity<UserResponse> getUsers(int page, int size, String property) {
+        return userServiceGateway.getUsers(page, size, property);
+    }
+
+    @Override
     public ResponseEntity<UserResponse> createUser(User user) {
         return userServiceGateway.createUser(user);
     }

@@ -76,6 +76,18 @@ public class UserServiceGatewayImplTest {
     }
 
     @Test
+    public void whenGetUsersPageableCalled_thenRestTemplateIsCalled() throws Exception {
+        UserResponse questionResponse = new UserResponse();
+        ResponseEntity<UserResponse> response = ResponseEntity.ok(questionResponse);
+
+        when(restTemplate.getForEntity("fakeUri/users?page=0&size=20&property=firstName", UserResponse.class)).thenReturn(response);
+
+        userServiceGateway.getUsers(0,20,"firstName");
+
+        verify(restTemplate).getForEntity("fakeUri/users?page=0&size=20&property=firstName", UserResponse.class);
+    }
+
+    @Test
     public void whenActivateCalled_thenRestTemplateIsCalled() throws Exception {
         String uuid = UUID.randomUUID().toString();
 
