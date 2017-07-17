@@ -25,6 +25,23 @@ public class UsersController {
         this.userService = userService;
     }
 
+    @GetMapping
+    public ResponseEntity<UserResponse> getUsers() {
+        return userService.getUsers();
+    }
+
+    @GetMapping(params = {"page", "size", "property"})
+    public ResponseEntity<UserResponse> getUsers(@RequestParam("page") int page,
+                                                 @RequestParam("size") int size,
+                                                 @RequestParam("property") String property) {
+        return  userService.getUsers(page, size, property);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteUser(@PathVariable("id") String id) {
+        return userService.deleteUser(id);
+    }
+
     @PostMapping
     public ResponseEntity<UserResponse> createUser(@RequestBody User user) {
         return userService.createUser(user);

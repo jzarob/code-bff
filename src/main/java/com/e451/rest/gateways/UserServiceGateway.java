@@ -10,6 +10,9 @@ import java.util.UUID;
  * Created by l659598 on 6/20/2017.
  */
 public interface UserServiceGateway {
+    ResponseEntity<UserResponse> getUsers();
+    ResponseEntity<UserResponse> getUsers(int page, int size, String property);
     ResponseEntity<UserResponse> createUser(User user);
+    ResponseEntity deleteUser(String id);
     ResponseEntity activate(String uuid);
 }
