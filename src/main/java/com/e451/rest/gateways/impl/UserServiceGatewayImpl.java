@@ -50,7 +50,14 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
                 .queryParam("page", page)
                 .queryParam("size", size)
                 .queryParam("property", property);
-        return restTemplate.getForEntity(builder.build().toUriString(), UserResponse.class);
+        ResponseEntity response;
+
+        try {
+            response = restTemplate.getForEntity(builder.build().toUriString(), UserResponse.class);
+            return ResponseEntity.ok((UserResponse) response.getBody());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @Override
