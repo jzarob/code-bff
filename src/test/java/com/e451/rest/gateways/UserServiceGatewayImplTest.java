@@ -16,7 +16,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import java.net.URI;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
@@ -33,6 +35,12 @@ public class UserServiceGatewayImplTest {
 
     private static final String BASE_URI = "fakeUri/users";
     private User user;
+
+    private static final List<User> users = Arrays.asList(
+            new User("id1", "liz", "conrad", "zil@darnoc.com", "passw0rd"),
+            new User("id2", "liz", "conrad", "zil@darnoc.com", "passw0rd"),
+            new User("id3", "liz", "conrad", "zil@darnoc.com", "passw0rd")
+    );
 
     @Before
     public void setup() {
@@ -53,6 +61,31 @@ public class UserServiceGatewayImplTest {
         userServiceGateway.createUser(user);
 
         verify(restTemplate).postForEntity(BASE_URI, user, UserResponse.class);
+    }
+
+    @Test
+    public  void whenGetUsersCalled_thenRestTemplateIsCalled() throws Exception {
+        UserResponse userResponse = new UserResponse();
+        userResponse.setUsers(users);
+        ResponseEntity<UserResponse> response = ResponseEntity.ok(userResponse);
+
+        when(restTemplate.getForEntity(BASE_URI, UserResponse.class)).thenReturn(response);
+
+        userServiceGateway.getUsers();
+
+        verify(restTemplate).getForEntity(BASE_URI, UserResponse.class);
+    }
+
+    @Test
+    public void whenGetUsersPageableCalled_thenRestTemplateIsCalled() throws Exception {
+        UserResponse userResponse = new UserResponse();
+        ResponseEntity<UserResponse> response = ResponseEntity.ok(userResponse);
+
+        when(restTemplate.getForEntity("fakeUri/users?page=0&size=20&property=firstName", UserResponse.class)).thenReturn(response);
+
+        userServiceGateway.getUsers(0,20,"firstName");
+
+        verify(restTemplate).getForEntity("fakeUri/users?page=0&size=20&property=firstName", UserResponse.class);
     }
 
     @Test
@@ -116,6 +149,18 @@ public class UserServiceGatewayImplTest {
         userServiceGateway.getActiveUser();
 
         verify(restTemplate).getForEntity(builder.build().toUriString(), UserResponse.class);
+    }
+
+    public void whenDeleteUserCalled_thenRestTempalteIsCalled() throws Exception {
+        URI uri = new URI("fakeUri/users/1");
+
+        HttpEntity request = new HttpEntity(null, null);
+
+        when(restTemplate.exchange(uri, HttpMethod.DELETE, request, Object.class)).thenReturn(ResponseEntity.status(HttpStatus.NO_CONTENT).build());
+
+        userServiceGateway.deleteUser("1");
+
+        verify(restTemplate).exchange(uri, HttpMethod.DELETE, request, Object.class);
     }
 
 }

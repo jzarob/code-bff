@@ -34,6 +34,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public ResponseEntity<UserResponse> getUsers() {
+        return userServiceGateway.getUsers();
+    }
+
+    @Override
+    public ResponseEntity<UserResponse> getUsers(int page, int size, String property) {
+        return userServiceGateway.getUsers(page, size, property);
+    }
+
+    @Override
     public ResponseEntity<UserResponse> createUser(User user) {
         return userServiceGateway.createUser(user);
     }
@@ -45,6 +55,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public ResponseEntity<UserResponse> updateUser(UserVerification userVerification) {
         return userServiceGateway.updateUser(userVerification);
     }
+    public ResponseEntity deleteUser(String id) { return userServiceGateway.deleteUser(id); }
 
     @Override
     public ResponseEntity activate(String guid) {

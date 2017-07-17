@@ -1,6 +1,5 @@
 package com.e451.rest.services;
 
-import com.e451.rest.domains.assessment.AssessmentResponse;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
 import com.e451.rest.domains.user.UserVerification;
@@ -71,6 +70,38 @@ public class UserServiceImplTest {
     }
 
     @Test
+    public void whenGetUsers_returnListOfUsers() {
+        UserResponse userResponse =  new UserResponse();
+        userResponse.setUsers(users);
+
+        ResponseEntity<UserResponse> gatewayResponse =
+                ResponseEntity.status(HttpStatus.OK).body(userResponse);
+
+        when(userServiceGateway.getUsers()).thenReturn(gatewayResponse);
+
+        ResponseEntity<UserResponse> response = userService.getUsers();
+
+        Assert.assertEquals(users.size(), response.getBody().getUsers().size());
+    }
+
+    @Test
+    public void whenGetUsersPageable_returnListOfUsers() {
+        UserResponse userResponse = new UserResponse();
+        userResponse.setUsers(this.users);
+        userResponse.setPaginationTotalElements((long) this.users.size());
+
+        ResponseEntity<UserResponse> gatewayResponse =
+                new ResponseEntity<UserResponse>(userResponse, HttpStatus.OK);
+
+        when(userServiceGateway.getUsers(0, 20, "title")).thenReturn(gatewayResponse);
+
+        ResponseEntity<UserResponse> response = userService.getUsers(0, 20, "title");
+
+        Assert.assertEquals(this.users.size(), response.getBody().getUsers().size());
+        Assert.assertEquals(this.users.size(), (long) response.getBody().getPaginationTotalElements());
+    }
+
+    @Test
     public void whenActivateUser_returnOK() {
         String guid = UUID.randomUUID().toString();
 
@@ -129,5 +160,15 @@ public class UserServiceImplTest {
         ResponseEntity<UserResponse> response = userService.getActiveUser();
 
         Assert.assertEquals(user, response.getBody().getUsers().get(0));
+    }
+
+    public void whenDeleteUser_returnResponseEntity() {
+        ResponseEntity gatewayResponse = new ResponseEntity(null, HttpStatus.NO_CONTENT);
+
+        when(userServiceGateway.deleteUser("1")).thenReturn(gatewayResponse);
+
+        ResponseEntity response = userService.deleteUser("1");
+
+        Assert.assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 }
