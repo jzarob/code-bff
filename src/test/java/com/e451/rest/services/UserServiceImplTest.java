@@ -3,6 +3,7 @@ package com.e451.rest.services;
 import com.e451.rest.domains.assessment.AssessmentResponse;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
+import com.e451.rest.domains.user.UserVerification;
 import com.e451.rest.gateways.UserServiceGateway;
 import com.e451.rest.repository.UserRepository;
 import com.e451.rest.services.impl.UserServiceImpl;
@@ -105,6 +106,18 @@ public class UserServiceImplTest {
         ResponseEntity<UserResponse> response = userService.updateUser(user);
 
         Assert.assertEquals(user, response.getBody().getUsers().get(0));
+    }
+
+    @Test
+    public void whenUpdateUserVerification_returnsUpdatedUser() {
+        UserVerification userVerification = new UserVerification();
+        userVerification.setCurrentPassword("Password1!");
+        userVerification.setUser(user);
+        when(userServiceGateway.updateUser(userVerification));
+
+        ResponseEntity<UserResponse> response = userService.updateUser(userVerification);
+
+
     }
 
     @Test

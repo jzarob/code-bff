@@ -2,6 +2,7 @@ package com.e451.rest.gateways;
 
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
+import com.e451.rest.domains.user.UserVerification;
 import com.e451.rest.gateways.impl.UserServiceGatewayImpl;
 import org.junit.Assert;
 import org.junit.Before;
@@ -79,6 +80,24 @@ public class UserServiceGatewayImplTest {
         when(restTemplate.exchange(builder.build().toUriString(), HttpMethod.PUT, requestEntity, UserResponse.class))
                 .thenReturn(ResponseEntity.status(HttpStatus.OK).body(userResponse));
         ResponseEntity<UserResponse> response = userServiceGateway.updateUser(user);
+
+        Assert.assertEquals(user, response.getBody().getUsers().get(0));
+        verify(restTemplate).exchange(builder.build().toUriString(), HttpMethod.PUT, requestEntity, UserResponse.class);
+    }
+
+    @Test
+    public void whenUpdateUserVerification_thenReturnUpdatedUser() {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(BASE_URI);
+        UserVerification userVerification = new UserVerification();
+        userVerification.setUser(user);
+        userVerification.setCurrentPassword("Password1!");
+        HttpEntity<UserVerification> requestEntity = new HttpEntity<>(userVerification, null);
+        UserResponse userResponse = new UserResponse();
+        userResponse.setUsers(Arrays.asList(user));
+
+        when(restTemplate.exchange(builder.build().toUriString(), HttpMethod.PUT, requestEntity, UserResponse.class))
+                .thenReturn(ResponseEntity.status(HttpStatus.OK).body(userResponse));
+        ResponseEntity<UserResponse> response = userServiceGateway.updateUser(userVerification);
 
         Assert.assertEquals(user, response.getBody().getUsers().get(0));
         verify(restTemplate).exchange(builder.build().toUriString(), HttpMethod.PUT, requestEntity, UserResponse.class);

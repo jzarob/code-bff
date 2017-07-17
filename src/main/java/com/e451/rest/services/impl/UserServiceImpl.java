@@ -2,6 +2,7 @@ package com.e451.rest.services.impl;
 
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
+import com.e451.rest.domains.user.UserVerification;
 import com.e451.rest.gateways.UserServiceGateway;
 import com.e451.rest.repository.UserRepository;
 import com.e451.rest.services.UserService;
@@ -39,6 +40,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public ResponseEntity<UserResponse> updateUser(User user) { return userServiceGateway.updateUser(user); }
+
+    @Override
+    public ResponseEntity<UserResponse> updateUser(UserVerification userVerification) {
+        return userServiceGateway.updateUser(userVerification);
+    }
 
     @Override
     public ResponseEntity activate(String guid) {

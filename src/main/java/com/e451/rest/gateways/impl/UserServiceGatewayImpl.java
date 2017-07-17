@@ -2,6 +2,7 @@ package com.e451.rest.gateways.impl;
 
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
+import com.e451.rest.domains.user.UserVerification;
 import com.e451.rest.gateways.UserServiceGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -58,6 +59,15 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @Override
+    public ResponseEntity<UserResponse> updateUser(UserVerification userVerification) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri);
+        ResponseEntity response;
+        HttpEntity<UserVerification> requestEntity = new HttpEntity<>(userVerification, null);
+
+        return restTemplate.exchange(builder.build().toUriString(), HttpMethod.PUT, requestEntity, UserResponse.class);
     }
 
     @Override

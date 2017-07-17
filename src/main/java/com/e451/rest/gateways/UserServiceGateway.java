@@ -2,6 +2,7 @@ package com.e451.rest.gateways;
 
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
+import com.e451.rest.domains.user.UserVerification;
 import org.springframework.http.ResponseEntity;
 
 import java.util.UUID;
@@ -12,6 +13,7 @@ import java.util.UUID;
 public interface UserServiceGateway {
     ResponseEntity<UserResponse> createUser(User user);
     ResponseEntity<UserResponse> updateUser(User user);
+    ResponseEntity<UserResponse> updateUser(UserVerification userVerification);
     ResponseEntity<UserResponse> getActiveUser();
     ResponseEntity activate(String uuid);
 }
