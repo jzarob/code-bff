@@ -3,6 +3,7 @@ package com.e451.rest.controllers;
 import com.e451.rest.domains.assessment.AssessmentResponse;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
+import com.e451.rest.domains.user.UserVerification;
 import com.e451.rest.services.UserService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -82,6 +83,20 @@ public class UsersControllerTest {
 
         Assert.assertEquals(user, response.getBody().getUsers().get(0));
         Assert.assertNotEquals(originalFirstName, response.getBody().getUsers().get(0).getFirstName());
+    }
+
+    @Test
+    public void whenUpdateUserVerification_returnsUpdatedUser() {
+        UserResponse userResponse = new UserResponse();
+        User user = users.get(0);
+        UserVerification userVerification = new UserVerification();
+        userVerification.setUser(user);
+        userVerification.setCurrentPassword("Password1");
+        userResponse.setUsers(Arrays.asList(user));
+        when(userService.updateUser(userVerification)).thenReturn(ResponseEntity.status(HttpStatus.OK).body(userResponse));
+        ResponseEntity<UserResponse> response = controller.updateUser(userVerification);
+
+        Assert.assertEquals(user, response.getBody().getUsers().get(0));
     }
 
     @Test

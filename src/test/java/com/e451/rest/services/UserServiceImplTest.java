@@ -113,10 +113,12 @@ public class UserServiceImplTest {
         UserVerification userVerification = new UserVerification();
         userVerification.setCurrentPassword("Password1!");
         userVerification.setUser(user);
-        when(userServiceGateway.updateUser(userVerification));
+        when(userServiceGateway.updateUser(userVerification)).thenReturn(ResponseEntity.status(HttpStatus.OK)
+            .body(userResponse));
 
         ResponseEntity<UserResponse> response = userService.updateUser(userVerification);
 
+        Assert.assertEquals(user, response.getBody().getUsers().get(0));
 
     }
 

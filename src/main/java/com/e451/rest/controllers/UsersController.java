@@ -2,6 +2,7 @@ package com.e451.rest.controllers;
 
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
+import com.e451.rest.domains.user.UserVerification;
 import com.e451.rest.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,11 @@ public class UsersController {
 
     @PutMapping
     public ResponseEntity<UserResponse> updateUser(@RequestBody User user) { return userService.updateUser(user); }
+
+    @PutMapping
+    public ResponseEntity<UserResponse> updateUser(@RequestBody UserVerification userVerification) {
+        return userService.updateUser(userVerification);
+    }
 
     @GetMapping("/activate/{guid}")
     public ResponseEntity activateUser(@PathVariable("guid") String guid) {
