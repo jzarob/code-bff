@@ -34,7 +34,7 @@ public class UsersController {
     @PutMapping
     public ResponseEntity<UserResponse> updateUser(@RequestBody User user) { return userService.updateUser(user); }
 
-    @PutMapping
+    @PutMapping("/password")
     public ResponseEntity<UserResponse> updateUser(@RequestBody UserVerification userVerification) {
         return userService.updateUser(userVerification);
     }

@@ -63,8 +63,7 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
 
     @Override
     public ResponseEntity<UserResponse> updateUser(UserVerification userVerification) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri);
-        ResponseEntity response;
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri).pathSegment("password");
         HttpEntity<UserVerification> requestEntity = new HttpEntity<>(userVerification, null);
 
         return restTemplate.exchange(builder.build().toUriString(), HttpMethod.PUT, requestEntity, UserResponse.class);

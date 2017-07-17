@@ -87,7 +87,7 @@ public class UserServiceGatewayImplTest {
 
     @Test
     public void whenUpdateUserVerification_thenReturnUpdatedUser() {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(BASE_URI);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(BASE_URI).pathSegment("password");
         UserVerification userVerification = new UserVerification();
         userVerification.setUser(user);
         userVerification.setCurrentPassword("Password1!");
