@@ -77,8 +77,8 @@ public class UserServiceGatewayImplTest {
 
     @Test
     public void whenGetUsersPageableCalled_thenRestTemplateIsCalled() throws Exception {
-        UserResponse questionResponse = new UserResponse();
-        ResponseEntity<UserResponse> response = ResponseEntity.ok(questionResponse);
+        UserResponse userResponse = new UserResponse();
+        ResponseEntity<UserResponse> response = ResponseEntity.ok(userResponse);
 
         when(restTemplate.getForEntity("fakeUri/users?page=0&size=20&property=firstName", UserResponse.class)).thenReturn(response);
 

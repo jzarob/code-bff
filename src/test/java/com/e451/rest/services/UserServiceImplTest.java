@@ -83,12 +83,12 @@ public class UserServiceImplTest {
 
     @Test
     public void whenGetUsersPageable_returnListOfUsers() {
-        UserResponse questionResponse = new UserResponse();
-        questionResponse.setUsers(this.users);
-        questionResponse.setPaginationTotalElements((long) this.users.size());
+        UserResponse userResponse = new UserResponse();
+        userResponse.setUsers(this.users);
+        userResponse.setPaginationTotalElements((long) this.users.size());
 
         ResponseEntity<UserResponse> gatewayResponse =
-                new ResponseEntity<UserResponse>(questionResponse, HttpStatus.OK);
+                new ResponseEntity<UserResponse>(userResponse, HttpStatus.OK);
 
         when(userServiceGateway.getUsers(0, 20, "title")).thenReturn(gatewayResponse);
 
