@@ -26,4 +26,9 @@ public class FailedLoginServiceImpl implements FailedLoginService {
     public List<FailedLoginAttempt> findByDateBetweenAndUsername(Date fromDate, Date toDate, String username) {
         return failedLoginRepository.findByDateBetweenAndUsername(fromDate, toDate, username);
     }
+
+    @Override
+    public FailedLoginAttempt createFailedLoginAttempt(FailedLoginAttempt failedLoginAttempt) {
+        return failedLoginRepository.save(failedLoginAttempt);
+    }
 }

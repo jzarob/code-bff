@@ -13,6 +13,12 @@ public class FailedLoginAttempt {
     public FailedLoginAttempt() {
     }
 
+    public FailedLoginAttempt(String username, String ipAddress, Date date) {
+        this.username = username;
+        this.ipAddress = ipAddress;
+        this.date = date;
+    }
+
     public String getUsername() {
         return username;
     }

@@ -16,5 +16,5 @@ public interface UserService {
     ResponseEntity<UserResponse> createUser(User user);
     ResponseEntity deleteUser(String id);
     ResponseEntity activate(String uuid);
-    UserDetails loadUserByUsername(String username);
+    User loadUserByUsername(String username);
 }
