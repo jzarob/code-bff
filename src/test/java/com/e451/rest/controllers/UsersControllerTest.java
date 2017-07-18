@@ -2,6 +2,7 @@ package com.e451.rest.controllers;
 
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
+import com.e451.rest.domains.user.UserVerification;
 import com.e451.rest.services.UserService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -103,6 +104,44 @@ public class UsersControllerTest {
     }
 
     @Test
+    public void whenUpdateUser_returnsUpdatedUser() {
+        UserResponse userResponse = new UserResponse();
+        User user = users.get(0);
+        String originalFirstName = user.getFirstName();
+        user.setFirstName("firstName");
+        userResponse.setUsers(Arrays.asList(user));
+        when(userService.updateUser(user)).thenReturn(ResponseEntity.status(HttpStatus.OK).body(userResponse));
+        ResponseEntity<UserResponse> response = controller.updateUser(user);
+
+        Assert.assertEquals(user, response.getBody().getUsers().get(0));
+        Assert.assertNotEquals(originalFirstName, response.getBody().getUsers().get(0).getFirstName());
+    }
+
+    @Test
+    public void whenUpdateUserVerification_returnsUpdatedUser() {
+        UserResponse userResponse = new UserResponse();
+        User user = users.get(0);
+        UserVerification userVerification = new UserVerification();
+        userVerification.setUser(user);
+        userVerification.setCurrentPassword("Password1");
+        userResponse.setUsers(Arrays.asList(user));
+        when(userService.updateUser(userVerification)).thenReturn(ResponseEntity.status(HttpStatus.OK).body(userResponse));
+        ResponseEntity<UserResponse> response = controller.updateUser(userVerification);
+
+        Assert.assertEquals(user, response.getBody().getUsers().get(0));
+    }
+
+    @Test
+    public void whenGetActiveUser_returnsActiveUser() {
+        UserResponse userResponse = new UserResponse();
+        User user = users.get(0);
+        userResponse.setUsers(Arrays.asList(user));
+        when(userService.getActiveUser()).thenReturn(ResponseEntity.status(HttpStatus.OK).body(userResponse));
+        ResponseEntity<UserResponse> response = controller.getActiveUer();
+
+        Assert.assertEquals(user, response.getBody().getUsers().get(0));
+    }
+
     public void whenDeleteUser_returnNoContent() {
         ResponseEntity responseEntity = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 

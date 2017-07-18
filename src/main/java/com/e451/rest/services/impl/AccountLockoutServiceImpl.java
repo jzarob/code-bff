@@ -2,6 +2,7 @@ package com.e451.rest.services.impl;
 
 import com.e451.rest.domains.auth.FailedLoginAttempt;
 import com.e451.rest.domains.user.User;
+import com.e451.rest.repository.UserRepository;
 import com.e451.rest.services.AccountLockoutService;
 import com.e451.rest.services.FailedLoginService;
 import com.e451.rest.services.UserService;
@@ -18,22 +19,25 @@ import java.util.Date;
 @Service
 public class AccountLockoutServiceImpl implements AccountLockoutService {
 
-    @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
-    @Autowired
     private FailedLoginService failedLoginService;
 
-    @Value("${lockout.timeout}")
     private Integer timeout;
 
-    @Value("${lockout.attemptLimit}")
     private Integer attemptLimit;
 
     @Autowired
-    public AccountLockoutServiceImpl(UserService userService, FailedLoginService failedLoginService) {
-        this.userService = userService;
+    public AccountLockoutServiceImpl(
+            UserRepository userRepository,
+            FailedLoginService failedLoginService,
+            @Value("${lockout.timeout}") Integer timeout,
+            @Value("${lockout.attemptLimit}") Integer attemptLimit) {
+
+        this.userRepository = userRepository;
         this.failedLoginService = failedLoginService;
+        this.timeout = timeout;
+        this.attemptLimit = attemptLimit;
     }
     @Override
     public Boolean canAccountLogin(User user) {
@@ -49,9 +53,9 @@ public class AccountLockoutServiceImpl implements AccountLockoutService {
                 failedLoginService.findByDateBetweenAndUsername(timeoutDate, currentDate, username).size();
 
         if (failedAttempts >= attemptLimit) {
-            User user = userService.loadUserByUsername(username);
-            user.setLocked(false);
-            userService.update(user);
+            User user = userRepository.findByUsername(username);
+            user.setLocked(true);
+            userRepository.save(user);
         }
     }
 }

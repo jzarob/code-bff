@@ -2,6 +2,7 @@ package com.e451.rest.services;
 
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
+import com.e451.rest.domains.user.UserVerification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -14,7 +15,10 @@ public interface UserService {
     ResponseEntity<UserResponse> getUsers();
     ResponseEntity<UserResponse> getUsers(int page, int size, String property);
     ResponseEntity<UserResponse> createUser(User user);
+    ResponseEntity<UserResponse> updateUser(User user);
+    ResponseEntity<UserResponse> updateUser(UserVerification userVerification);
     ResponseEntity deleteUser(String id);
     ResponseEntity activate(String uuid);
-    User loadUserByUsername(String username);
+    UserDetails loadUserByUsername(String username);
+    ResponseEntity<UserResponse> getActiveUser();
 }

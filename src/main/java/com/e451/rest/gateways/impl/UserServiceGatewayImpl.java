@@ -2,6 +2,7 @@ package com.e451.rest.gateways.impl;
 
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
+import com.e451.rest.domains.user.UserVerification;
 import com.e451.rest.gateways.UserServiceGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -84,10 +85,43 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
     }
 
     @Override
+    public ResponseEntity<UserResponse> updateUser(User user) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri);
+        ResponseEntity response;
+        HttpEntity<User> requestEntity = new HttpEntity<User>(user, null);
+
+        try {
+            response = restTemplate.exchange(builder.build().toUriString(), HttpMethod.PUT, requestEntity, UserResponse.class);
+            return ResponseEntity.status(HttpStatus.OK).body((UserResponse) response.getBody());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @Override
+    public ResponseEntity<UserResponse> updateUser(UserVerification userVerification) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri).pathSegment("password");
+        HttpEntity<UserVerification> requestEntity = new HttpEntity<>(userVerification, null);
+
+        return restTemplate.exchange(builder.build().toUriString(), HttpMethod.PUT, requestEntity, UserResponse.class);
+    }
+
+    @Override
     public ResponseEntity activate(String uuid) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri)
                 .pathSegment("activate", uuid);
         return restTemplate.getForEntity(builder.build().toUriString(), ResponseEntity.class);
+    }
+
+    @Override
+    public ResponseEntity<UserResponse> getActiveUser() {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri)
+                .pathSegment("activeUser");
+        try {
+            return restTemplate.getForEntity(builder.build().toUriString(), UserResponse.class);
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
 }
