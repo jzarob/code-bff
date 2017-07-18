@@ -4,6 +4,7 @@ import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
 import com.e451.rest.domains.user.UserVerification;
 import com.e451.rest.gateways.UserServiceGateway;
+import com.sun.deploy.net.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -27,7 +28,7 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
 
     @Autowired
     public UserServiceGatewayImpl(@Value("${service-uri}") String userServiceUri,
-                                      RestTemplate restTemplate) {
+                                  RestTemplate restTemplate) {
         this.userServiceUri = userServiceUri + "/users";
         this.restTemplate = restTemplate;
     }
@@ -64,10 +65,15 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
     @Override
     public ResponseEntity deleteUser(String id) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri).pathSegment(id);
-
+        ResponseEntity response;
         HttpEntity requestEntity = new HttpEntity(null, null);
 
-        return restTemplate.exchange(builder.build().toUri(), HttpMethod.DELETE, requestEntity, Object.class);
+        try {
+            response = restTemplate.exchange(builder.build().toUri(), HttpMethod.DELETE, requestEntity, Object.class);
+            return ResponseEntity.status(HttpStatus.OK).body((UserResponse) response.getBody());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @Override
@@ -78,7 +84,7 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
 
         try {
             response = restTemplate.postForEntity(builder.build().toUriString(), user, UserResponse.class);
-            return ResponseEntity.status(HttpStatus.CREATED).body((UserResponse)response.getBody());
+            return ResponseEntity.status(HttpStatus.CREATED).body((UserResponse) response.getBody());
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -88,7 +94,7 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
     public ResponseEntity<UserResponse> updateUser(User user) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri);
         ResponseEntity response;
-        HttpEntity<User> requestEntity = new HttpEntity<User>(user, null);
+        HttpEntity<User> requestEntity = new HttpEntity<>(user, null);
 
         try {
             response = restTemplate.exchange(builder.build().toUriString(), HttpMethod.PUT, requestEntity, UserResponse.class);
@@ -101,24 +107,31 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
     @Override
     public ResponseEntity<UserResponse> updateUser(UserVerification userVerification) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri).pathSegment("password");
+        ResponseEntity response;
         HttpEntity<UserVerification> requestEntity = new HttpEntity<>(userVerification, null);
+        try {
+            response = restTemplate.exchange(builder.build().toUriString(), HttpMethod.PUT, requestEntity, UserResponse.class);
+            return ResponseEntity.status(HttpStatus.OK).body((UserResponse) response.getBody());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
 
-        return restTemplate.exchange(builder.build().toUriString(), HttpMethod.PUT, requestEntity, UserResponse.class);
+
     }
 
     @Override
-    public ResponseEntity activate(String uuid) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri)
-                .pathSegment("activate", uuid);
+    public ResponseEntity activate(String guid) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri).pathSegment("activate", guid);
         return restTemplate.getForEntity(builder.build().toUriString(), ResponseEntity.class);
     }
 
     @Override
     public ResponseEntity<UserResponse> getActiveUser() {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri)
-                .pathSegment("activeUser");
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri).pathSegment("activeUser");
+        ResponseEntity response;
         try {
-            return restTemplate.getForEntity(builder.build().toUriString(), UserResponse.class);
+            response = restTemplate.getForEntity(builder.build().toUriString(), UserResponse.class);
+            return ResponseEntity.status(HttpStatus.OK).body((UserResponse) response.getBody());
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
