@@ -11,4 +11,5 @@ import java.util.List;
 public interface FailedLoginService {
     List<FailedLoginAttempt> findByDateBetweenAndUsername(Date fromDate, Date toDate, String username);
     FailedLoginAttempt createFailedLoginAttempt(FailedLoginAttempt failedLoginAttempt);
+    List<FailedLoginAttempt> updateFailedLoginAttempt(Iterable<FailedLoginAttempt> attempts);
 }

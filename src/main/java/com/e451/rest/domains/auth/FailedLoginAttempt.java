@@ -9,14 +9,17 @@ public class FailedLoginAttempt {
     private String username;
     private String ipAddress;
     private Date date;
+    private boolean active;
 
     public FailedLoginAttempt() {
+        this.active = true;
     }
 
     public FailedLoginAttempt(String username, String ipAddress, Date date) {
         this.username = username;
         this.ipAddress = ipAddress;
         this.date = date;
+        this.active = true;
     }
 
     public String getUsername() {
@@ -41,5 +44,13 @@ public class FailedLoginAttempt {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

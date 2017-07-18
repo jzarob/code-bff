@@ -1,6 +1,7 @@
 package com.e451.rest.eventlisteners;
 
 import com.e451.rest.domains.auth.FailedLoginAttempt;
+import com.e451.rest.domains.user.User;
 import com.e451.rest.repository.FailedLoginRepository;
 import com.e451.rest.services.AccountLockoutService;
 import org.slf4j.Logger;
@@ -37,11 +38,12 @@ public class AuthenticationEventListener implements ApplicationListener<Abstract
     @Override
     public void onApplicationEvent(AbstractAuthenticationEvent authenticationEvent) {
         if (authenticationEvent instanceof InteractiveAuthenticationSuccessEvent || authenticationEvent instanceof AuthenticationSuccessEvent) {
-            logger.info("Authentication success.");
+            User user = (User) authenticationEvent.getAuthentication().getPrincipal();
+            logger.info("Authentication success for user " + user.getUsername());
+            accountLockoutService.processLoginSuccess(user.getUsername());
         } else if (authenticationEvent instanceof AbstractAuthenticationFailureEvent) {
-            String username = authenticationEvent.getAuthentication().getPrincipal().toString();
             String ipAddress = "";
-
+            String username = authenticationEvent.getAuthentication().getPrincipal().toString();
             if (authenticationEvent.getAuthentication().getDetails() instanceof WebAuthenticationDetails) {
                 WebAuthenticationDetails auth = (WebAuthenticationDetails) authenticationEvent.getAuthentication().getDetails();
                 ipAddress = auth.getRemoteAddress();

@@ -31,4 +31,9 @@ public class FailedLoginServiceImpl implements FailedLoginService {
     public FailedLoginAttempt createFailedLoginAttempt(FailedLoginAttempt failedLoginAttempt) {
         return failedLoginRepository.save(failedLoginAttempt);
     }
+
+    @Override
+    public List<FailedLoginAttempt> updateFailedLoginAttempt(Iterable<FailedLoginAttempt> attempts) {
+        return failedLoginRepository.save(attempts);
+    }
 }

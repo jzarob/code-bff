@@ -8,4 +8,5 @@ import com.e451.rest.domains.user.User;
 public interface AccountLockoutService {
     Boolean canAccountLogin(User user);
     void processLoginFailure(String username, String ipAddress);
+    void processLoginSuccess(String username);
 }

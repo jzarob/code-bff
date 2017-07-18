@@ -47,10 +47,10 @@ public class AccountLockoutServiceImpl implements AccountLockoutService {
             Date currentDate = new Date();
             Date timeoutDate = new Date(System.currentTimeMillis() - 1000 * timeout);
             String username = user.getUsername();
-            int attempts =
-                    failedLoginService.findByDateBetweenAndUsername(timeoutDate, currentDate, username).size();
+            List<FailedLoginAttempt> attempts =
+                    failedLoginService.findByDateBetweenAndUsername(timeoutDate, currentDate, username);
 
-            if(attempts == 0) {
+            if(attempts.size() == 0 || attempts.stream().allMatch(attempt -> !attempt.isActive())) {
                user.setLocked(false);
                user = userRepository.save(user);
             }
@@ -65,14 +65,29 @@ public class AccountLockoutServiceImpl implements AccountLockoutService {
         Date currentDate = new Date();
         Date timeoutDate = new Date(System.currentTimeMillis() - 1000 * timeout);
 
-        int failedAttempts =
-                failedLoginService.findByDateBetweenAndUsername(timeoutDate, currentDate, username).size();
+        List<FailedLoginAttempt> failedAttempts =
+                failedLoginService.findByDateBetweenAndUsername(timeoutDate, currentDate, username);
 
-        if (failedAttempts >= attemptLimit) {
+        if (failedAttempts.stream().filter(attempt -> attempt.isActive()).count() >= attemptLimit) {
             User user = userRepository.findByUsername(username);
             user.setLocked(true);
             userRepository.save(user);
         }
+    }
+
+    @Override
+    public void processLoginSuccess(String username) {
+        Date currentDate = new Date();
+        Date timeoutDate = new Date(System.currentTimeMillis() - 1000 * timeout);
+
+        List<FailedLoginAttempt> failedAttempts =
+                failedLoginService.findByDateBetweenAndUsername(timeoutDate, currentDate, username);
+
+        for (FailedLoginAttempt failedLoginAttempt : failedAttempts) {
+            failedLoginAttempt.setActive(false);
+        }
+
+        failedLoginService.updateFailedLoginAttempt(failedAttempts);
     }
 
 }
