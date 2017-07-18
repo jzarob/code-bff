@@ -17,9 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by l659598 on 7/18/2017.
@@ -73,4 +71,34 @@ public class AccountLockoutServiceImplTest {
         verify(userRepository).save(any(User.class));
         Assert.assertEquals(false, mockUser.isAccountNonLocked());
     }
+
+    @Test
+    public void whenAccountCanLoginAndIsLocked_updateUser() {
+        when(failedLoginService.findByDateBetweenAndUsername(any(Date.class), any(Date.class), any(String.class)))
+                .thenReturn(new ArrayList<FailedLoginAttempt>());
+        when(userRepository.save(any(User.class))).thenReturn(mockUser);
+
+        mockUser.setLocked(true);
+
+        Boolean canLogin = accountLockoutService.canAccountLogin(mockUser);
+
+        verify(userRepository).save(any(User.class));
+        Assert.assertEquals(true, canLogin);
+    }
+
+    @Test
+    public void whenAccountCannotLoginAndIsLocked_updateUser() {
+        when(failedLoginService.findByDateBetweenAndUsername(any(Date.class), any(Date.class), any(String.class)))
+                .thenReturn(failedLoginAttempts);
+        when(userRepository.save(any(User.class))).thenReturn(mockUser);
+
+        mockUser.setLocked(true);
+
+        Boolean canLogin = accountLockoutService.canAccountLogin(mockUser);
+
+        verifyZeroInteractions(userRepository);
+        Assert.assertEquals(false, canLogin);
+    }
+
+
 }

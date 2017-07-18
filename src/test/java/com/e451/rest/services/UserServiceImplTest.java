@@ -38,13 +38,16 @@ public class UserServiceImplTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private AccountLockoutService accountLockoutService;
+
     private List<User> users;
     private UserResponse userResponse;
     private User user;
 
     @Before
     public void setup() {
-        this.userService = new UserServiceImpl(userServiceGateway, userRepository);
+        this.userService = new UserServiceImpl(userServiceGateway, userRepository, accountLockoutService);
 
         users = Arrays.asList(
                 new User("id1", "liz1", "conrad1", "email1", "password1"),

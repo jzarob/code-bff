@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by l659598 on 7/18/2017.
@@ -39,9 +40,24 @@ public class AccountLockoutServiceImpl implements AccountLockoutService {
         this.timeout = timeout;
         this.attemptLimit = attemptLimit;
     }
+
     @Override
     public Boolean canAccountLogin(User user) {
-        return null;
+        if (!user.isAccountNonLocked()) {
+            Date currentDate = new Date();
+            Date timeoutDate = new Date(System.currentTimeMillis() - 1000 * timeout);
+            String username = user.getUsername();
+            int attempts =
+                    failedLoginService.findByDateBetweenAndUsername(timeoutDate, currentDate, username).size();
+
+            if(attempts == 0) {
+               user.setLocked(false);
+               user = userRepository.save(user);
+            }
+
+        }
+
+        return user.isAccountNonLocked();
     }
 
     @Override
@@ -58,4 +74,5 @@ public class AccountLockoutServiceImpl implements AccountLockoutService {
             userRepository.save(user);
         }
     }
+
 }
