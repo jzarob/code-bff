@@ -64,12 +64,11 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
     @Override
     public ResponseEntity deleteUser(String id) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri).pathSegment(id);
-        ResponseEntity response;
         HttpEntity requestEntity = new HttpEntity(null, null);
 
         try {
-            response = restTemplate.exchange(builder.build().toUri(), HttpMethod.DELETE, requestEntity, Object.class);
-            return ResponseEntity.status(HttpStatus.OK).body((UserResponse) response.getBody());
+            restTemplate.exchange(builder.build().toUri(), HttpMethod.DELETE, requestEntity, Object.class);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -97,7 +96,7 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
 
         try {
             response = restTemplate.exchange(builder.build().toUriString(), HttpMethod.PUT, requestEntity, UserResponse.class);
-            return ResponseEntity.status(HttpStatus.OK).body((UserResponse) response.getBody());
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body((UserResponse) response.getBody());
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -110,7 +109,7 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
         HttpEntity<UserVerification> requestEntity = new HttpEntity<>(userVerification, null);
         try {
             response = restTemplate.exchange(builder.build().toUriString(), HttpMethod.PUT, requestEntity, UserResponse.class);
-            return ResponseEntity.status(HttpStatus.OK).body((UserResponse) response.getBody());
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body((UserResponse) response.getBody());
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -119,8 +118,8 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
     }
 
     @Override
-    public ResponseEntity activate(String guid) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri).pathSegment("activate", guid);
+    public ResponseEntity activate(String uuid) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri).pathSegment("activate", uuid);
         return restTemplate.getForEntity(builder.build().toUriString(), ResponseEntity.class);
     }
 
