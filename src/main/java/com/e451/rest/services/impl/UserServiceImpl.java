@@ -5,6 +5,7 @@ import com.e451.rest.domains.user.UserResponse;
 import com.e451.rest.domains.user.UserVerification;
 import com.e451.rest.gateways.UserServiceGateway;
 import com.e451.rest.repository.UserRepository;
+import com.e451.rest.services.AccountLockoutService;
 import com.e451.rest.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -26,11 +27,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserServiceGateway userServiceGateway;
     private final UserRepository userRepository;
+    private final AccountLockoutService accountLockoutService;
 
     @Autowired
-    public UserServiceImpl(UserServiceGateway userServiceGateway, UserRepository userRepository) {
+    public UserServiceImpl(
+            UserServiceGateway userServiceGateway,
+            UserRepository userRepository,
+            AccountLockoutService accountLockoutService) {
         this.userServiceGateway = userServiceGateway;
         this.userRepository = userRepository;
+        this.accountLockoutService = accountLockoutService;
     }
 
     @Override
@@ -63,11 +69,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public User loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
         if(user == null) {
             throw new UsernameNotFoundException(String.format("No user found with username %s" ,username));
         }
+
+        accountLockoutService.canAccountLogin(user);
 
         return user;
     }

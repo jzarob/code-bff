@@ -6,10 +6,13 @@ import com.e451.rest.security.JwtAuthFilter;
 import com.e451.rest.security.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.DefaultApplicationArguments;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -52,11 +55,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         authenticationManagerBuilder
                 .userDetailsService(this.userDetailsService)
                 .passwordEncoder(encoder);
+
+        authenticationManagerBuilder.authenticationEventPublisher(defaultAuthenticationEventPublisher());
     }
 
     @Bean
     public JwtAuthFilter authenticationTokenFilterBean() throws Exception {
         return new JwtAuthFilter(userDetailsService, jwtTokenUtil, header);
+    }
+
+    @Bean
+    public DefaultAuthenticationEventPublisher defaultAuthenticationEventPublisher() {
+        return new DefaultAuthenticationEventPublisher();
     }
 
     @Override
