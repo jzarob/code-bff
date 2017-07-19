@@ -118,5 +118,16 @@ public class AccountLockoutServiceImplTest {
         Assert.assertTrue(failedLoginAttempts.stream().allMatch(attempt -> !attempt.isActive()));
     }
 
+    @Test
+    public void whenGetRecentLoginAttempts_returnListOfAttempts() {
+        when(failedLoginService.findByDateBetweenAndUsername(any(Date.class), any(Date.class), any(String.class)))
+                .thenReturn(failedLoginAttempts);
+
+        List<FailedLoginAttempt> actual = accountLockoutService.getRecentLoginAttempts(mockUser.getUsername());
+
+        verify(failedLoginService).findByDateBetweenAndUsername(any(Date.class), any(Date.class), any(String.class));
+        Assert.assertEquals(failedLoginAttempts.size(), actual.size());
+    }
+
 
 }
