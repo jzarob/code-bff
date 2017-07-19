@@ -67,7 +67,7 @@ public class AuthControllerTest {
     public void whenCreateAuthenticationToken_ReturnsValidToken() {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
-        ResponseEntity<AuthenticationResponse> response = authController.createAuthenticationToken(authenticationRequest);
+        ResponseEntity<AuthenticationResponse> response = authController.createAuthenticationToken(servletRequest, authenticationRequest);
         Assert.assertNotNull(response);
         Assert.assertEquals("imatoken", response.getBody().getToken());
     }
