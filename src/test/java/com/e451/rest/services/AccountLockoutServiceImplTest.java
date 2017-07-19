@@ -46,14 +46,21 @@ public class AccountLockoutServiceImplTest {
                 new FailedLoginAttempt(),
                 new FailedLoginAttempt(),
                 new FailedLoginAttempt(),
+                new FailedLoginAttempt(),
+                new FailedLoginAttempt(),
+                new FailedLoginAttempt(),
                 new FailedLoginAttempt()
         );
     }
 
     @Test
     public void whenProcessFailedLoginLessThanLimit_doNothing() {
+        for (int i = 0; i < 4; i++) {
+            failedLoginAttempts.get(i).setActive(false);
+        }
+
         when(failedLoginService.findByDateBetweenAndUsername(any(Date.class), any(Date.class), any(String.class)))
-                .thenReturn(new ArrayList<FailedLoginAttempt>());
+                .thenReturn(failedLoginAttempts);
 
         accountLockoutService.processLoginFailure("Test@Test.com", "mockIP");
 
@@ -87,7 +94,7 @@ public class AccountLockoutServiceImplTest {
     }
 
     @Test
-    public void whenAccountCannotLoginAndIsLocked_updateUser() {
+    public void whenAccountCannotLoginAndIsLocked_doNothing() {
         when(failedLoginService.findByDateBetweenAndUsername(any(Date.class), any(Date.class), any(String.class)))
                 .thenReturn(failedLoginAttempts);
         when(userRepository.save(any(User.class))).thenReturn(mockUser);
@@ -98,6 +105,17 @@ public class AccountLockoutServiceImplTest {
 
         verifyZeroInteractions(userRepository);
         Assert.assertEquals(false, canLogin);
+    }
+
+    @Test
+    public void whenProcessLoginSuccess_updateFailedLoginAttempts() {
+        when(failedLoginService.findByDateBetweenAndUsername(any(Date.class), any(Date.class), any(String.class)))
+                .thenReturn(failedLoginAttempts);
+
+        accountLockoutService.processLoginSuccess(mockUser.getUsername());
+
+        verify(failedLoginService).updateFailedLoginAttempt(any());
+        Assert.assertTrue(failedLoginAttempts.stream().allMatch(attempt -> !attempt.isActive()));
     }
 
 

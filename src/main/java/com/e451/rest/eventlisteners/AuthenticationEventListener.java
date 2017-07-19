@@ -4,6 +4,7 @@ import com.e451.rest.domains.auth.FailedLoginAttempt;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.repository.FailedLoginRepository;
 import com.e451.rest.services.AccountLockoutService;
+import com.e451.rest.services.FailedLoginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +27,12 @@ public class AuthenticationEventListener implements ApplicationListener<Abstract
 
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationEventListener.class);
 
-    private FailedLoginRepository failedLoginRepository;
+    private FailedLoginService failedLoginService;
     private AccountLockoutService accountLockoutService;
 
     @Autowired
-    public AuthenticationEventListener(FailedLoginRepository failedLoginRepository, AccountLockoutService accountLockoutService) {
-        this.failedLoginRepository = failedLoginRepository;
+    public AuthenticationEventListener(FailedLoginService failedLoginService, AccountLockoutService accountLockoutService) {
+        this.failedLoginService = failedLoginService;
         this.accountLockoutService = accountLockoutService;
     }
 
@@ -52,7 +53,7 @@ public class AuthenticationEventListener implements ApplicationListener<Abstract
             logger.info("Authentication failed for user " + username + " at " + ipAddress);
 
             FailedLoginAttempt failedLoginAttempt = new FailedLoginAttempt(username, ipAddress, new Date());
-            failedLoginRepository.save(failedLoginAttempt);
+            failedLoginService.createFailedLoginAttempt(failedLoginAttempt);
 
             accountLockoutService.processLoginFailure(username, ipAddress);
         }

@@ -1,11 +1,15 @@
 package com.e451.rest.domains.auth;
 
+import org.springframework.data.annotation.Id;
+
 import java.util.Date;
 
 /**
  * Created by l659598 on 7/18/2017.
  */
 public class FailedLoginAttempt {
+    @Id
+    private String id;
     private String username;
     private String ipAddress;
     private Date date;
@@ -20,6 +24,14 @@ public class FailedLoginAttempt {
         this.ipAddress = ipAddress;
         this.date = date;
         this.active = true;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getUsername() {
