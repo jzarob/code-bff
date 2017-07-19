@@ -39,24 +39,32 @@ public class AuthenticationEventListener implements ApplicationListener<Abstract
     @Override
     public void onApplicationEvent(AbstractAuthenticationEvent authenticationEvent) {
         if (authenticationEvent instanceof InteractiveAuthenticationSuccessEvent || authenticationEvent instanceof AuthenticationSuccessEvent) {
-            User user = (User) authenticationEvent.getAuthentication().getPrincipal();
-            logger.info("Authentication success for user " + user.getUsername());
-            accountLockoutService.processLoginSuccess(user.getUsername());
+            onAuthenticationSuccess(authenticationEvent);
         } else if (authenticationEvent instanceof AbstractAuthenticationFailureEvent) {
-            String ipAddress = "";
-            String username = authenticationEvent.getAuthentication().getPrincipal().toString();
-            //if (authenticationEvent.getAuthentication().getDetails() instanceof WebAuthenticationDetails) {
-                WebAuthenticationDetails auth = (WebAuthenticationDetails) authenticationEvent.getAuthentication().getDetails();
-                ipAddress = auth.getRemoteAddress();
-            //}
-
-            logger.info("Authentication failed for user " + username + " at " + ipAddress);
-
-            FailedLoginAttempt failedLoginAttempt = new FailedLoginAttempt(username, ipAddress, new Date());
-            failedLoginService.createFailedLoginAttempt(failedLoginAttempt);
-
-            accountLockoutService.processLoginFailure(username, ipAddress);
+            onAuthenticationFailure((AbstractAuthenticationFailureEvent) authenticationEvent);
         }
     }
 
+    public void onAuthenticationSuccess(AbstractAuthenticationEvent authenticationSuccessEvent) {
+        User user = (User) authenticationSuccessEvent.getAuthentication().getPrincipal();
+        logger.info("Authentication success for user " + user.getUsername());
+        accountLockoutService.processLoginSuccess(user.getUsername());
+    }
+
+    public void onAuthenticationFailure(AbstractAuthenticationFailureEvent authenticationFailureEvent) {
+        String ipAddress = "";
+        String username = authenticationFailureEvent.getAuthentication().getPrincipal().toString();
+
+        if (authenticationFailureEvent.getAuthentication().getDetails() instanceof WebAuthenticationDetails) {
+            WebAuthenticationDetails auth = (WebAuthenticationDetails) authenticationFailureEvent.getAuthentication().getDetails();
+            ipAddress = auth.getRemoteAddress();
+        }
+
+        logger.info("Authentication failed for user " + username + " at " + ipAddress);
+
+        FailedLoginAttempt failedLoginAttempt = new FailedLoginAttempt(username, ipAddress, new Date());
+        failedLoginService.createFailedLoginAttempt(failedLoginAttempt);
+
+        accountLockoutService.processLoginFailure(username, ipAddress);
+    }
 }
