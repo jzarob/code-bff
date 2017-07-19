@@ -69,7 +69,7 @@ public class FailedLoginServiceImplTest {
     public void whenUpdateFailedLoginAttempts_returnFailedLoginAttempts() {
         when(failedLoginRepository.save(any(Iterable.class))).thenReturn(attempts);
 
-        List<FailedLoginAttempt> actual = failedLoginService.updateFailedLoginAttempt(attempts);
+        List<FailedLoginAttempt> actual = failedLoginService.updateFailedLoginAttempts(attempts);
 
         verify(failedLoginRepository).save(any(Iterable.class));
         Assert.assertEquals(attempts.size(), actual.size());

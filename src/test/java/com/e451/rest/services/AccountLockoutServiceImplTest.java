@@ -114,7 +114,7 @@ public class AccountLockoutServiceImplTest {
 
         accountLockoutService.processLoginSuccess(mockUser.getUsername());
 
-        verify(failedLoginService).updateFailedLoginAttempt(any());
+        verify(failedLoginService).updateFailedLoginAttempts(any());
         Assert.assertTrue(failedLoginAttempts.stream().allMatch(attempt -> !attempt.isActive()));
     }
 

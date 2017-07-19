@@ -33,7 +33,7 @@ public class FailedLoginServiceImpl implements FailedLoginService {
     }
 
     @Override
-    public List<FailedLoginAttempt> updateFailedLoginAttempt(Iterable<FailedLoginAttempt> attempts) {
+    public List<FailedLoginAttempt> updateFailedLoginAttempts(Iterable<FailedLoginAttempt> attempts) {
         return failedLoginRepository.save(attempts);
     }
 }

@@ -5,10 +5,8 @@ import com.e451.rest.domains.user.User;
 import com.e451.rest.repository.UserRepository;
 import com.e451.rest.services.AccountLockoutService;
 import com.e451.rest.services.FailedLoginService;
-import com.e451.rest.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -74,7 +72,7 @@ public class AccountLockoutServiceImpl implements AccountLockoutService {
             failedLoginAttempt.setActive(false);
         }
 
-        failedLoginService.updateFailedLoginAttempt(failedAttempts);
+        failedLoginService.updateFailedLoginAttempts(failedAttempts);
     }
 
     private List<FailedLoginAttempt> getRecentLoginAttempts(String username) {
