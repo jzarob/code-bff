@@ -45,10 +45,10 @@ public class AuthenticationEventListener implements ApplicationListener<Abstract
         } else if (authenticationEvent instanceof AbstractAuthenticationFailureEvent) {
             String ipAddress = "";
             String username = authenticationEvent.getAuthentication().getPrincipal().toString();
-            if (authenticationEvent.getAuthentication().getDetails() instanceof WebAuthenticationDetails) {
+            //if (authenticationEvent.getAuthentication().getDetails() instanceof WebAuthenticationDetails) {
                 WebAuthenticationDetails auth = (WebAuthenticationDetails) authenticationEvent.getAuthentication().getDetails();
                 ipAddress = auth.getRemoteAddress();
-            }
+            //}
 
             logger.info("Authentication failed for user " + username + " at " + ipAddress);
 
