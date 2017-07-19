@@ -62,9 +62,7 @@ public class AuthenticationEventListener implements ApplicationListener<Abstract
 
         logger.info("Authentication failed for user " + username + " at " + ipAddress);
 
-        FailedLoginAttempt failedLoginAttempt = new FailedLoginAttempt(username, ipAddress, new Date());
-        failedLoginService.createFailedLoginAttempt(failedLoginAttempt);
-
+        failedLoginService.createFailedLoginAttempt(new FailedLoginAttempt(username, ipAddress, new Date()));
         accountLockoutService.processLoginFailure(username, ipAddress);
     }
 }

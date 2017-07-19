@@ -44,19 +44,17 @@ public class AuthController {
     @PostMapping
     public ResponseEntity<AuthenticationResponse> createAuthenticationToken(
             HttpServletRequest httpServletRequest,
-            @RequestBody AuthenticationRequest request) {
+            @RequestBody AuthenticationRequest authenticationRequest) {
 
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
-        usernamePasswordAuthenticationToken.setDetails(
+        authenticationToken.setDetails(
                 new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
 
-        final Authentication authentication = authenticationManager.authenticate(
-                usernamePasswordAuthenticationToken
-        );
+        final Authentication authentication = authenticationManager.authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new AuthenticationResponse(token));
     }

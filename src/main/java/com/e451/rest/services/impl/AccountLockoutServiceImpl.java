@@ -21,12 +21,11 @@ import java.util.List;
 public class AccountLockoutServiceImpl implements AccountLockoutService {
 
     private UserRepository userRepository;
-
     private FailedLoginService failedLoginService;
-
     private Integer timeout;
-
     private Integer attemptLimit;
+    private Date currentDate;
+    private Date timeoutDate;
 
     @Autowired
     public AccountLockoutServiceImpl(
@@ -44,17 +43,13 @@ public class AccountLockoutServiceImpl implements AccountLockoutService {
     @Override
     public Boolean canAccountLogin(User user) {
         if (!user.isAccountNonLocked()) {
-            Date currentDate = new Date();
-            Date timeoutDate = new Date(System.currentTimeMillis() - 1000 * timeout);
             String username = user.getUsername();
-            List<FailedLoginAttempt> attempts =
-                    failedLoginService.findByDateBetweenAndUsername(timeoutDate, currentDate, username);
+            List<FailedLoginAttempt> attempts = getRecentLoginAttempts(username);
 
             if(attempts.size() == 0 || attempts.stream().allMatch(attempt -> !attempt.isActive())) {
                user.setLocked(false);
                user = userRepository.save(user);
             }
-
         }
 
         return user.isAccountNonLocked();
@@ -62,11 +57,7 @@ public class AccountLockoutServiceImpl implements AccountLockoutService {
 
     @Override
     public void processLoginFailure(String username, String ipAddress) {
-        Date currentDate = new Date();
-        Date timeoutDate = new Date(System.currentTimeMillis() - 1000 * timeout);
-
-        List<FailedLoginAttempt> failedAttempts =
-                failedLoginService.findByDateBetweenAndUsername(timeoutDate, currentDate, username);
+        List<FailedLoginAttempt> failedAttempts = getRecentLoginAttempts(username);
 
         if (failedAttempts.stream().filter(attempt -> attempt.isActive()).count() >= attemptLimit) {
             User user = userRepository.findByUsername(username);
@@ -77,17 +68,20 @@ public class AccountLockoutServiceImpl implements AccountLockoutService {
 
     @Override
     public void processLoginSuccess(String username) {
-        Date currentDate = new Date();
-        Date timeoutDate = new Date(System.currentTimeMillis() - 1000 * timeout);
-
-        List<FailedLoginAttempt> failedAttempts =
-                failedLoginService.findByDateBetweenAndUsername(timeoutDate, currentDate, username);
+        List<FailedLoginAttempt> failedAttempts = getRecentLoginAttempts(username);
 
         for (FailedLoginAttempt failedLoginAttempt : failedAttempts) {
             failedLoginAttempt.setActive(false);
         }
 
         failedLoginService.updateFailedLoginAttempt(failedAttempts);
+    }
+
+    private List<FailedLoginAttempt> getRecentLoginAttempts(String username) {
+        Date currentDate = new Date();
+        Date timeoutDate = new Date(System.currentTimeMillis() - 1000 * timeout);
+
+        return failedLoginService.findByDateBetweenAndUsername(timeoutDate, currentDate, username);
     }
 
 }
