@@ -89,6 +89,20 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
     }
 
     @Override
+    public ResponseEntity<UserResponse> unlockUser(User user) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri).pathSegment("unlock");
+        ResponseEntity response;
+        HttpEntity<User> requestEntity = new HttpEntity<>(user, null);
+
+        try {
+            response = restTemplate.exchange(builder.build().toUriString(), HttpMethod.PUT, requestEntity, UserResponse.class);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body((UserResponse) response.getBody());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @Override
     public ResponseEntity<UserResponse> updateUser(User user) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri);
         ResponseEntity response;

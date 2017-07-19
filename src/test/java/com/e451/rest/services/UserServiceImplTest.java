@@ -134,10 +134,18 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void whenUpdateUser_returnsUpdatedUsser() {
+    public void whenUpdateUser_returnsUpdatedUser() {
         when(userServiceGateway.updateUser(user)).thenReturn(ResponseEntity.status(HttpStatus.OK).body(userResponse));
 
         ResponseEntity<UserResponse> response = userService.updateUser(user);
+
+        Assert.assertEquals(user, response.getBody().getUsers().get(0));
+    }
+
+    @Test
+    public void whenUnlockUser_returnsUnlockedUser() {
+        when(userServiceGateway.unlockUser(user)).thenReturn(ResponseEntity.ok(userResponse));
+        ResponseEntity<UserResponse> response = userService.unlockUser(user);
 
         Assert.assertEquals(user, response.getBody().getUsers().get(0));
     }

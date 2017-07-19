@@ -119,6 +119,21 @@ public class UserServiceGatewayImplTest {
     }
 
     @Test
+    public void whenUnlockUser_thenReturnUpdatedUser() {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(BASE_URI).pathSegment("unlock");
+        HttpEntity<User> requestEntity = new HttpEntity<>(user, null);
+        UserResponse userResponse = new UserResponse();
+        userResponse.setUsers(Arrays.asList(user));
+
+        when(restTemplate.exchange(builder.build().toUriString(), HttpMethod.PUT, requestEntity, UserResponse.class))
+                .thenReturn(ResponseEntity.status(HttpStatus.OK).body(userResponse));
+        ResponseEntity<UserResponse> response = userServiceGateway.unlockUser(user);
+
+        Assert.assertEquals(user, response.getBody().getUsers().get(0));
+        verify(restTemplate).exchange(builder.build().toUriString(), HttpMethod.PUT, requestEntity, UserResponse.class);
+    }
+
+    @Test
     public void whenUpdateUserVerification_thenReturnUpdatedUser() {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(BASE_URI).pathSegment("password");
         UserVerification userVerification = new UserVerification();
