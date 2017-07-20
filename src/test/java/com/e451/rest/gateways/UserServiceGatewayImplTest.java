@@ -119,7 +119,7 @@ public class UserServiceGatewayImplTest {
     }
 
     @Test
-    public void whenUnlockUser_thenReturnUpdatedUser() {
+    public void whenUnlockUser_thenVerifyRestTemplateCalled() {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(BASE_URI).pathSegment("unlock");
         HttpEntity<User> requestEntity = new HttpEntity<>(user, null);
         UserResponse userResponse = new UserResponse();
@@ -134,7 +134,7 @@ public class UserServiceGatewayImplTest {
     }
 
     @Test
-    public void whenUpdateUserVerification_thenReturnUpdatedUser() {
+    public void whenUpdateUserVerification_thenVerifyRestTemplateCalled() {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(BASE_URI).pathSegment("password");
         UserVerification userVerification = new UserVerification();
         userVerification.setUser(user);
