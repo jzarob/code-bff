@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
@@ -36,9 +37,9 @@ public class AssessmentsControllerTest {
     public void setup() {
         assessmentsController = new AssessmentsController(assessmentService);
         assessments = Arrays.asList(
-                new Assessment("1", "fn1", "ln1", "test1@test.com"),
-                new Assessment("2", "fn2", "ln2", "test2@test.com"),
-                new Assessment("3", "fn3", "ln3", "test3@test.com")
+                new Assessment("1", "fn1", "ln1", "test1@test.com", new Date()),
+                new Assessment("2", "fn2", "ln2", "test2@test.com", new Date()),
+                new Assessment("3", "fn3", "ln3", "test3@test.com", new Date())
         );
     }
 

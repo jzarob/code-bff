@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Created by j747951 on 6/15/2017.
@@ -50,6 +52,14 @@ public class AssessmentServiceImpl implements AssessmentService {
     @Override
     public ResponseEntity<AssessmentResponse> updateAssessment(Assessment assessment) {
         return assessmentServiceGateway.updateAssessment(assessment);
+    }
+
+    @Override
+    public Stream<String> getAssessmentsCsv() {
+        List<Assessment> assessments = getAssessments().getBody().getAssessments();
+
+        return Stream.concat(Stream.of(Assessment.CSV_HEADERS),
+                assessments.stream().map(Assessment::toCsvRow));
     }
 
 }
