@@ -50,6 +50,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public ResponseEntity<UserResponse> searchUsers(int page, int size, String property, String searchString) {
+        return userServiceGateway.searchUsers(page, size, property, searchString);
+    }
+
+    @Override
     public ResponseEntity<UserResponse> createUser(User user) {
         return userServiceGateway.createUser(user);
     }

@@ -105,6 +105,21 @@ public class UserServiceImplTest {
     }
 
     @Test
+    public void whenSearchUsers_returnsListOfUsers() {
+        UserResponse userResponse = new UserResponse();
+        userResponse.setUsers(users);
+        userResponse.setPaginationTotalElements((long)users.size());
+
+        ResponseEntity<UserResponse> gatewayResponse = new ResponseEntity<UserResponse>(userResponse, HttpStatus.OK);
+
+        when(userService.searchUsers(0, 20, "lastName", "text")).thenReturn(gatewayResponse);
+
+        ResponseEntity<UserResponse> response = userService.searchUsers(0, 20, "lastName", "text");
+
+        Assert.assertEquals(users.size(), (long) response.getBody().getPaginationTotalElements());
+    }
+
+    @Test
     public void whenActivateUser_returnOK() {
         String guid = UUID.randomUUID().toString();
 
@@ -173,6 +188,7 @@ public class UserServiceImplTest {
         Assert.assertEquals(user, response.getBody().getUsers().get(0));
     }
 
+    @Test
     public void whenDeleteUser_returnResponseEntity() {
         ResponseEntity gatewayResponse = new ResponseEntity(null, HttpStatus.NO_CONTENT);
 
