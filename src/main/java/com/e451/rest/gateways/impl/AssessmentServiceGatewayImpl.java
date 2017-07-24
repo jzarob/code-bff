@@ -93,9 +93,11 @@ public class AssessmentServiceGatewayImpl implements AssessmentServiceGateway {
     @Override
     public ResponseEntity<AssessmentResponse> searchAssessments(int page, int size, String property, String searchString) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(assessmentServiceUri)
+                .pathSegment("search")
                 .queryParam("page", page)
                 .queryParam("size", size)
-                .queryParam("property", property);
+                .queryParam("property", property)
+                .queryParam("searchString", searchString);
 
         ResponseEntity response;
 
