@@ -11,6 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.stream.Collectors;
+
 /**
  * Created by j747951 on 6/15/2017.
  */
@@ -37,6 +43,23 @@ public class AssessmentsController {
                                                              @RequestParam("size") int size,
                                                              @RequestParam("property") String property) {
         return assessmentService.getAssessments(page, size, property);
+    }
+
+    @GetMapping("/csv")
+    public void getAssessmentsCsv(HttpServletResponse response) throws IOException {
+        response.setContentType("text/csv;charset=utf-8");
+        response.setHeader("Content-Disposition","attachment; filename=\"assessments.csv\"");
+        ServletOutputStream writer = response.getOutputStream();
+        assessmentService.getAssessmentsCsv().forEach(row -> {
+            try {
+                writer.print(row);
+                writer.print(System.getProperty("line.separator"));
+            } catch(Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        writer.flush();
+        writer.close();
     }
 
     @GetMapping("/{guid}")
