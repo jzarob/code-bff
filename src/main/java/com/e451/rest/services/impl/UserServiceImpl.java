@@ -58,6 +58,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public ResponseEntity<UserResponse> updateUser(User user) { return userServiceGateway.updateUser(user); }
 
     @Override
+    public ResponseEntity<UserResponse> unlockUser(User user) { return userServiceGateway.unlockUser(user); }
+
+    @Override
     public ResponseEntity<UserResponse> updateUser(UserVerification userVerification) {
         return userServiceGateway.updateUser(userVerification);
     }

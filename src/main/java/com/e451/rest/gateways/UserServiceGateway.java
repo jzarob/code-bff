@@ -14,6 +14,7 @@ public interface UserServiceGateway {
     ResponseEntity<UserResponse> getUsers();
     ResponseEntity<UserResponse> getUsers(int page, int size, String property);
     ResponseEntity<UserResponse> createUser(User user);
+    ResponseEntity<UserResponse> unlockUser(User user);
     ResponseEntity<UserResponse> updateUser(User user);
     ResponseEntity<UserResponse> updateUser(UserVerification userVerification);
     ResponseEntity<UserResponse> getActiveUser();
