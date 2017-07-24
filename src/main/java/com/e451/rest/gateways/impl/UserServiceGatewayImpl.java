@@ -66,7 +66,8 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
                 .pathSegment("search")
                 .queryParam("page", page)
                 .queryParam("size", size)
-                .queryParam("property", property);
+                .queryParam("property", property)
+                .queryParam("searchString", searchString);
 
         ResponseEntity<UserResponse> response;
 
