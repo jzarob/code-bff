@@ -26,6 +26,7 @@ public class Assessment {
     private Date modifiedDate;
     private String interviewGuid;
     private Date assessmentDate;
+    private Double rating;
 
     @JsonInclude(value=JsonInclude.Include.ALWAYS)
     private AssessmentState state;
@@ -134,6 +135,14 @@ public class Assessment {
 
     public void setAssessmentDate(Date assessmentDate) {
         this.assessmentDate = assessmentDate;
+    }
+
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
     }
 
     public static final String CSV_HEADERS = "first_name,last_name,email,notes,assessment_date";
