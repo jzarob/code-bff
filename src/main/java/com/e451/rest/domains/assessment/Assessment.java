@@ -140,7 +140,7 @@ public class Assessment {
 
     @JsonIgnore
     public String toCsvRow() {
-        return Stream.of(firstName, lastName, email, notes, assessmentDate.toString())
+        return Stream.of(firstName, lastName, email, notes, assessmentDate != null ? assessmentDate.toString() : "")
                 .map(value -> null == value ? "" : value)
                 .map(value -> value.replaceAll("\"", "\"\""))
                 .map(value -> value.replaceAll("\n", "  "))
