@@ -38,7 +38,7 @@ public class UsersController {
         return  userService.getUsers(page, size, property);
     }
 
-    @GetMapping(params = {"page", "size", "property", "searchString"})
+    @GetMapping(value = "/search", params = {"page", "size", "property", "searchString"})
     public ResponseEntity<UserResponse> getUsers(@RequestParam("page") int page,
                                                  @RequestParam("size") int size,
                                                  @RequestParam("property") String property,

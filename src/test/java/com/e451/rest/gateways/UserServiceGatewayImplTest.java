@@ -182,11 +182,11 @@ public class UserServiceGatewayImplTest {
         UserResponse userResponse = new UserResponse();
         ResponseEntity<UserResponse> response = ResponseEntity.ok(userResponse);
 
-        when(restTemplate.getForEntity("fakeUri/users?page=0&size=20&property=firstName&searchString=text", UserResponse.class)).thenReturn(response);
+        when(restTemplate.getForEntity("fakeUri/users/search?page=0&size=20&property=firstName&searchString=text", UserResponse.class)).thenReturn(response);
 
         userServiceGateway.searchUsers(0,20,"firstName", "text");
 
-        verify(restTemplate).getForEntity("fakeUri/users?page=0&size=20&property=firstName&searchString=text", UserResponse.class);
+        verify(restTemplate).getForEntity("fakeUri/users/search?page=0&size=20&property=firstName&searchString=text", UserResponse.class);
     }
 
 }

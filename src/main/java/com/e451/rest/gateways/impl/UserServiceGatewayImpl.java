@@ -63,6 +63,7 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
     @Override
     public ResponseEntity<UserResponse> searchUsers(int page, int size, String property, String searchString) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri)
+                .pathSegment("search")
                 .queryParam("page", page)
                 .queryParam("size", size)
                 .queryParam("property", property);
