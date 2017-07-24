@@ -6,6 +6,7 @@ import com.e451.rest.domains.assessment.AssessmentStateResponse;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Created by j747951 on 6/15/2017.
@@ -17,4 +18,6 @@ public interface AssessmentService {
     ResponseEntity<AssessmentStateResponse> getAssessmentStateByGuid(String guid);
     ResponseEntity<AssessmentResponse> createAssessment(Assessment assessment);
     ResponseEntity<AssessmentResponse> updateAssessment(Assessment assessment);
+
+    Stream<String> getAssessmentsCsv();
 }

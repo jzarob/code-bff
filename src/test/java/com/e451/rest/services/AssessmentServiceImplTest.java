@@ -16,7 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -39,9 +42,9 @@ public class AssessmentServiceImplTest {
         this.assessmentService = new AssessmentServiceImpl(assessmentServiceGateway);
 
         assessments = Arrays.asList(
-                new Assessment("1", "fn1", "ln1", "test1@test.com"),
-                new Assessment("2", "fn2", "ln2", "test2@test.com"),
-                new Assessment("3", "fn3", "ln3", "test3@test.com")
+                new Assessment("1", "fn1", "ln1", "test1@test.com", new Date()),
+                new Assessment("2", "fn2", "ln2", "test2@test.com", new Date()),
+                new Assessment("3", "fn3", "ln3", "test3@test.com", new Date())
         );
     }
 
@@ -108,7 +111,7 @@ public class AssessmentServiceImplTest {
     @Test
     public void whenCreateAssessment_returnNewAssessment() {
         AssessmentResponse assessmentResponse = new AssessmentResponse();
-        Assessment assessment = new Assessment("4", "fn4", "ln4", "test4@test.com");
+        Assessment assessment = new Assessment("4", "fn4", "ln4", "test4@test.com", new Date());
         assessmentResponse.setAssessments(Arrays.asList(assessment));
 
         ResponseEntity<AssessmentResponse> gatewayRespone =
@@ -125,7 +128,7 @@ public class AssessmentServiceImplTest {
     public void whenUpdateAssessment_returnUpdatedAssessment() {
         AssessmentResponse assessmentResponse = new AssessmentResponse();
 
-        Assessment assessment = new Assessment("4", "fn4", "ln4", "test4@test.com");
+        Assessment assessment = new Assessment("4", "fn4", "ln4", "test4@test.com", new Date());
         assessmentResponse.setAssessments(Arrays.asList(assessment));
 
         ResponseEntity<AssessmentResponse> gatewayResponse = new ResponseEntity<AssessmentResponse>(assessmentResponse, HttpStatus.ACCEPTED);
@@ -136,5 +139,23 @@ public class AssessmentServiceImplTest {
 
         Assert.assertEquals(1, response.getBody().getAssessments().size());
         Assert.assertEquals(assessment, response.getBody().getAssessments().get(0));
+    }
+
+    @Test
+    public void whenGetAssessmentCsv_returnAssessmentStream() {
+        AssessmentResponse assessmentResponse = new AssessmentResponse();
+        Assessment assessment = new Assessment("1", "fn1", "ln1", "test@test.com", new Date());
+        assessmentResponse.setAssessments(Arrays.asList(assessment));
+        ResponseEntity<AssessmentResponse> gatewayResponse = new ResponseEntity<>(assessmentResponse, HttpStatus.OK);
+
+        when(assessmentServiceGateway.getAssessments()).thenReturn(gatewayResponse);
+
+        Stream<String> stream = assessmentService.getAssessmentsCsv();
+
+        List<String> strings = stream.collect(Collectors.toList());
+
+        Assert.assertEquals(2, strings.size());
+        Assert.assertEquals(Assessment.CSV_HEADERS, strings.get(0));
+        Assert.assertEquals(assessment.toCsvRow(), strings.get(1));
     }
 }

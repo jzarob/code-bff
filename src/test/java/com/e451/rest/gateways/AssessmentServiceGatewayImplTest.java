@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Date;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -92,7 +93,7 @@ public class AssessmentServiceGatewayImplTest {
     public void whenCreateAssessmentCalled_thenRestTemplateIsCalled() throws Exception {
         AssessmentResponse assessmentResponse = new AssessmentResponse();
         final Assessment assessment =
-                new Assessment("1", "firstName", "lastName", "test@test.com");
+                new Assessment("1", "firstName", "lastName", "test@test.com", new Date());
         assessmentResponse.setAssessments(Arrays.asList(assessment));
         ResponseEntity<AssessmentResponse> response = ResponseEntity.ok(assessmentResponse);
 
@@ -107,7 +108,7 @@ public class AssessmentServiceGatewayImplTest {
     public void whenUpdateAssessmentCalled_thenRestTemplateIsCalled() throws Exception {
         AssessmentResponse assessmentResponse = new AssessmentResponse();
 
-        Assessment assessment = new Assessment("1", "firstName2", "lastName2", "test@test.com");
+        Assessment assessment = new Assessment("1", "firstName2", "lastName2", "test@test.com", new Date());
 
         assessmentResponse.setAssessments(Arrays.asList(assessment));
 
