@@ -18,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -137,5 +139,23 @@ public class AssessmentServiceImplTest {
 
         Assert.assertEquals(1, response.getBody().getAssessments().size());
         Assert.assertEquals(assessment, response.getBody().getAssessments().get(0));
+    }
+
+    @Test
+    public void whenGetAssessmentCsv_returnAssessmentStream() {
+        AssessmentResponse assessmentResponse = new AssessmentResponse();
+        Assessment assessment = new Assessment("1", "fn1", "ln1", "test@test.com", new Date());
+        assessmentResponse.setAssessments(Arrays.asList(assessment));
+        ResponseEntity<AssessmentResponse> gatewayResponse = new ResponseEntity<>(assessmentResponse, HttpStatus.OK);
+
+        when(assessmentServiceGateway.getAssessments()).thenReturn(gatewayResponse);
+
+        Stream<String> stream = assessmentService.getAssessmentsCsv();
+
+        List<String> strings = stream.collect(Collectors.toList());
+
+        Assert.assertEquals(2, strings.size());
+        Assert.assertEquals(Assessment.CSV_HEADERS, strings.get(0));
+        Assert.assertEquals(assessment.toCsvRow(), strings.get(1));
     }
 }

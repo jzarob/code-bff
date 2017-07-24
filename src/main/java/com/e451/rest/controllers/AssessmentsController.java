@@ -44,9 +44,8 @@ public class AssessmentsController {
 
     @GetMapping("/csv")
     public void getAssessmentsCsv(HttpServletResponse response) throws IOException {
-//        String str = assessmentService.getAssessmentsCsv().collect(Collectors.joining(System.getProperty("line.separator")));
         response.setContentType("text/csv;charset=utf-8");
-        response.setHeader("Content-Disposition","attachement; filename=\"assessments.csv\"");
+        response.setHeader("Content-Disposition","attachment; filename=\"assessments.csv\"");
         ServletOutputStream writer = response.getOutputStream();
         assessmentService.getAssessmentsCsv().forEach(row -> {
             try {
