@@ -45,6 +45,17 @@ public class QuestionServiceGatewayImpl implements QuestionServiceGateway {
     }
 
     @Override
+    public ResponseEntity<QuestionResponse> searchQuestions(int page, int size, String property, String searchString) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(questionServiceUri)
+                .pathSegment("search")
+                .queryParam("page", page)
+                .queryParam("size", size)
+                .queryParam("property", property)
+                .queryParam("searchString", searchString);
+        return restTemplate.getForEntity(builder.build().toUriString(), QuestionResponse.class);
+    }
+
+    @Override
     public ResponseEntity<QuestionResponse> getQuestion(String id) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(questionServiceUri).pathSegment(id);
         return restTemplate.getForEntity(builder.build().toUriString(), QuestionResponse.class);
