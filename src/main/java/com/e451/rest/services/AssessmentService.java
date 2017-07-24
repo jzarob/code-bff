@@ -15,6 +15,7 @@ public interface AssessmentService {
     ResponseEntity<AssessmentResponse> getAssessments(int page, int size, String property);
     ResponseEntity<AssessmentResponse> getAssessmentByGuid(String guid);
     ResponseEntity<AssessmentStateResponse> getAssessmentStateByGuid(String guid);
+    ResponseEntity<AssessmentResponse> searchAssessments(int page, int size, String property, String searchString);
     ResponseEntity<AssessmentResponse> createAssessment(Assessment assessment);
     ResponseEntity<AssessmentResponse> updateAssessment(Assessment assessment);
 }

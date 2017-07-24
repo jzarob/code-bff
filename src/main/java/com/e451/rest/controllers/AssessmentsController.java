@@ -46,6 +46,14 @@ public class AssessmentsController {
         return assessmentService.getAssessmentStateByGuid(guid);
     }
 
+    @GetMapping(name="/search", params = {"page", "size", "property", "searchString"})
+    public ResponseEntity<AssessmentResponse> searchAssessments(@RequestParam("page") int page,
+                                                                @RequestParam("size") int size,
+                                                                @RequestParam("property") String property,
+                                                                @RequestParam("searchString") String searchString) {
+        return assessmentService.searchAssessments(page, size, property, searchString);
+    }
+
     @PostMapping
     public ResponseEntity<AssessmentResponse> createAssessment(@RequestBody Assessment assessment) {
         return assessmentService.createAssessment(assessment);

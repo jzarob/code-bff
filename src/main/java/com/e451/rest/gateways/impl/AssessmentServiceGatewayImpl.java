@@ -91,6 +91,23 @@ public class AssessmentServiceGatewayImpl implements AssessmentServiceGateway {
     }
 
     @Override
+    public ResponseEntity<AssessmentResponse> searchAssessments(int page, int size, String property, String searchString) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(assessmentServiceUri)
+                .queryParam("page", page)
+                .queryParam("size", size)
+                .queryParam("property", property);
+
+        ResponseEntity response;
+
+        try {
+            response = restTemplate.getForEntity(builder.build().toUriString(), AssessmentResponse.class);
+            return ResponseEntity.status(HttpStatus.OK).body((AssessmentResponse) response.getBody());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @Override
     public ResponseEntity<AssessmentResponse> createAssessment(Assessment assessment) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(assessmentServiceUri);
         ResponseEntity response;
