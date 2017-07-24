@@ -14,6 +14,7 @@ import java.util.UUID;
 public interface UserService {
     ResponseEntity<UserResponse> getUsers();
     ResponseEntity<UserResponse> getUsers(int page, int size, String property);
+    ResponseEntity<UserResponse> searchUsers(int page, int size, String property, String searchString);
     ResponseEntity<UserResponse> createUser(User user);
     ResponseEntity<UserResponse> unlockUser(User user);
     ResponseEntity<UserResponse> updateUser(User user);

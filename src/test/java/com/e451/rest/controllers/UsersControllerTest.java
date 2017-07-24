@@ -76,6 +76,23 @@ public class UsersControllerTest {
     }
 
     @Test
+    public void whenSearchUsers_returnsListOfUsers() {
+        UserResponse userResponse = new UserResponse();
+        userResponse.setUsers(users);
+        userResponse.setPaginationTotalElements((long) users.size());
+
+        ResponseEntity<UserResponse> responseEntity = ResponseEntity.ok(userResponse);
+
+        when(userService.searchUsers(0, 20, "lastName", "text")).thenReturn(responseEntity);
+
+        ResponseEntity<UserResponse> response = controller.getUsers(0, 20, "lastName", "text");
+
+        Assert.assertEquals(this.users.size(), response.getBody().getUsers().size());
+        Assert.assertEquals(this.users.size(), (long) response.getBody().getPaginationTotalElements());
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
     public void whenCreateUser_returnNewUser() {
         UserResponse userResponse = new UserResponse();
         userResponse.setUsers(Arrays.asList(users.get(0)));

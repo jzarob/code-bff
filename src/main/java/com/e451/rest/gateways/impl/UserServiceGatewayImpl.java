@@ -61,6 +61,24 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
     }
 
     @Override
+    public ResponseEntity<UserResponse> searchUsers(int page, int size, String property, String searchString) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri)
+                .queryParam("page", page)
+                .queryParam("size", size)
+                .queryParam("property", property);
+
+        ResponseEntity<UserResponse> response;
+
+        try {
+            response = restTemplate.getForEntity(builder.build().toUriString(), UserResponse.class);
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return response;
+    }
+
+    @Override
     public ResponseEntity deleteUser(String id) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri).pathSegment(id);
         HttpEntity requestEntity = new HttpEntity(null, null);

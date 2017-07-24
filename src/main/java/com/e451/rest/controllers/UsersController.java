@@ -38,6 +38,14 @@ public class UsersController {
         return  userService.getUsers(page, size, property);
     }
 
+    @GetMapping(params = {"page", "size", "property", "searchString"})
+    public ResponseEntity<UserResponse> getUsers(@RequestParam("page") int page,
+                                                 @RequestParam("size") int size,
+                                                 @RequestParam("property") String property,
+                                                 @RequestParam("searchString") String searchString) {
+        return  userService.searchUsers(page, size, property, searchString);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity deleteUser(@PathVariable("id") String id) {
         return userService.deleteUser(id);
