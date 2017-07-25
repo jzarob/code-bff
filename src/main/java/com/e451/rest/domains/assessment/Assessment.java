@@ -1,11 +1,14 @@
 package com.e451.rest.domains.assessment;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by j747951 on 6/15/2017.
@@ -22,6 +25,9 @@ public class Assessment {
     private Date createdDate;
     private Date modifiedDate;
     private String interviewGuid;
+    private Date assessmentDate;
+    private Double rating = 0d;
+
     @JsonInclude(value=JsonInclude.Include.ALWAYS)
     private AssessmentState state;
     private List<QuestionAnswer> questionAnswers;
@@ -123,12 +129,41 @@ public class Assessment {
         this.notes = notes;
     }
 
-    public Assessment(String id, String firstName, String lastName, String email) {
+    public Date getAssessmentDate() {
+        return assessmentDate;
+    }
+
+    public void setAssessmentDate(Date assessmentDate) {
+        this.assessmentDate = assessmentDate;
+    }
+
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
+    }
+
+    public static final String CSV_HEADERS = "first_name,last_name,email,notes,rating,assessment_date";
+
+    @JsonIgnore
+    public String toCsvRow() {
+        return Stream.of(firstName, lastName, email, notes, rating.toString(), assessmentDate != null ? assessmentDate.toString() : "")
+                .map(value -> null == value ? "" : value)
+                .map(value -> value.replaceAll("\"", "\"\""))
+                .map(value -> value.replaceAll("\n", "  "))
+                .map(value -> Stream.of("\"", ",").anyMatch(value::contains) ? "\"" + value + "\"" : value)
+                .collect(Collectors.joining(","));
+    }
+
+    public Assessment(String id, String firstName, String lastName, String email, Date assessmentDate) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.interviewGuid = UUID.randomUUID().toString();
+        this.assessmentDate = assessmentDate;
     }
 
     public Assessment() {

@@ -35,6 +35,14 @@ public class QuestionsController {
         return questionService.getQuestions(page, size, property);
     }
 
+    @GetMapping(value = "/search", params = {"page", "size", "property", "searchString"})
+    public ResponseEntity<QuestionResponse> searchQuestions(@RequestParam("page") int page,
+                                                            @RequestParam("size") int size,
+                                                            @RequestParam("property") String property,
+                                                            @RequestParam("searchString") String searchString) {
+        return questionService.searchQuestions(page, size, property, searchString);
+    }
+
     @PutMapping
     public ResponseEntity<QuestionResponse> updateQuestion(@RequestBody Question question) {
         return questionService.updateQuestion(question);

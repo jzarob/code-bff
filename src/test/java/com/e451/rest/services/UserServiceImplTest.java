@@ -1,8 +1,8 @@
 package com.e451.rest.services;
 
-import com.e451.rest.domains.assessment.AssessmentResponse;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
+import com.e451.rest.domains.user.UserVerification;
 import com.e451.rest.gateways.UserServiceGateway;
 import com.e451.rest.repository.UserRepository;
 import com.e451.rest.services.impl.UserServiceImpl;
@@ -38,24 +38,29 @@ public class UserServiceImplTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private AccountLockoutService accountLockoutService;
+
     private List<User> users;
+    private UserResponse userResponse;
+    private User user;
 
     @Before
     public void setup() {
-        this.userService = new UserServiceImpl(userServiceGateway, userRepository);
+        this.userService = new UserServiceImpl(userServiceGateway, userRepository, accountLockoutService);
 
         users = Arrays.asList(
                 new User("id1", "liz1", "conrad1", "email1", "password1"),
                 new User("id2", "liz2", "conrad2", "email2", "password2"),
                 new User("id3", "liz3", "conrad3", "email3", "password3")
         );
+        userResponse = new UserResponse();
+        user = users.get(0);
+        userResponse.setUsers(Arrays.asList(user));
     }
 
     @Test
     public void whenCreateUser_returnNewUser() {
-        UserResponse userResponse = new UserResponse();
-        User user = users.get(0);
-        userResponse.setUsers(Arrays.asList(user));
 
         ResponseEntity<UserResponse> gatewayRespone =
                 ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
@@ -65,6 +70,53 @@ public class UserServiceImplTest {
         ResponseEntity<UserResponse> response = userService.createUser(user);
 
         Assert.assertEquals(1, response.getBody().getUsers().size());
+    }
+
+    @Test
+    public void whenGetUsers_returnListOfUsers() {
+        UserResponse userResponse =  new UserResponse();
+        userResponse.setUsers(users);
+
+        ResponseEntity<UserResponse> gatewayResponse =
+                ResponseEntity.status(HttpStatus.OK).body(userResponse);
+
+        when(userServiceGateway.getUsers()).thenReturn(gatewayResponse);
+
+        ResponseEntity<UserResponse> response = userService.getUsers();
+
+        Assert.assertEquals(users.size(), response.getBody().getUsers().size());
+    }
+
+    @Test
+    public void whenGetUsersPageable_returnListOfUsers() {
+        UserResponse userResponse = new UserResponse();
+        userResponse.setUsers(this.users);
+        userResponse.setPaginationTotalElements((long) this.users.size());
+
+        ResponseEntity<UserResponse> gatewayResponse =
+                new ResponseEntity<UserResponse>(userResponse, HttpStatus.OK);
+
+        when(userServiceGateway.getUsers(0, 20, "title")).thenReturn(gatewayResponse);
+
+        ResponseEntity<UserResponse> response = userService.getUsers(0, 20, "title");
+
+        Assert.assertEquals(this.users.size(), response.getBody().getUsers().size());
+        Assert.assertEquals(this.users.size(), (long) response.getBody().getPaginationTotalElements());
+    }
+
+    @Test
+    public void whenSearchUsers_returnsListOfUsers() {
+        UserResponse userResponse = new UserResponse();
+        userResponse.setUsers(users);
+        userResponse.setPaginationTotalElements((long)users.size());
+
+        ResponseEntity<UserResponse> gatewayResponse = new ResponseEntity<UserResponse>(userResponse, HttpStatus.OK);
+
+        when(userService.searchUsers(0, 20, "lastName", "text")).thenReturn(gatewayResponse);
+
+        ResponseEntity<UserResponse> response = userService.searchUsers(0, 20, "lastName", "text");
+
+        Assert.assertEquals(users.size(), (long) response.getBody().getPaginationTotalElements());
     }
 
     @Test
@@ -94,5 +146,56 @@ public class UserServiceImplTest {
         when(userRepository.findByUsername(any(String.class))).thenThrow(new RecoverableDataAccessException(("error")));
 
         userService.loadUserByUsername("test");
+    }
+
+    @Test
+    public void whenUpdateUser_returnsUpdatedUser() {
+        when(userServiceGateway.updateUser(user)).thenReturn(ResponseEntity.status(HttpStatus.OK).body(userResponse));
+
+        ResponseEntity<UserResponse> response = userService.updateUser(user);
+
+        Assert.assertEquals(user, response.getBody().getUsers().get(0));
+    }
+
+    @Test
+    public void whenUnlockUser_returnsUnlockedUser() {
+        when(userServiceGateway.unlockUser(user)).thenReturn(ResponseEntity.ok(userResponse));
+        ResponseEntity<UserResponse> response = userService.unlockUser(user);
+
+        Assert.assertEquals(user, response.getBody().getUsers().get(0));
+    }
+
+    @Test
+    public void whenUpdateUserVerification_returnsUpdatedUser() {
+        UserVerification userVerification = new UserVerification();
+        userVerification.setCurrentPassword("Password1!");
+        userVerification.setUser(user);
+        when(userServiceGateway.updateUser(userVerification)).thenReturn(ResponseEntity.status(HttpStatus.OK)
+            .body(userResponse));
+
+        ResponseEntity<UserResponse> response = userService.updateUser(userVerification);
+
+        Assert.assertEquals(user, response.getBody().getUsers().get(0));
+
+    }
+
+    @Test
+    public void whenGetActiveUser_returnsActiveUser () {
+        when(userServiceGateway.getActiveUser()).thenReturn(ResponseEntity.status(HttpStatus.OK).body(userResponse));
+
+        ResponseEntity<UserResponse> response = userService.getActiveUser();
+
+        Assert.assertEquals(user, response.getBody().getUsers().get(0));
+    }
+
+    @Test
+    public void whenDeleteUser_returnResponseEntity() {
+        ResponseEntity gatewayResponse = new ResponseEntity(null, HttpStatus.NO_CONTENT);
+
+        when(userServiceGateway.deleteUser("1")).thenReturn(gatewayResponse);
+
+        ResponseEntity response = userService.deleteUser("1");
+
+        Assert.assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 }

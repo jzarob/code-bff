@@ -10,13 +10,20 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Stream;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 /**
@@ -30,15 +37,18 @@ public class AssessmentsControllerTest {
     @Mock
     private AssessmentService assessmentService;
 
+    @Mock
+    private HttpServletResponse servletResponse;
+
     private List<Assessment> assessments;
 
     @Before
     public void setup() {
         assessmentsController = new AssessmentsController(assessmentService);
         assessments = Arrays.asList(
-                new Assessment("1", "fn1", "ln1", "test1@test.com"),
-                new Assessment("2", "fn2", "ln2", "test2@test.com"),
-                new Assessment("3", "fn3", "ln3", "test3@test.com")
+                new Assessment("1", "fn1", "ln1", "test1@test.com", new Date()),
+                new Assessment("2", "fn2", "ln2", "test2@test.com", new Date()),
+                new Assessment("3", "fn3", "ln3", "test3@test.com", new Date())
         );
     }
 
@@ -103,6 +113,25 @@ public class AssessmentsControllerTest {
 
         Assert.assertEquals(AssessmentState.NOTES, response.getBody().getState());
     }
+
+    @Test
+    public void whenSearchAssessments_returnListOfAssessments() {
+        AssessmentResponse assessmentResponse = new AssessmentResponse();
+        assessmentResponse.setAssessments(assessments);
+        assessmentResponse.setPaginationTotalElements((long) assessments.size());
+
+        ResponseEntity<AssessmentResponse> responseEntity = ResponseEntity.ok(assessmentResponse);
+
+        when(assessmentService
+                .searchAssessments(any(Integer.class), any(Integer.class), any(String.class), any(String.class)))
+                .thenReturn(responseEntity);
+
+        ResponseEntity<AssessmentResponse> response = assessmentsController.searchAssessments(0, 20, "title", "search");
+
+        Assert.assertEquals(this.assessments.size(), response.getBody().getAssessments().size());
+        Assert.assertEquals(this.assessments.size(), (long) response.getBody().getPaginationTotalElements());
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
     
     @Test
     public void whenCreateAssessment_returnNewAssessment() {
@@ -133,5 +162,14 @@ public class AssessmentsControllerTest {
 
         Assert.assertEquals(response.getBody().getAssessments().get(0), assessments.get(0));
         Assert.assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
+    }
+
+    @Test
+    public void whenGetCsv_BuildsCsvResponse() throws IOException {
+        ServletOutputStream outputStream = Mockito.spy(ServletOutputStream.class);
+        when(servletResponse.getOutputStream()).thenReturn(outputStream);
+        when(assessmentService.getAssessmentsCsv()).thenReturn(Stream.of("1,2,3,4,5", "1,2,3,4,5"));
+        assessmentsController.getAssessmentsCsv(servletResponse);
+        Mockito.verify(outputStream, Mockito.times(4)).print(any());
     }
 }

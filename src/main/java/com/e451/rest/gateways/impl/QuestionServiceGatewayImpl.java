@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -42,6 +43,25 @@ public class QuestionServiceGatewayImpl implements QuestionServiceGateway {
                 .queryParam("size", size)
                 .queryParam("property", property);
         return restTemplate.getForEntity(builder.build().toUriString(), QuestionResponse.class);
+    }
+
+    @Override
+    public ResponseEntity<QuestionResponse> searchQuestions(int page, int size, String property, String searchString) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(questionServiceUri)
+                .pathSegment("search")
+                .queryParam("page", page)
+                .queryParam("size", size)
+                .queryParam("property", property)
+                .queryParam("searchString", searchString);
+
+        ResponseEntity responseEntity;
+
+        try {
+            responseEntity = restTemplate.getForEntity(builder.build().toUriString(), QuestionResponse.class);
+            return ResponseEntity.ok((QuestionResponse) responseEntity.getBody());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @Override

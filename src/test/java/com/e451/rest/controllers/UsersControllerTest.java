@@ -1,8 +1,8 @@
 package com.e451.rest.controllers;
 
-import com.e451.rest.domains.assessment.AssessmentResponse;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
+import com.e451.rest.domains.user.UserVerification;
 import com.e451.rest.services.UserService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -43,6 +43,56 @@ public class UsersControllerTest {
     }
 
     @Test
+    public void whenGetUsers_returnListOfUsers() {
+        UserResponse userResponse = new UserResponse();
+        userResponse.setUsers(this.users);
+
+        ResponseEntity<UserResponse> responseEntity =
+                ResponseEntity.ok().body(userResponse);
+
+        when(userService.getUsers()).thenReturn(responseEntity);
+
+        ResponseEntity<UserResponse> response = controller.getUsers();
+
+        Assert.assertEquals(users.size(), response.getBody().getUsers().size());
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void whenGetUsersPageable_returnListOfUsers() {
+        UserResponse userResponse = new UserResponse();
+        userResponse.setUsers(users);
+        userResponse.setPaginationTotalElements((long) users.size());
+
+        ResponseEntity<UserResponse> responseEntity = ResponseEntity.ok(userResponse);
+
+        when(userService.getUsers(0, 20, "lastName")).thenReturn(responseEntity);
+
+        ResponseEntity<UserResponse> response = controller.getUsers(0, 20, "lastName");
+
+        Assert.assertEquals(this.users.size(), response.getBody().getUsers().size());
+        Assert.assertEquals(this.users.size(), (long) response.getBody().getPaginationTotalElements());
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void whenSearchUsers_returnsListOfUsers() {
+        UserResponse userResponse = new UserResponse();
+        userResponse.setUsers(users);
+        userResponse.setPaginationTotalElements((long) users.size());
+
+        ResponseEntity<UserResponse> responseEntity = ResponseEntity.ok(userResponse);
+
+        when(userService.searchUsers(0, 20, "lastName", "text")).thenReturn(responseEntity);
+
+        ResponseEntity<UserResponse> response = controller.getUsers(0, 20, "lastName", "text");
+
+        Assert.assertEquals(this.users.size(), response.getBody().getUsers().size());
+        Assert.assertEquals(this.users.size(), (long) response.getBody().getPaginationTotalElements());
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
     public void whenCreateUser_returnNewUser() {
         UserResponse userResponse = new UserResponse();
         userResponse.setUsers(Arrays.asList(users.get(0)));
@@ -68,6 +118,69 @@ public class UsersControllerTest {
         ResponseEntity response = controller.activateUser(uuid.toString());
 
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void whenUpdateUser_returnsUpdatedUser() {
+        UserResponse userResponse = new UserResponse();
+        User user = users.get(0);
+        String originalFirstName = user.getFirstName();
+        user.setFirstName("firstName");
+        userResponse.setUsers(Arrays.asList(user));
+        when(userService.updateUser(user)).thenReturn(ResponseEntity.status(HttpStatus.OK).body(userResponse));
+        ResponseEntity<UserResponse> response = controller.updateUser(user);
+
+        Assert.assertEquals(user, response.getBody().getUsers().get(0));
+        Assert.assertNotEquals(originalFirstName, response.getBody().getUsers().get(0).getFirstName());
+    }
+
+    @Test
+    public void whenUnlockUser_returnsUpdatedUser() {
+        UserResponse userResponse = new UserResponse();
+        User user = users.get(0);
+        String originalFirstName = user.getFirstName();
+        user.setFirstName("firstName");
+        userResponse.setUsers(Arrays.asList(user));
+        when(userService.unlockUser(user)).thenReturn(ResponseEntity.status(HttpStatus.OK).body(userResponse));
+        ResponseEntity<UserResponse> response = controller.unlockUser(user);
+
+        Assert.assertEquals(user, response.getBody().getUsers().get(0));
+        Assert.assertNotEquals(originalFirstName, response.getBody().getUsers().get(0).getFirstName());
+    }
+
+    @Test
+    public void whenUpdateUserVerification_returnsUpdatedUser() {
+        UserResponse userResponse = new UserResponse();
+        User user = users.get(0);
+        UserVerification userVerification = new UserVerification();
+        userVerification.setUser(user);
+        userVerification.setCurrentPassword("Password1");
+        userResponse.setUsers(Arrays.asList(user));
+        when(userService.updateUser(userVerification)).thenReturn(ResponseEntity.status(HttpStatus.OK).body(userResponse));
+        ResponseEntity<UserResponse> response = controller.updateUser(userVerification);
+
+        Assert.assertEquals(user, response.getBody().getUsers().get(0));
+    }
+
+    @Test
+    public void whenGetActiveUser_returnsActiveUser() {
+        UserResponse userResponse = new UserResponse();
+        User user = users.get(0);
+        userResponse.setUsers(Arrays.asList(user));
+        when(userService.getActiveUser()).thenReturn(ResponseEntity.status(HttpStatus.OK).body(userResponse));
+        ResponseEntity<UserResponse> response = controller.getActiveUer();
+
+        Assert.assertEquals(user, response.getBody().getUsers().get(0));
+    }
+
+    public void whenDeleteUser_returnNoContent() {
+        ResponseEntity responseEntity = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
+        when(userService.deleteUser("1")).thenReturn(responseEntity);
+
+        ResponseEntity response = controller.deleteUser("1");
+
+        Assert.assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
 }

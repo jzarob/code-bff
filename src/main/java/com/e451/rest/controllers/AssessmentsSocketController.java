@@ -91,4 +91,12 @@ public class AssessmentsSocketController {
         return event;
     }
 
+    @MessageMapping("/paste")
+    @SendTo("/topic/assessment/{guid}/paste")
+    public PasteEvent paste(@DestinationVariable("guid") String assessmentGuid,
+                            PasteEvent event) {
+        LOG.info("received paste event for assessment " + assessmentGuid);
+        return event;
+    }
+
 }
