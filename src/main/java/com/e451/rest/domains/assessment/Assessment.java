@@ -26,7 +26,7 @@ public class Assessment {
     private Date modifiedDate;
     private String interviewGuid;
     private Date assessmentDate;
-    private Double rating;
+    private Double rating = 0d;
 
     @JsonInclude(value=JsonInclude.Include.ALWAYS)
     private AssessmentState state;
