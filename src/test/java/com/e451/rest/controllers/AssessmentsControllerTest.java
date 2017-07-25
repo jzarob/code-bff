@@ -113,6 +113,25 @@ public class AssessmentsControllerTest {
 
         Assert.assertEquals(AssessmentState.NOTES, response.getBody().getState());
     }
+
+    @Test
+    public void whenSearchAssessments_returnListOfAssessments() {
+        AssessmentResponse assessmentResponse = new AssessmentResponse();
+        assessmentResponse.setAssessments(assessments);
+        assessmentResponse.setPaginationTotalElements((long) assessments.size());
+
+        ResponseEntity<AssessmentResponse> responseEntity = ResponseEntity.ok(assessmentResponse);
+
+        when(assessmentService
+                .searchAssessments(any(Integer.class), any(Integer.class), any(String.class), any(String.class)))
+                .thenReturn(responseEntity);
+
+        ResponseEntity<AssessmentResponse> response = assessmentsController.searchAssessments(0, 20, "title", "search");
+
+        Assert.assertEquals(this.assessments.size(), response.getBody().getAssessments().size());
+        Assert.assertEquals(this.assessments.size(), (long) response.getBody().getPaginationTotalElements());
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
     
     @Test
     public void whenCreateAssessment_returnNewAssessment() {
