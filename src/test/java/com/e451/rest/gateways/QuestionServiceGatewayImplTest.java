@@ -67,6 +67,18 @@ public class QuestionServiceGatewayImplTest {
     }
 
     @Test
+    public void whenSearchQuestionsCalled_thenRestTemplateIsCalled() throws Exception {
+        QuestionResponse questionResponse = new QuestionResponse();
+        ResponseEntity<QuestionResponse> response = ResponseEntity.ok(questionResponse);
+
+        when(restTemplate.getForEntity("fakeUri/questions/search?page=0&size=20&property=title&searchString=search", QuestionResponse.class)).thenReturn(response);
+
+        questionServiceGateway.searchQuestions(0,20,"title", "search");
+
+        verify(restTemplate).getForEntity("fakeUri/questions/search?page=0&size=20&property=title&searchString=search", QuestionResponse.class);
+    }
+
+    @Test
     public void whenGetQuestionCalled_thenRestTemplateIsCalled() throws Exception {
         QuestionResponse questionResponse = new QuestionResponse();
         ResponseEntity<QuestionResponse> response = ResponseEntity.ok(questionResponse);

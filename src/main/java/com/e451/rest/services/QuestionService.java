@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 public interface QuestionService {
     ResponseEntity<QuestionResponse> getQuestions();
     ResponseEntity<QuestionResponse> getQuestions(int page, int size, String property);
+    ResponseEntity<QuestionResponse> searchQuestions(int page, int size, String property, String searchString);
     ResponseEntity<QuestionResponse> getQuestion(String id);
     ResponseEntity<QuestionResponse> createQuestion(Question question);
     ResponseEntity<QuestionResponse> updateQuestion(Question question);

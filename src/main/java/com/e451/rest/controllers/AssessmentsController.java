@@ -4,6 +4,8 @@ import com.e451.rest.domains.assessment.Assessment;
 import com.e451.rest.domains.assessment.AssessmentResponse;
 import com.e451.rest.domains.assessment.AssessmentStateResponse;
 import com.e451.rest.services.AssessmentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
 public class AssessmentsController {
 
     private final AssessmentService assessmentService;
+    private static final Logger logger = LoggerFactory.getLogger(AssessmentsController.class);
 
     @Autowired
     public AssessmentsController(AssessmentService assessmentService) {
@@ -67,6 +70,14 @@ public class AssessmentsController {
     @GetMapping("/{guid}/status")
     public ResponseEntity<AssessmentStateResponse> getAssessmentStateByGuid(@PathVariable("guid") String guid) {
         return assessmentService.getAssessmentStateByGuid(guid);
+    }
+
+    @GetMapping(value="/search", params = {"page", "size", "property", "searchString"})
+    public ResponseEntity<AssessmentResponse> searchAssessments(@RequestParam("page") int page,
+                                                                @RequestParam("size") int size,
+                                                                @RequestParam("property") String property,
+                                                                @RequestParam("searchString") String searchString) {
+        return assessmentService.searchAssessments(page, size, property, searchString);
     }
 
     @PostMapping

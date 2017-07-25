@@ -109,6 +109,25 @@ public class AssessmentServiceImplTest {
     }
 
     @Test
+    public void whenSearchAssessments_returnPageOfAssessments() {
+        AssessmentResponse assessmentResponse = new AssessmentResponse();
+        assessmentResponse.setAssessments(this.assessments);
+        assessmentResponse.setPaginationTotalElements((long) this.assessments.size());
+
+        ResponseEntity<AssessmentResponse> gatewayResponse =
+                new ResponseEntity<AssessmentResponse>(assessmentResponse, HttpStatus.OK);
+
+        when(assessmentServiceGateway
+                .searchAssessments(any(Integer.class), any(Integer.class), any(String.class), any(String.class)))
+                .thenReturn(gatewayResponse);
+
+        ResponseEntity<AssessmentResponse> response = assessmentService.searchAssessments(0, 20, "title", "search");
+
+        Assert.assertEquals(this.assessments.size(), response.getBody().getAssessments().size());
+        Assert.assertEquals(this.assessments.size(), (long) response.getBody().getPaginationTotalElements());
+    }
+
+    @Test
     public void whenCreateAssessment_returnNewAssessment() {
         AssessmentResponse assessmentResponse = new AssessmentResponse();
         Assessment assessment = new Assessment("4", "fn4", "ln4", "test4@test.com", new Date());

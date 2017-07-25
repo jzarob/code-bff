@@ -45,6 +45,11 @@ public class AssessmentServiceImpl implements AssessmentService {
     }
 
     @Override
+    public ResponseEntity<AssessmentResponse> searchAssessments(int page, int size, String property, String searchString) {
+        return assessmentServiceGateway.searchAssessments(page, size, property, searchString);
+    }
+
+    @Override
     public ResponseEntity<AssessmentResponse> createAssessment(Assessment assessment) {
         return assessmentServiceGateway.createAssessment(assessment);
     }

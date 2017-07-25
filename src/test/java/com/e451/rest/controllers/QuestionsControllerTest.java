@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 /**
@@ -71,6 +72,25 @@ public class QuestionsControllerTest {
         when(questionService.getQuestions(0, 20, "title")).thenReturn(responseEntity);
 
         ResponseEntity<QuestionResponse> response = questionsController.getQuestions(0, 20, "title");
+
+        Assert.assertEquals(this.questions.size(), response.getBody().getQuestions().size());
+        Assert.assertEquals(this.questions.size(), (long) response.getBody().getPaginationTotalElements());
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void whenSearchQuestions_returnListOfQuestions() {
+        QuestionResponse questionResponse = new QuestionResponse();
+        questionResponse.setQuestions(questions);
+        questionResponse.setPaginationTotalElements((long) questions.size());
+
+        ResponseEntity<QuestionResponse> responseEntity = ResponseEntity.ok(questionResponse);
+
+        when(questionService
+                .searchQuestions(any(Integer.class), any(Integer.class), any(String.class), any(String.class)))
+                .thenReturn(responseEntity);
+
+        ResponseEntity<QuestionResponse> response = questionsController.searchQuestions(0, 20, "title", "search");
 
         Assert.assertEquals(this.questions.size(), response.getBody().getQuestions().size());
         Assert.assertEquals(this.questions.size(), (long) response.getBody().getPaginationTotalElements());

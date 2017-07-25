@@ -90,6 +90,18 @@ public class AssessmentServiceGatewayImplTest {
     }
 
     @Test
+    public void whenSearchAssessmentsCalled_thenRestTemplateIsCalled() throws Exception {
+        AssessmentResponse assessmentResponse = new AssessmentResponse();
+        ResponseEntity<AssessmentResponse> response = ResponseEntity.ok(assessmentResponse);
+
+        when(restTemplate.getForEntity("fakeUri/assessments/search?page=0&size=20&property=title&searchString=search", AssessmentResponse.class)).thenReturn(response);
+
+        assessmentServiceGateway.searchAssessments(0,20,"title", "search");
+
+        verify(restTemplate).getForEntity("fakeUri/assessments/search?page=0&size=20&property=title&searchString=search", AssessmentResponse.class);
+    }
+
+    @Test
     public void whenCreateAssessmentCalled_thenRestTemplateIsCalled() throws Exception {
         AssessmentResponse assessmentResponse = new AssessmentResponse();
         final Assessment assessment =
