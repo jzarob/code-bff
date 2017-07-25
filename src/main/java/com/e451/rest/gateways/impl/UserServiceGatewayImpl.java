@@ -77,7 +77,7 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
-        return response;
+        return ResponseEntity.ok(response.getBody());
     }
 
     @Override
