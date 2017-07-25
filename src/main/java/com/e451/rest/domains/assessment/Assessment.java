@@ -145,11 +145,11 @@ public class Assessment {
         this.rating = rating;
     }
 
-    public static final String CSV_HEADERS = "first_name,last_name,email,notes,assessment_date";
+    public static final String CSV_HEADERS = "first_name,last_name,email,notes,rating,assessment_date";
 
     @JsonIgnore
     public String toCsvRow() {
-        return Stream.of(firstName, lastName, email, notes, assessmentDate != null ? assessmentDate.toString() : "")
+        return Stream.of(firstName, lastName, email, notes, rating.toString(), assessmentDate != null ? assessmentDate.toString() : "")
                 .map(value -> null == value ? "" : value)
                 .map(value -> value.replaceAll("\"", "\"\""))
                 .map(value -> value.replaceAll("\n", "  "))
