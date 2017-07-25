@@ -26,6 +26,7 @@ public class Assessment {
     private Date modifiedDate;
     private String interviewGuid;
     private Date assessmentDate;
+    private Double rating = 0d;
 
     @JsonInclude(value=JsonInclude.Include.ALWAYS)
     private AssessmentState state;
@@ -136,11 +137,19 @@ public class Assessment {
         this.assessmentDate = assessmentDate;
     }
 
-    public static final String CSV_HEADERS = "first_name,last_name,email,notes,assessment_date";
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
+    }
+
+    public static final String CSV_HEADERS = "first_name,last_name,email,notes,rating,assessment_date";
 
     @JsonIgnore
     public String toCsvRow() {
-        return Stream.of(firstName, lastName, email, notes, assessmentDate != null ? assessmentDate.toString() : "")
+        return Stream.of(firstName, lastName, email, notes, rating.toString(), assessmentDate != null ? assessmentDate.toString() : "")
                 .map(value -> null == value ? "" : value)
                 .map(value -> value.replaceAll("\"", "\"\""))
                 .map(value -> value.replaceAll("\n", "  "))
