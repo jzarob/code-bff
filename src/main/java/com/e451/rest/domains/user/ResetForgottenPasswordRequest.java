@@ -8,9 +8,7 @@ public class ResetForgottenPasswordRequest {
     private String lastName;
     private String username;
     private String resetGuid;
-
-    public ResetForgottenPasswordRequest() {
-    }
+    private String newPassword;
 
     public ResetForgottenPasswordRequest(String firstName, String lastName, String username, String resetGuid) {
         this.firstName = firstName;
@@ -49,5 +47,16 @@ public class ResetForgottenPasswordRequest {
 
     public void setResetGuid(String resetGuid) {
         this.resetGuid = resetGuid;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
+
+    public ResetForgottenPasswordRequest() {
     }
 }
