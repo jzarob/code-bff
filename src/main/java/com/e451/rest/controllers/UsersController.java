@@ -75,5 +75,10 @@ public class UsersController {
     @GetMapping("/activeUser")
     public ResponseEntity<UserResponse> getActiveUer() { return userService.getActiveUser(); }
 
+    @GetMapping(value = "/forgot-password", params = {"username"})
+    public ResponseEntity forgotPassword(String username) {
+        return userService.forgotPassword(username);
+    }
+
 }
 

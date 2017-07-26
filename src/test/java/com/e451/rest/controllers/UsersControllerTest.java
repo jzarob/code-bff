@@ -173,6 +173,7 @@ public class UsersControllerTest {
         Assert.assertEquals(user, response.getBody().getUsers().get(0));
     }
 
+    @Test
     public void whenDeleteUser_returnNoContent() {
         ResponseEntity responseEntity = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 
@@ -183,4 +184,12 @@ public class UsersControllerTest {
         Assert.assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
+    @Test
+    public void whenForgotPassword_returnOKResponseEntity() {
+        ResponseEntity responseEntity = ResponseEntity.ok().build();
+        when(userService.forgotPassword("username")).thenReturn(responseEntity);
+        ResponseEntity response = controller.forgotPassword("username");
+
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
 }

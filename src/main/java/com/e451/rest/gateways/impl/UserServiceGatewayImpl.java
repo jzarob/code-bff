@@ -170,4 +170,13 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
         }
     }
 
+    @Override
+    public ResponseEntity forgotPassword(String username) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri)
+                .pathSegment("forgot-password")
+                .queryParam("username", username);
+
+        return restTemplate.getForEntity(builder.build().toUriString(), ResponseEntity.class);
+    }
+
 }

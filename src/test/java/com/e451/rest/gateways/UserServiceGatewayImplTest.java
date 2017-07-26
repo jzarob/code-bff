@@ -166,6 +166,7 @@ public class UserServiceGatewayImplTest {
         verify(restTemplate).getForEntity(builder.build().toUriString(), UserResponse.class);
     }
 
+    @Test
     public void whenDeleteUserCalled_thenRestTempalteIsCalled() throws Exception {
         URI uri = new URI("fakeUri/users/1");
 
@@ -178,6 +179,7 @@ public class UserServiceGatewayImplTest {
         verify(restTemplate).exchange(uri, HttpMethod.DELETE, request, Object.class);
     }
 
+    @Test
     public void whenSearchUsersCalled_thenRestTemplateIsCalled() throws Exception {
         UserResponse userResponse = new UserResponse();
         ResponseEntity<UserResponse> response = ResponseEntity.ok(userResponse);
@@ -187,6 +189,17 @@ public class UserServiceGatewayImplTest {
         userServiceGateway.searchUsers(0,20,"firstName", "text");
 
         verify(restTemplate).getForEntity("fakeUri/users/search?page=0&size=20&property=firstName&searchString=text", UserResponse.class);
+    }
+
+    @Test
+    public void whenForgotPasswordCalled_thenRestTemplateIsCalled() throws  Exception {
+        ResponseEntity response = ResponseEntity.ok().build();
+
+        when(restTemplate.getForEntity("fakeUri/users/forgot-password?username=username", UserResponse.class)).thenReturn(response);
+
+        userServiceGateway.forgotPassword("username");
+
+        verify(restTemplate).getForEntity("fakeUri/users/forgot-password?username=username", ResponseEntity.class);
     }
 
 }

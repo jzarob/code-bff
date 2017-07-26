@@ -198,4 +198,14 @@ public class UserServiceImplTest {
 
         Assert.assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
+
+    @Test
+    public void whenForgotPassword_returnOKResponseEntity() {
+        ResponseEntity gatewayResponse = ResponseEntity.ok().build();
+        when(userServiceGateway.forgotPassword("username")).thenReturn(gatewayResponse);
+
+        ResponseEntity responseEntity = userService.forgotPassword("username");
+
+        Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    }
 }

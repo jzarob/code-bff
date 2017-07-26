@@ -91,6 +91,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public ResponseEntity<UserResponse> getActiveUser() { return userServiceGateway.getActiveUser(); }
 
+    @Override
+    public ResponseEntity forgotPassword(String username) {
+        return userServiceGateway.forgotPassword(username);
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

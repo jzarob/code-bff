@@ -21,4 +21,5 @@ public interface UserServiceGateway {
     ResponseEntity<UserResponse> getActiveUser();
     ResponseEntity deleteUser(String id);
     ResponseEntity activate(String uuid);
+    ResponseEntity forgotPassword(String username);
 }

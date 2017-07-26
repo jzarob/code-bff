@@ -23,4 +23,5 @@ public interface UserService {
     ResponseEntity activate(String uuid);
     UserDetails loadUserByUsername(String username);
     ResponseEntity<UserResponse> getActiveUser();
+    ResponseEntity forgotPassword(String username);
 }
