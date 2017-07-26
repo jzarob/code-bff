@@ -1,5 +1,6 @@
 package com.e451.rest.gateways;
 
+import com.e451.rest.domains.user.ResetForgottenPasswordRequest;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
 import com.e451.rest.domains.user.UserVerification;
@@ -10,16 +11,20 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.dao.RecoverableDataAccessException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.zip.DataFormatException;
+
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
@@ -200,6 +205,45 @@ public class UserServiceGatewayImplTest {
         userServiceGateway.forgotPassword("username");
 
         verify(restTemplate).getForEntity("fakeUri/users/forgot-password?username=username", ResponseEntity.class);
+    }
+
+    @Test
+    public void whenResetForgottenPasswordCalled_thenRestTemplateIsCalled() throws Exception {
+        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest("user", "name", "username", "guid");
+        HttpEntity<ResetForgottenPasswordRequest> requestEntity = new HttpEntity<>(request, null);
+        ResponseEntity response = ResponseEntity.ok().build();
+
+        when(restTemplate.exchange("fakeUri/users/forgot-password", HttpMethod.PUT, requestEntity, Object.class)).thenReturn(response);
+
+        userServiceGateway.resetForgottenPassword(request);
+
+        verify(restTemplate).exchange("fakeUri/users/forgot-password", HttpMethod.PUT, requestEntity, Object.class);
+    }
+
+    @Test
+    public void whenResetForgottenPasswordCalled_gatewayThrowsHttpClientErrorException_returnsUnauthorized() {
+        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest("user", "name", "username", "guid");
+        HttpEntity<ResetForgottenPasswordRequest> requestEntity = new HttpEntity<>(request, null);
+
+        when(restTemplate.exchange("fakeUri/users/forgot-password", HttpMethod.PUT, requestEntity, Object.class))
+                .thenThrow(new HttpClientErrorException(HttpStatus.UNAUTHORIZED));
+
+        ResponseEntity response = userServiceGateway.resetForgottenPassword(request);
+
+        Assert.assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+    }
+
+    @Test
+    public void whenResetForgttenPasswordCalled_gatewayThrowsException_returnsInternalServerError() {
+        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest("user", "name", "username", "guid");
+        HttpEntity<ResetForgottenPasswordRequest> requestEntity = new HttpEntity<>(request, null);
+
+        when(restTemplate.exchange("fakeUri/users/forgot-password", HttpMethod.PUT, requestEntity, Object.class))
+            .thenThrow(new RecoverableDataAccessException("string"));
+
+        ResponseEntity response = userServiceGateway.resetForgottenPassword(request);
+
+        Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
 
 }

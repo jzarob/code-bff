@@ -1,5 +1,6 @@
 package com.e451.rest.services;
 
+import com.e451.rest.domains.user.ResetForgottenPasswordRequest;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
 import com.e451.rest.domains.user.UserVerification;
@@ -207,5 +208,16 @@ public class UserServiceImplTest {
         ResponseEntity responseEntity = userService.forgotPassword("username");
 
         Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    }
+
+    @Test
+    public void whenResetForgottenPassword_returnOKResponseEntity() {
+        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest("user", "name", "username", "guid");
+        ResponseEntity responseEntity = ResponseEntity.ok().build();
+        when(userServiceGateway.resetForgottenPassword(request)).thenReturn(responseEntity);
+
+        ResponseEntity response = userService.resetForgottenPassword(request);
+
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 }

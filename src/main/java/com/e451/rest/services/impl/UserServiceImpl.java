@@ -1,5 +1,6 @@
 package com.e451.rest.services.impl;
 
+import com.e451.rest.domains.user.ResetForgottenPasswordRequest;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
 import com.e451.rest.domains.user.UserVerification;
@@ -94,6 +95,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public ResponseEntity forgotPassword(String username) {
         return userServiceGateway.forgotPassword(username);
+    }
+
+    @Override
+    public ResponseEntity resetForgottenPassword(ResetForgottenPasswordRequest request) {
+        return userServiceGateway.resetForgottenPassword(request);
     }
 
     @Bean
