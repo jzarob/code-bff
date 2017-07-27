@@ -209,7 +209,7 @@ public class UserServiceGatewayImplTest {
 
     @Test
     public void whenResetForgottenPasswordCalled_thenRestTemplateIsCalled() throws Exception {
-        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest("user", "name", "username", "guid");
+        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest("username", "guid");
         HttpEntity<ResetForgottenPasswordRequest> requestEntity = new HttpEntity<>(request, null);
         ResponseEntity response = ResponseEntity.ok().build();
 
@@ -222,7 +222,7 @@ public class UserServiceGatewayImplTest {
 
     @Test
     public void whenResetForgottenPasswordCalled_gatewayThrowsHttpClientErrorException_returnsUnauthorized() {
-        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest("user", "name", "username", "guid");
+        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest("username", "guid");
         HttpEntity<ResetForgottenPasswordRequest> requestEntity = new HttpEntity<>(request, null);
 
         when(restTemplate.exchange("fakeUri/users/forgot-password", HttpMethod.PUT, requestEntity, Object.class))
@@ -235,7 +235,7 @@ public class UserServiceGatewayImplTest {
 
     @Test
     public void whenResetForgttenPasswordCalled_gatewayThrowsException_returnsInternalServerError() {
-        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest("user", "name", "username", "guid");
+        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest("username", "guid");
         HttpEntity<ResetForgottenPasswordRequest> requestEntity = new HttpEntity<>(request, null);
 
         when(restTemplate.exchange("fakeUri/users/forgot-password", HttpMethod.PUT, requestEntity, Object.class))

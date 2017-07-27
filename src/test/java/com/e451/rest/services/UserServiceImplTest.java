@@ -212,7 +212,7 @@ public class UserServiceImplTest {
 
     @Test
     public void whenResetForgottenPassword_returnOKResponseEntity() {
-        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest("user", "name", "username", "guid");
+        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest("username", "guid");
         ResponseEntity responseEntity = ResponseEntity.ok().build();
         when(userServiceGateway.resetForgottenPassword(request)).thenReturn(responseEntity);
 
