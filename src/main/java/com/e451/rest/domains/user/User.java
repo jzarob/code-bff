@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.Date;
 
 /**
  * Created by l659598 on 6/19/2017.
@@ -35,6 +36,13 @@ public class User implements UserDetails {
     @Indexed
     @JsonIgnore
     private String activationGuid;
+
+    @JsonIgnore
+    @Indexed
+    private String resetPasswordGuid;
+
+    @JsonIgnore
+    private Date resetPasswordSentDate;
 
     public User() {
     }
@@ -110,6 +118,22 @@ public class User implements UserDetails {
 
     public void setLocked(boolean locked) {
         this.locked = locked;
+    }
+
+    public String getResetPasswordGuid() {
+        return resetPasswordGuid;
+    }
+
+    public void setResetPasswordGuid(String resetPasswordGuid) {
+        this.resetPasswordGuid = resetPasswordGuid;
+    }
+
+    public Date getResetPasswordSentDate() {
+        return resetPasswordSentDate;
+    }
+
+    public void setResetPasswordSentDate(Date resetPasswordSentDate) {
+        this.resetPasswordSentDate = resetPasswordSentDate;
     }
 
     //@Override

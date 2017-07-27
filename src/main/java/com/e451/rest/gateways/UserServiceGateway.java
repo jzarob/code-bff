@@ -1,5 +1,6 @@
 package com.e451.rest.gateways;
 
+import com.e451.rest.domains.user.ResetForgottenPasswordRequest;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
 import com.e451.rest.domains.user.UserVerification;
@@ -21,4 +22,6 @@ public interface UserServiceGateway {
     ResponseEntity<UserResponse> getActiveUser();
     ResponseEntity deleteUser(String id);
     ResponseEntity activate(String uuid);
+    ResponseEntity forgotPassword(String username);
+    ResponseEntity resetForgottenPassword(ResetForgottenPasswordRequest request);
 }

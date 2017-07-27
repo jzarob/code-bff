@@ -1,5 +1,6 @@
 package com.e451.rest.gateways;
 
+import com.e451.rest.domains.user.ResetForgottenPasswordRequest;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
 import com.e451.rest.domains.user.UserVerification;
@@ -10,16 +11,20 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.dao.RecoverableDataAccessException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.zip.DataFormatException;
+
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
@@ -166,6 +171,7 @@ public class UserServiceGatewayImplTest {
         verify(restTemplate).getForEntity(builder.build().toUriString(), UserResponse.class);
     }
 
+    @Test
     public void whenDeleteUserCalled_thenRestTempalteIsCalled() throws Exception {
         URI uri = new URI("fakeUri/users/1");
 
@@ -178,6 +184,7 @@ public class UserServiceGatewayImplTest {
         verify(restTemplate).exchange(uri, HttpMethod.DELETE, request, Object.class);
     }
 
+    @Test
     public void whenSearchUsersCalled_thenRestTemplateIsCalled() throws Exception {
         UserResponse userResponse = new UserResponse();
         ResponseEntity<UserResponse> response = ResponseEntity.ok(userResponse);
@@ -187,6 +194,56 @@ public class UserServiceGatewayImplTest {
         userServiceGateway.searchUsers(0,20,"firstName", "text");
 
         verify(restTemplate).getForEntity("fakeUri/users/search?page=0&size=20&property=firstName&searchString=text", UserResponse.class);
+    }
+
+    @Test
+    public void whenForgotPasswordCalled_thenRestTemplateIsCalled() throws  Exception {
+        ResponseEntity response = ResponseEntity.ok().build();
+
+        when(restTemplate.getForEntity("fakeUri/users/forgot-password?username=username", UserResponse.class)).thenReturn(response);
+
+        userServiceGateway.forgotPassword("username");
+
+        verify(restTemplate).getForEntity("fakeUri/users/forgot-password?username=username", ResponseEntity.class);
+    }
+
+    @Test
+    public void whenResetForgottenPasswordCalled_thenRestTemplateIsCalled() throws Exception {
+        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest("user", "name", "username", "guid");
+        HttpEntity<ResetForgottenPasswordRequest> requestEntity = new HttpEntity<>(request, null);
+        ResponseEntity response = ResponseEntity.ok().build();
+
+        when(restTemplate.exchange("fakeUri/users/forgot-password", HttpMethod.PUT, requestEntity, Object.class)).thenReturn(response);
+
+        userServiceGateway.resetForgottenPassword(request);
+
+        verify(restTemplate).exchange("fakeUri/users/forgot-password", HttpMethod.PUT, requestEntity, Object.class);
+    }
+
+    @Test
+    public void whenResetForgottenPasswordCalled_gatewayThrowsHttpClientErrorException_returnsUnauthorized() {
+        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest("user", "name", "username", "guid");
+        HttpEntity<ResetForgottenPasswordRequest> requestEntity = new HttpEntity<>(request, null);
+
+        when(restTemplate.exchange("fakeUri/users/forgot-password", HttpMethod.PUT, requestEntity, Object.class))
+                .thenThrow(new HttpClientErrorException(HttpStatus.UNAUTHORIZED));
+
+        ResponseEntity response = userServiceGateway.resetForgottenPassword(request);
+
+        Assert.assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+    }
+
+    @Test
+    public void whenResetForgttenPasswordCalled_gatewayThrowsException_returnsInternalServerError() {
+        ResetForgottenPasswordRequest request = new ResetForgottenPasswordRequest("user", "name", "username", "guid");
+        HttpEntity<ResetForgottenPasswordRequest> requestEntity = new HttpEntity<>(request, null);
+
+        when(restTemplate.exchange("fakeUri/users/forgot-password", HttpMethod.PUT, requestEntity, Object.class))
+            .thenThrow(new RecoverableDataAccessException("string"));
+
+        ResponseEntity response = userServiceGateway.resetForgottenPassword(request);
+
+        Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
 
 }

@@ -1,9 +1,6 @@
 package com.e451.rest.gateways.impl;
 
-import com.e451.rest.domains.user.InvalidPasswordException;
-import com.e451.rest.domains.user.User;
-import com.e451.rest.domains.user.UserResponse;
-import com.e451.rest.domains.user.UserVerification;
+import com.e451.rest.domains.user.*;
 import com.e451.rest.gateways.UserServiceGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -168,6 +165,32 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @Override
+    public ResponseEntity forgotPassword(String username) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri)
+                .pathSegment("forgot-password")
+                .queryParam("username", username);
+
+        return restTemplate.getForEntity(builder.build().toUriString(), ResponseEntity.class);
+    }
+
+    @Override
+    public ResponseEntity resetForgottenPassword(ResetForgottenPasswordRequest request) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(userServiceUri).pathSegment("forgot-password");
+        ResponseEntity response;
+        HttpEntity<ResetForgottenPasswordRequest> requestEntity = new HttpEntity<>(request, null);
+
+        try {
+            response = restTemplate.exchange(builder.build().toUriString(), HttpMethod.PUT, requestEntity, Object.class);
+        } catch (HttpClientErrorException ex) {
+            return ResponseEntity.status(ex.getStatusCode()).build();
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body((UserResponse) response.getBody());
     }
 
 }

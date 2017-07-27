@@ -1,5 +1,6 @@
 package com.e451.rest.services;
 
+import com.e451.rest.domains.user.ResetForgottenPasswordRequest;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
 import com.e451.rest.domains.user.UserVerification;
@@ -23,4 +24,6 @@ public interface UserService {
     ResponseEntity activate(String uuid);
     UserDetails loadUserByUsername(String username);
     ResponseEntity<UserResponse> getActiveUser();
+    ResponseEntity forgotPassword(String username);
+    ResponseEntity resetForgottenPassword(ResetForgottenPasswordRequest request);
 }

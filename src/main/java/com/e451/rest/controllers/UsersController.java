@@ -1,5 +1,6 @@
 package com.e451.rest.controllers;
 
+import com.e451.rest.domains.user.ResetForgottenPasswordRequest;
 import com.e451.rest.domains.user.User;
 import com.e451.rest.domains.user.UserResponse;
 import com.e451.rest.domains.user.UserVerification;
@@ -74,6 +75,16 @@ public class UsersController {
 
     @GetMapping("/activeUser")
     public ResponseEntity<UserResponse> getActiveUer() { return userService.getActiveUser(); }
+
+    @GetMapping(value = "/forgot-password", params = {"username"})
+    public ResponseEntity forgotPassword(String username) {
+        return userService.forgotPassword(username);
+    }
+
+    @PutMapping(value = "/forgot-password")
+    public ResponseEntity resetForgottenPassword(@RequestBody ResetForgottenPasswordRequest request) {
+        return userService.resetForgottenPassword(request);
+    }
 
 }
 
