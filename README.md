@@ -10,6 +10,8 @@
 |CODE_WEB_URI         |The base address for the Client Application (ng)          |http://code-web-ui.azurewebsites.net|
 |CODE_SERVICE_URI     |The URI of the running service instance                   |http://code-service.azurewebsites.net/api/v1|
 |CODE_DATABASE_NAME   |The name to use for the MongoDB database                  |code_service_prod|
+|JWT_PRIVATE_KEY      |Private key in PKCS8 format                               |none provided|
+|JWT_PUBLIC_KEY       |Public key in X.509v3 format                              |none provided|
 **Note:** the ugly DB name comes from Azure. Sorry. :(
 
 ## Deployment Instructions
