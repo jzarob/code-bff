@@ -126,7 +126,7 @@ public class JwtTokenUtil implements Serializable {
                     .setClaims(claims)
                     .setExpiration(generateExpirationDate());
 
-            if(privateKeyEncoded.isEmpty()|| publicKeyEncoded.isEmpty()) {
+            if(privateKeyEncoded.isEmpty() || publicKeyEncoded.isEmpty()) {
                 builder.signWith(SignatureAlgorithm.HS256, "secret");
             } else {
                 builder.signWith(SignatureAlgorithm.RS256, getPrivateKey());
