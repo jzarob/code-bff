@@ -86,7 +86,7 @@ public class JwtTokenUtil implements Serializable {
         try {
             JwtParser parser = Jwts.parser();
 
-            if(privateKeyEncoded == null || publicKeyEncoded == null) {
+            if(privateKeyEncoded.isEmpty() || publicKeyEncoded.isEmpty()) {
                 parser.setSigningKey("secret");
             } else {
                 parser.setSigningKey(getPublicKey());
