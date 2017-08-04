@@ -12,11 +12,12 @@
 |CODE_DATABASE_NAME   |The name to use for the MongoDB database                  |code_service_prod|
 |JWT_PRIVATE_KEY      |Private key in PKCS8 format                               |none provided|
 |JWT_PUBLIC_KEY       |Public key in X.509v3 format                              |none provided|
+
 **Note:** the ugly DB name comes from Azure. Sorry. :(
 
 ## Deployment Instructions
 
-**Note:** Use the azure-deploy.py script provided in the services repository
+**Note:** Use the azure-deploy.py script provided in the deploy repository
 
 ```sh
 mvn package
