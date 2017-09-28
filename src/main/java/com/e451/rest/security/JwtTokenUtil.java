@@ -129,7 +129,7 @@ public class JwtTokenUtil implements Serializable {
             if(privateKeyEncoded.isEmpty() || publicKeyEncoded.isEmpty()) {
                 builder.signWith(SignatureAlgorithm.HS256, "secret");
             } else {
-                builder.signWith(SignatureAlgorithm.RS256, getPrivateKey());
+                builder.signWith(SignatureAlgorithm.ES256, getPrivateKey());
             }
 
             return builder.compact();
@@ -172,7 +172,7 @@ public class JwtTokenUtil implements Serializable {
                 byte[] publicKeyBytes = publicKeyEncoded.getBytes();
                 byte[] publicKeyDecoded = java.util.Base64.getDecoder().decode(publicKeyBytes);
                 X509EncodedKeySpec spec = new X509EncodedKeySpec(publicKeyDecoded);
-                KeyFactory factory = KeyFactory.getInstance("RSA");
+                KeyFactory factory = KeyFactory.getInstance("EC");
                 publicKey = factory.generatePublic(spec);
             } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
                 logger.error("Error in public key algorithm or spec", e);
@@ -182,15 +182,17 @@ public class JwtTokenUtil implements Serializable {
     }
 
     private Key getPrivateKey() throws Exception {
-        if (privateKey == null) {
+        if ( null == privateKey){
             try {
                 byte[] privateKeyBytes = privateKeyEncoded.getBytes();
+
                 byte[] privateKeyDecoded = java.util.Base64.getDecoder().decode(privateKeyBytes);
                 PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(privateKeyDecoded);
-                KeyFactory factory = KeyFactory.getInstance("RSA");
+
+                KeyFactory factory = KeyFactory.getInstance("EC");
                 privateKey = factory.generatePrivate(spec);
             } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
-                logger.error("Error in private key algorithm or spec", e);
+                throw new IllegalArgumentException("Incorrect private key algorithm or key spec.", e);
             }
         }
         return privateKey;
