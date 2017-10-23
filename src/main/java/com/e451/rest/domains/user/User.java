@@ -26,7 +26,7 @@ public class User implements UserDetails {
     private String firstName;
     private String lastName;
 
-    @Indexed(unique = true)
+//    @Indexed(unique = true)
     private String username;
     @JsonProperty(access = JsonProperty.Access.READ_WRITE)
     private String password;
