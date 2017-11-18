@@ -1,6 +1,9 @@
 # Code BFF
 
 [![Build Status](https://travis-ci.org/8451/code-bff.svg?branch=develop)](https://travis-ci.org/8451/code-bff)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d350bf4f75534c88b31fe0bae3e129a1)](https://www.codacy.com/app/tomd8451/code-bff?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=8451/code-bff&amp;utm_campaign=Badge_Grade)
+[![Coverage Status](https://coveralls.io/repos/github/8451/code-bff/badge.svg?branch=develop)](https://coveralls.io/github/8451/code-bff?branch=develop)  
+
 [![forthebadge](http://forthebadge.com/images/badges/built-by-developers.svg)](http://forthebadge.com)
 
 ## Environment Variables
