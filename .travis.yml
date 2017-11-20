@@ -5,3 +5,5 @@ services:
   - mongodb
 env:
   - DB=mongodb://127.0.0.1/code_bff_local
+after_success:
+  - ./mvnw jacoco:report coveralls:report
